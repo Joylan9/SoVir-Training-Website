@@ -1,0 +1,125 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../lib/api';
+
+interface User {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber?: string;
+    role: string;
+    isEmailVerified: boolean;
+}
+
+interface AuthContextType {
+    user: User | null;
+    loading: boolean;
+    login: (email: string, password: string) => Promise<void>;
+    register: (name: string, email: string, phoneNumber: string, password: string, germanLevel?: string) => Promise<void>;
+    verifyOtp: (email: string, otp: string) => Promise<void>;
+    resendOtp: (email: string) => Promise<void>;
+    logout: () => void;
+    refreshUser: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Check if user is already logged in
+        const token = localStorage.getItem('token');
+        const savedUser = localStorage.getItem('user');
+
+        if (token && savedUser) {
+            setUser(JSON.parse(savedUser));
+            refreshUser();
+        } else {
+            setLoading(false);
+        }
+    }, []);
+
+    const refreshUser = async () => {
+        try {
+            const response = await api.get('/auth/me');
+            setUser(response.data);
+            localStorage.setItem('user', JSON.stringify(response.data));
+        } catch (error) {
+            console.error('Failed to refresh user:', error);
+            logout();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const register = async (
+        name: string,
+        email: string,
+        phoneNumber: string,
+        password: string,
+        germanLevel?: string
+    ) => {
+        const response = await api.post('/auth/register', {
+            name,
+            email,
+            phoneNumber,
+            password,
+            germanLevel,
+        });
+        return response.data;
+    };
+
+    const verifyOtp = async (email: string, otp: string) => {
+        const response = await api.post('/auth/verify-otp', { email, otp });
+        const { token, user: userData } = response.data;
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+    };
+
+    const resendOtp = async (email: string) => {
+        await api.post('/auth/resend-otp', { email });
+    };
+
+    const login = async (email: string, password: string) => {
+        const response = await api.post('/auth/login', { email, password });
+        const { token, user: userData } = response.data;
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+    };
+
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                login,
+                register,
+                verifyOtp,
+                resendOtp,
+                logout,
+                refreshUser,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+    return context;
+};

@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-lg;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* Smooth Transitions */
+* {
+    @apply transition-colors duration-200;
+}
+
+/* Remove transition for specific elements to avoid weird effects */
+button,
+input,
+select,
+textarea {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+}
