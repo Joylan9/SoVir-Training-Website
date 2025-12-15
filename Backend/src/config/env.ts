@@ -12,4 +12,5 @@ export const env = {
     EMAIL_PORT: Number(process.env.EMAIL_PORT) || 587,
     EMAIL_USER: process.env.EMAIL_USER || '',
     EMAIL_PASS: process.env.EMAIL_PASS || '',
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID_HERE',
 };

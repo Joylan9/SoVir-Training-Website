@@ -4,7 +4,10 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import { EmailService } from '../utils/email.service';
 import { env } from '../config/env';
-import { RegisterDto, VerifyOtpDto, ResendOtpDto, LoginDto } from '../dtos/auth.dto';
+import { RegisterDto, VerifyOtpDto, ResendOtpDto, LoginDto, GoogleLoginDto } from '../dtos/auth.dto';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(env.GOOGLE_CLIENT_ID);
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
@@ -43,6 +46,8 @@ export const register = async (req: Request, res: Response) => {
                 name: registerDto.name,
                 email: registerDto.email,
                 password: hashedPassword,
+                phoneNumber: registerDto.phoneNumber,
+                germanLevel: registerDto.germanLevel,
                 otp: otpHash,
                 otpExpires,
                 lastOtpSent: new Date(),
@@ -137,6 +142,51 @@ export const login = async (req: Request, res: Response) => {
 
         const payload = { id: (user as any)._id, role: user.role };
         const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions);
+
+        res.status(200).json({ token, user: { id: (user as any)._id, name: user.name, email: user.email, role: user.role } });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+export const googleLogin = async (req: Request, res: Response) => {
+    const googleDto = plainToClass(GoogleLoginDto, req.body);
+    const errors = await validate(googleDto);
+    if (errors.length > 0) return res.status(400).json({ errors });
+
+    try {
+        // Fetch user info using the access token
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${googleDto.token}` }
+        });
+
+        if (!response.ok) {
+            return res.status(400).json({ message: 'Invalid Google Token' });
+        }
+
+        const payload = await response.json() as any;
+        const { email, name, picture, sub: googleId } = payload;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Create new user if not found
+            user = new User({
+                name,
+                email,
+                googleId,
+                isVerified: true, // Google users are considered verified
+            });
+            await user.save();
+        } else if (!user.googleId) {
+            // Link Google account if user exists but not linked
+            user.googleId = googleId;
+            user.isVerified = true;
+            await user.save();
+        }
+
+        const jwtPayload = { id: (user as any)._id, role: user.role };
+        const token = jwt.sign(jwtPayload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions);
 
         res.status(200).json({ token, user: { id: (user as any)._id, name: user.name, email: user.email, role: user.role } });
     } catch (error) {

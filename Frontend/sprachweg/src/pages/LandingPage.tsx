@@ -69,7 +69,7 @@ const LandingPage: React.FC = () => {
         }
     ];
 
-    const partners = ['Goethe Institut', 'TestDaF', 'TELC', 'Make it in Germany', 'DAAD', 'IHK'];
+    const partners = ['Goethe Institut', 'TELC', 'TestDaF', 'ÖSD', 'Make it in Germany', 'IHK'];
 
     return (
         <div className="min-h-screen bg-white dark:bg-[#0a192f] transition-colors duration-300 font-sans">
@@ -83,21 +83,19 @@ const LandingPage: React.FC = () => {
                                 <span className="font-serif font-bold text-xl text-[#0a192f]">S</span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-serif font-bold text-xl leading-none text-gray-900 dark:text-white">SprachWeg</span>
-                                <span className="text-xs tracking-wider text-gray-500 dark:text-gray-400">AKADEMIE</span>
+                                <span className="font-serif font-bold text-xl leading-none text-gray-900 dark:text-white">SoVir Akademie</span>
+                                <span className="text-xs tracking-wider text-gray-500 dark:text-gray-400">A Division of SoVir Technologies LLP</span>
                             </div>
                         </div>
 
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center gap-8">
                             <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Home</Link>
-
-                            <div className="group relative">
-                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
-                                    Language Training <ChevronDown className="w-4 h-4" />
-                                </button>
-                                {/* Dropdown placeholder */}
-                            </div>
+                            <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">About Us</a>
+                            <a href="#skill-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Skill Training</a>
+                            <a href="#language-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Language Training</a>
+                            <a href="#exam-prep" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Exam Preparation</a>
+                            <a href="#careers" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Careers Abroad</a>
 
                             <div className="group relative">
                                 <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
@@ -197,26 +195,30 @@ const LandingPage: React.FC = () => {
                             </div>
 
                             <h1 className="font-serif text-5xl lg:text-7xl font-medium text-gray-900 dark:text-white leading-tight mb-6">
-                                SprachWeg <br />
+                                SoVir Akademie <br />
                                 <span className="text-[#d6b161]">Skills, Languages</span> <br />
                                 & Global Careers
                             </h1>
 
+                            <p className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-4">
+                                A Training & Career Services Division of SoVir Technologies LLP
+                            </p>
+
                             <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-xl">
-                                Master German from A1 to B2 with live interactive classes, prepare for Goethe exams, and unlock career opportunities in Germany through our proven pathways.
+                                A professional training academy empowering individuals with industry-ready skills, international language expertise, and global career opportunities through specialized skill development, language training, international exam preparation, and abroad placement support.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link to="/register">
                                     <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-semibold px-8 py-6 text-lg rounded-full w-full sm:w-auto flex items-center justify-center gap-2">
-                                        Start A1 Trial
+                                        Start Learning
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                                     </Button>
                                 </Link>
                                 <Link to="/consult">
                                     <Button variant="outline" className="border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 px-8 py-6 text-lg rounded-full w-full sm:w-auto flex items-center justify-center gap-2">
                                         <Play className="w-5 h-5" />
-                                        Book Free Consult
+                                        Book Free Consultation
                                     </Button>
                                 </Link>
                             </div>
@@ -304,9 +306,99 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Pathways Section */}
-            <section className="py-24 bg-[#0a192f]">
+            {/* About Us Section */}
+            <section id="about" className="py-24 bg-white dark:bg-[#0a192f]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Section Header */}
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-semibold text-sm tracking-widest uppercase">About Us</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mt-4 mb-6">
+                            Empowering Careers Through Excellence
+                        </h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                            Part of SoVir Technologies LLP's commitment to professional development and global opportunities
+                        </p>
+                    </div>
+
+                    <div className="grid lg:grid-cols-2 gap-12 mb-16">
+                        {/* About SoVir Technologies LLP */}
+                        <div className="bg-gray-50 dark:bg-[#112240] rounded-[2rem] p-10 border border-gray-100 dark:border-white/5">
+                            <div className="w-14 h-14 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-6">
+                                <Globe className="w-7 h-7 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                                About SoVir Technologies LLP
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                                SoVir Technologies LLP is a professional services organization focused on technology, training, and workforce development. With a strong commitment to quality and innovation, the company supports individuals and industries through specialized skill-building solutions.
+                            </p>
+                            <div className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                <CheckCircle className="w-5 h-5 text-[#d6b161] flex-shrink-0 mt-0.5" />
+                                <span>Professional technology and training services</span>
+                            </div>
+                        </div>
+
+                        {/* About SoVir Akademie */}
+                        <div className="bg-gray-50 dark:bg-[#112240] rounded-[2rem] p-10 border border-gray-100 dark:border-white/5">
+                            <div className="w-14 h-14 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-6">
+                                <GraduationCap className="w-7 h-7 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                                About SoVir Akademie
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                                SoVir Akademie is the training and education wing of SoVir Technologies LLP. Our academy is built to deliver practical learning, certification-oriented training, and career-focused guidance for students, working professionals, and international aspirants.
+                            </p>
+                            <div className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                <CheckCircle className="w-5 h-5 text-[#d6b161] flex-shrink-0 mt-0.5" />
+                                <span>Practical learning and career-focused training</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mission & Vision */}
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-gradient-to-br from-[#d6b161]/10 to-transparent dark:from-[#d6b161]/5 rounded-2xl p-8 border border-[#d6b161]/20">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-10 h-10 rounded-lg bg-[#d6b161] flex items-center justify-center">
+                                    <Star className="w-5 h-5 text-[#0a192f]" />
+                                </div>
+                                <h4 className="font-serif text-xl font-semibold text-gray-900 dark:text-white">Our Mission</h4>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                To provide high-quality training programs that enhance technical competence, language proficiency, and global employability.
+                            </p>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-[#d6b161]/10 to-transparent dark:from-[#d6b161]/5 rounded-2xl p-8 border border-[#d6b161]/20">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-10 h-10 rounded-lg bg-[#d6b161] flex items-center justify-center">
+                                    <Globe className="w-5 h-5 text-[#0a192f]" />
+                                </div>
+                                <h4 className="font-serif text-xl font-semibold text-gray-900 dark:text-white">Our Vision</h4>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                To become a trusted academy for technology training, language education, and international career pathways.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Careers Abroad - Pathways Section */}
+            <section id="careers" className="py-24 bg-[#0a192f]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Section Header */}
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-semibold text-sm tracking-widest uppercase">Careers Abroad</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-white mt-4 mb-6">
+                            Build Your Career in Germany
+                        </h2>
+                        <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+                            Structured placement programs with end-to-end support for vocational training and nursing opportunities
+                        </p>
+                    </div>
+
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Ausbildung */}
                         <div className="bg-[#112240] rounded-[2rem] overflow-hidden group hover:shadow-2xl hover:shadow-[#d6b161]/10 transition-all duration-300 border border-white/5 relative">
@@ -452,6 +544,275 @@ const LandingPage: React.FC = () => {
                                 </div>
 
                                 <Button className="w-full bg-white text-[#0a192f] hover:bg-gray-100 font-semibold rounded-xl">Learn More</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Skill Training Services Section */}
+            <section id="skill-training" className="py-24 bg-white dark:bg-[#0a192f]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Section Header */}
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-semibold text-sm tracking-widest uppercase">Skill Training</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mt-4 mb-6">
+                            Industry-Ready Technical Training
+                        </h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                            Practical, hands-on training programs combining theory with real-world applications
+                        </p>
+                    </div>
+
+                    {/* Training Programs Grid */}
+                    <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
+                        {/* Industrial Automation */}
+                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Industrial Automation</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> PLC Programming</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> HMI Development</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> SCADA Systems</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industry Case Studies</li>
+                            </ul>
+                        </div>
+
+                        {/* Technology & Engineering */}
+                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Technology Training</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industrial Technology</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Live Project Training</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Job-oriented Skills</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Practical Modules</li>
+                            </ul>
+                        </div>
+
+                        {/* Corporate Training */}
+                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Corporate Training</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Custom Solutions</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Employee Upskilling</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> On-site Training</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Online Programs</li>
+                            </ul>
+                        </div>
+
+                        {/* Industrial Training */}
+                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <GraduationCap className="w-6 h-6 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Industrial Training</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industrial Exposure</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Internship Programs</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Career-focused Skills</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Hands-on Learning</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Language Training Services Section */}
+            <section id="language-training" className="py-24 bg-gray-50 dark:bg-[#0d1f3a]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Section Header */}
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-semibold text-sm tracking-widest uppercase">Language Training</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mt-4 mb-6">
+                            Master Global Languages
+                        </h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                            Comprehensive language programs for academic, professional, and international opportunities
+                        </p>
+                    </div>
+
+                    {/* German Language - Flagship */}
+                    <div className="bg-white dark:bg-[#112240] rounded-[2rem] p-10 mb-8 border-2 border-[#d6b161]/30 relative overflow-hidden">
+                        <div className="absolute top-4 right-4 bg-[#d6b161] text-[#0a192f] px-4 py-1 rounded-full text-sm font-semibold">
+                            Flagship Program
+                        </div>
+                        <div className="flex items-start gap-6 mb-6">
+                            <div className="w-16 h-16 rounded-2xl bg-[#d6b161]/10 flex items-center justify-center flex-shrink-0">
+                                <Globe className="w-8 h-8 text-[#d6b161]" />
+                            </div>
+                            <div>
+                                <h3 className="font-serif text-3xl font-semibold text-gray-900 dark:text-white mb-2">German Language Training</h3>
+                                <p className="text-gray-600 dark:text-gray-400">Complete A1 to B2 certification program with exam preparation</p>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-6 mb-6">
+                            <div className="bg-gray-50 dark:bg-[#0a192f] p-4 rounded-xl">
+                                <div className="text-[#d6b161] font-semibold mb-2">Levels Offered</div>
+                                <div className="text-gray-900 dark:text-white font-medium">A1, A2, B1, B2</div>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-[#0a192f] p-4 rounded-xl">
+                                <div className="text-[#d6b161] font-semibold mb-2">Class Formats</div>
+                                <div className="text-gray-900 dark:text-white font-medium">Individual & Group</div>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-[#0a192f] p-4 rounded-xl">
+                                <div className="text-[#d6b161] font-semibold mb-2">Learning Mode</div>
+                                <div className="text-gray-900 dark:text-white font-medium">Online & Offline</div>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                    <span>Intensive speaking sessions</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                    <span>Grammar & vocabulary focus</span>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                    <span>Exam-oriented preparation</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                    <span>Regular assessments & feedback</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Other Languages */}
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="bg-white dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <Globe className="w-6 h-6 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">English Language</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Spoken English</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Business English</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Interview Preparation</li>
+                            </ul>
+                        </div>
+
+                        <div className="bg-white dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <Globe className="w-6 h-6 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">French Language</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Beginner to Advanced</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Conversational French</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Written French</li>
+                            </ul>
+                        </div>
+
+                        <div className="bg-white dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5">
+                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
+                                <Globe className="w-6 h-6 text-[#d6b161]" />
+                            </div>
+                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Japanese Language</h3>
+                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Basic to Intermediate</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Career-focused Training</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Cultural Context</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Exam Preparation Section */}
+            <section id="exam-prep" className="py-24 bg-white dark:bg-[#0a192f]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-semibold text-sm tracking-widest uppercase">Exam Prepar
+
+                            ation</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mt-4 mb-6">
+                            International Exam Coaching
+                        </h2>
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                            Structured coaching and mock test preparation for globally recognized language exams
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-50 dark:bg-[#112240] rounded-[2rem] p-10 border border-gray-100 dark:border-white/5">
+                        <div className="grid md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h3 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white mb-6">Exams Covered</h3>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">TELC</div>
+                                        <div className="text-xs text-gray-500">A1 to B2</div>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">Goethe</div>
+                                        <div className="text-xs text-gray-500">Institut Exams</div>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">TestDaF</div>
+                                        <div className="text-xs text-gray-500">University Entry</div>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">ÖSD</div>
+                                        <div className="text-xs text-gray-500">Austrian Exam</div>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">IELTS</div>
+                                        <div className="text-xs text-gray-500">English Proficiency</div>
+                                    </div>
+                                    <div className="bg-white dark:bg-[#0a192f] p-4 rounded-xl text-center">
+                                        <div className="text-[#d6b161] font-semibold">Others</div>
+                                        <div className="text-xs text-gray-500">On Request</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white mb-6">Preparation Includes</h3>
+                                <div className="space-y-3">
+                                    <div className="flex items-start gap-3">
+                                        <CheckCircle className="w-5 h-5 text-[#d6b161] mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Exam Pattern Guidance</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">Detailed breakdown of exam structure</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <CheckCircle className="w-5 h-5 text-[#d6b161] mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Practice Tests & Evaluations</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">Regular mock tests with feedback</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <CheckCircle className="w-5 h-5 text-[#d6b161] mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Speaking & Writing Assessments</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">One-on-one evaluation sessions</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <CheckCircle className="w-5 h-5 text-[#d6b161] mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <div className="font-medium text-gray-900 dark:text-white">Time Management Strategies</div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">Techniques for optimal performance</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

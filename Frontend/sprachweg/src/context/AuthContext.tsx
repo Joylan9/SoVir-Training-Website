@@ -15,6 +15,7 @@ interface AuthContextType {
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     register: (name: string, email: string, phoneNumber: string, password: string, germanLevel?: string) => Promise<void>;
+    googleLogin: (token: string) => Promise<void>;
     verifyOtp: (email: string, otp: string) => Promise<void>;
     resendOtp: (email: string) => Promise<void>;
     logout: () => void;
@@ -92,6 +93,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(userData);
     };
 
+    const googleLogin = async (token: string) => {
+        const response = await api.post('/auth/google', { token });
+        const { token: jwtToken, user: userData } = response.data;
+
+        localStorage.setItem('token', jwtToken);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -104,6 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 user,
                 loading,
                 login,
+                googleLogin,
                 register,
                 verifyOtp,
                 resendOtp,

@@ -4,6 +4,10 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password?: string;
+    googleId?: string;
+    avatar?: string;
+    phoneNumber?: string;
+    germanLevel?: string;
     role: string;
     isVerified: boolean;
     otp?: string;
@@ -14,7 +18,11 @@ export interface IUser extends Document {
 const UserSchema: Schema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String }, // Optional for Google Auth users
+    googleId: { type: String, unique: true, sparse: true },
+    avatar: { type: String },
+    phoneNumber: { type: String },
+    germanLevel: { type: String },
     role: { type: String, default: 'student' },
     isVerified: { type: Boolean, default: false },
     otp: { type: String }, // Hashed
