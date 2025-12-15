@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -22,10 +22,29 @@ import {
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useTheme } from '../context/ThemeContext';
+import { skillAPI } from '../lib/api';
+import type { SkillCourse } from '../types/skill';
 
 const LandingPage: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
+    const [skillCourses, setSkillCourses] = useState<SkillCourse[]>([]);
+    const [loadingSkills, setLoadingSkills] = useState(true);
+
+    useEffect(() => {
+        const fetchSkillCourses = async () => {
+            try {
+                const data = await skillAPI.getAll();
+                setSkillCourses(data);
+            } catch (error) {
+                console.error('Failed to fetch skill courses:', error);
+            } finally {
+                setLoadingSkills(false);
+            }
+        };
+
+        fetchSkillCourses();
+    }, []);
 
     const courses = [
         {
@@ -550,64 +569,84 @@ const LandingPage: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Training Programs Grid */}
-                    <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
-                        {/* Industrial Automation */}
-                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
-                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
-                            </div>
-                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Industrial Automation</h3>
-                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> PLC Programming</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> HMI Development</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> SCADA Systems</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industry Case Studies</li>
-                            </ul>
+                    {/* Training Programs Grid - Dynamic */}
+                    {loadingSkills ? (
+                        <div className="flex justify-center py-12">
+                            <div className="w-12 h-12 border-4 border-[#d6b161] border-t-transparent rounded-full animate-spin"></div>
                         </div>
+                    ) : skillCourses.length > 0 ? (
+                        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
+                            {skillCourses.slice(0, 3).map((course) => (
+                                <div key={course._id} className="bg-gray-50 dark:bg-[#112240] rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group overflow-hidden">
+                                    {course.image && (
+                                        <div className="relative h-48">
+                                            <img
+                                                src={`http://localhost:5000/${course.image}`}
+                                                alt={course.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            {course.popular && (
+                                                <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                                    Popular
+                                                </div>
+                                            )}
+                                            {course.level && (
+                                                <div className="absolute top-4 right-4 bg-[#d6b161] text-[#0a192f] text-xs font-bold px-3 py-1 rounded-full">
+                                                    {course.level}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                    <div className="p-6">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center">
+                                                <GraduationCap className="w-4 h-4 text-[#d6b161]" />
+                                            </div>
+                                            {course.rating && (
+                                                <div className="flex items-center gap-1 text-sm text-yellow-500 font-medium">
+                                                    ★ {course.rating}
+                                                </div>
+                                            )}
+                                        </div>
 
-                        {/* Technology & Engineering */}
-                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
-                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                            </div>
-                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Technology Training</h3>
-                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industrial Technology</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Live Project Training</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Job-oriented Skills</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Practical Modules</li>
-                            </ul>
-                        </div>
+                                        <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{course.title}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{course.description}</p>
 
-                        {/* Corporate Training */}
-                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
-                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
-                                <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                            </div>
-                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Corporate Training</h3>
-                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Custom Solutions</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Employee Upskilling</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> On-site Training</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Online Programs</li>
-                            </ul>
-                        </div>
+                                        {course.features?.length > 0 && (
+                                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                                {course.features.slice(0, 3).map((feature, idx) => (
+                                                    <li key={idx} className="flex items-start gap-2">
+                                                        <CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" />
+                                                        <span className="line-clamp-1">{feature}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
 
-                        {/* Industrial Training */}
-                        <div className="bg-gray-50 dark:bg-[#112240] p-6 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all group">
-                            <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
-                                <GraduationCap className="w-6 h-6 text-[#d6b161]" />
-                            </div>
-                            <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-3">Industrial Training</h3>
-                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Industrial Exposure</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Internship Programs</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Career-focused Skills</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5 flex-shrink-0" /> Hands-on Learning</li>
-                            </ul>
+                                        <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-white/10">
+                                            <div className="flex flex-col">
+                                                {course.originalPrice && (
+                                                    <span className="text-xs text-gray-400 line-through">
+                                                        {course.originalPrice}
+                                                    </span>
+                                                )}
+                                                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                                                    {course.price || 'Free'}
+                                                </span>
+                                            </div>
+                                            <Button variant="outline" size="sm" className="hover:bg-[#d6b161] hover:text-[#0a192f] border-[#d6b161] text-[#d6b161]">
+                                                Enroll Now
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-gray-600 dark:text-gray-400">No skill courses available yet.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

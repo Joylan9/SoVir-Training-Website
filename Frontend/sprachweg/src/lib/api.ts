@@ -32,4 +32,36 @@ api.interceptors.response.use(
     }
 );
 
+// Skill Course API
+export const skillAPI = {
+    async getAll() {
+        const response = await api.get('/skills');
+        return response.data;
+    },
+
+    async create(data: FormData) {
+        const response = await api.post('/skills', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    },
+
+    async update(id: string, data: FormData) {
+        const response = await api.put(`/skills/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    },
+
+    async delete(id: string) {
+        const response = await api.delete(`/skills/${id}`);
+        return response.data;
+    },
+};
+
 export default api;
+
