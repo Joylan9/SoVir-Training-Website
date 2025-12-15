@@ -581,7 +581,7 @@ const LandingPage: React.FC = () => {
                                     {course.image && (
                                         <div className="relative h-48">
                                             <img
-                                                src={`http://localhost:5000/${course.image}`}
+                                                src={`http://localhost:5000/uploads/${course.image}`}
                                                 alt={course.title}
                                                 className="w-full h-full object-cover"
                                             />

@@ -12,7 +12,9 @@ export const createCourse = async (req: Request, res: Response) => {
 
         let imagePath = '';
         if (req.file) {
-            imagePath = req.file.path.replace(/\\/g, '/'); // Normalize path for Windows
+            // Store relative path from uploads folder (e.g., 'courses/image-123.jpg')
+            // This works with app.use('/uploads', express.static('uploads'))
+            imagePath = path.join('courses', req.file.filename).replace(/\\/g, '/');
         }
 
         const newCourse = new SkillCourse({
@@ -79,10 +81,14 @@ export const updateCourse = async (req: Request, res: Response) => {
 
         if (req.file) {
             // Delete old image if it exists
-            if (course.image && fs.existsSync(course.image)) {
-                fs.unlinkSync(course.image);
+            if (course.image) {
+                const oldImagePath = path.join('uploads', course.image);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
             }
-            course.image = req.file.path.replace(/\\/g, '/');
+            // Store relative path from uploads folder
+            course.image = path.join('courses', req.file.filename).replace(/\\/g, '/');
         }
 
         const updatedCourse = await course.save();
@@ -102,8 +108,11 @@ export const deleteCourse = async (req: Request, res: Response) => {
         }
 
         // Delete image file
-        if (course.image && fs.existsSync(course.image)) {
-            fs.unlinkSync(course.image);
+        if (course.image) {
+            const imagePath = path.join('uploads', course.image);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
         }
 
         await SkillCourse.deleteOne({ _id: id });

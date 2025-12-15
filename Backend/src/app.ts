@@ -6,8 +6,18 @@ import { env } from './config/env';
 const app = express();
 
 // Middlewares
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
+// CORS Configuration
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:3000'], // Allow frontend origins
+    credentials: true, // Allow cookies and credentials
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+}));
+
 app.use(express.json());
 
 import itemRoutes from './routes/item.routes';

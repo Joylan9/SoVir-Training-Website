@@ -322,7 +322,7 @@ const SkillDashboard: React.FC = () => {
                             <div key={course._id} className="bg-white dark:bg-[#112240] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden group hover:shadow-lg transition-shadow">
                                 {course.image && (
                                     <div className="relative h-48">
-                                        <img src={`http://localhost:5000/${course.image}`} alt={course.title} className="w-full h-full object-cover" />
+                                        <img src={`http://localhost:5000/uploads/${course.image}`} alt={course.title} className="w-full h-full object-cover" />
                                         {course.popular && <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Popular</div>}
                                         {course.level && <div className="absolute top-4 right-4 bg-[#d6b161] text-[#0a192f] text-xs font-bold px-3 py-1 rounded-full">{course.level}</div>}
                                     </div>
