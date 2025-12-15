@@ -1,214 +1,287 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-    GraduationCap,
-    Users,
-    Award,
-    BookOpen,
-    Video,
-    MessageCircle,
-    TrendingUp,
     CheckCircle,
-    ArrowRight,
     Star,
+    Globe,
+    Play,
+    Menu,
+    X,
+    ChevronDown,
+    MapPin,
+    Mail,
+    Phone,
+    Facebook,
+    Instagram,
+    Linkedin,
+    Youtube,
+    Sun,
+    Moon,
+    GraduationCap
 } from 'lucide-react';
 import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
+import { useTheme } from '../context/ThemeContext';
 
 const LandingPage: React.FC = () => {
-    const stats = [
-        { value: '150+', label: 'Active Students' },
-        { value: '8', label: 'Expert Trainers' },
-        { value: '6', label: 'Level Programs' },
-        { value: '95%', label: 'Success Rate' },
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { theme, toggleTheme } = useTheme();
+
+    const courses = [
+        {
+            level: 'A1',
+            title: 'German A1 Complete',
+            subtitle: "Beginner's Journey",
+            price: '€299',
+            originalPrice: '€399',
+            rating: '4.9',
+            students: '1,250',
+            duration: '8 weeks',
+            startDate: 'Jan 15, 2024',
+            mode: 'Live',
+            popular: true
+        },
+        {
+            level: 'A2',
+            title: 'German A2 Intensive',
+            subtitle: "Build Fluency",
+            price: '€349',
+            originalPrice: '€449',
+            rating: '4.8',
+            students: '890',
+            duration: '10 weeks',
+            startDate: 'Jan 20, 2024',
+            mode: 'Hybrid',
+            popular: false
+        },
+        {
+            level: 'B1',
+            title: 'German B1 Professional',
+            subtitle: "Workplace Ready",
+            price: '€449',
+            originalPrice: '€549',
+            rating: '4.9',
+            students: '670',
+            duration: '12 weeks',
+            startDate: 'Feb 1, 2024',
+            mode: 'Live',
+            popular: true
+        }
     ];
 
-    const features = [
-        {
-            icon: <Video className="w-6 h-6" />,
-            title: 'Live Classes',
-            description: 'Interactive sessions with native German speakers',
-        },
-        {
-            icon: <BookOpen className="w-6 h-6" />,
-            title: 'Structured Curriculum',
-            description: 'A1 to C2 levels with clear progression paths',
-        },
-        {
-            icon: <Award className="w-6 h-6" />,
-            title: 'Certificates',
-            description: 'Recognized certifications upon completion',
-        },
-        {
-            icon: <MessageCircle className="w-6 h-6" />,
-            title: 'Placement Support',
-            description: 'Career guidance for German-speaking markets',
-        },
-        {
-            icon: <Users className="w-6 h-6" />,
-            title: 'Community',
-            description: 'Connect with fellow learners worldwide',
-        },
-        {
-            icon: <TrendingUp className="w-6 h-6" />,
-            title: 'AI Practice',
-            description: 'Smart exercises tailored to your level',
-        },
-    ];
+    const partners = ['Goethe Institut', 'TestDaF', 'TELC', 'Make it in Germany', 'DAAD', 'IHK'];
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            {/* Header */}
-            <motion.header
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800"
-            >
-                <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl flex items-center justify-center">
-                                <span className="text-white font-black text-lg">SW</span>
-                            </div>
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">SprachWeg</span>
-                        </div>
-
-                        <div className="hidden md:flex items-center gap-8">
-                            <a href="#features" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Features
-                            </a>
-                            <a href="#levels" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Levels
-                            </a>
-                            <a href="#testimonials" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Testimonials
-                            </a>
-                            <a href="#pricing" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Pricing
-                            </a>
-                        </div>
-
+        <div className="min-h-screen bg-white dark:bg-[#0a192f] transition-colors duration-300 font-sans">
+            {/* Navbar */}
+            <nav className="fixed w-full z-50 bg-white/90 dark:bg-[#0a192f]/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-20">
+                        {/* Logo */}
                         <div className="flex items-center gap-3">
-                            <Link to="/login">
-                                <Button variant="ghost">Log In</Button>
+                            <div className="w-10 h-10 rounded-full bg-[#dbf4e2] dark:bg-[#d6b161] flex items-center justify-center">
+                                <span className="font-serif font-bold text-xl text-[#0a192f]">S</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-serif font-bold text-xl leading-none text-gray-900 dark:text-white">SprachWeg</span>
+                                <span className="text-xs tracking-wider text-gray-500 dark:text-gray-400">AKADEMIE</span>
+                            </div>
+                        </div>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden lg:flex items-center gap-8">
+                            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Home</Link>
+
+                            <div className="group relative">
+                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
+                                    Language Training <ChevronDown className="w-4 h-4" />
+                                </button>
+                                {/* Dropdown placeholder */}
+                            </div>
+
+                            <div className="group relative">
+                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
+                                    Skill Training <ChevronDown className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            <div className="group relative">
+                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
+                                    Career Abroad <ChevronDown className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">About</Link>
+                            <Link to="/contact" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Contact</Link>
+                        </div>
+
+                        {/* Right Area */}
+                        <div className="hidden lg:flex items-center gap-6">
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-yellow-400 transition-colors"
+                            >
+                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                            <Link to="/login" className="text-gray-700 dark:text-white font-medium hover:text-[#d6b161] transition-colors">
+                                Sign In
                             </Link>
                             <Link to="/register">
-                                <Button>Start Free</Button>
+                                <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-semibold px-6 rounded-full">
+                                    Enroll Now
+                                </Button>
                             </Link>
                         </div>
+
+                        {/* Mobile Menu Button */}
+                        <div className="lg:hidden flex items-center gap-4">
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-yellow-400"
+                            >
+                                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            </button>
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="text-gray-700 dark:text-white"
+                            >
+                                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            </button>
+                        </div>
                     </div>
-                </nav>
-            </motion.header>
+                </div>
+
+                {/* Mobile Menu */}
+                <AnimatePresence>
+                    {isMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="lg:hidden bg-white dark:bg-[#0a192f] border-t border-gray-100 dark:border-gray-800"
+                        >
+                            <div className="px-4 py-6 space-y-4">
+                                <Link to="/" className="block text-gray-700 dark:text-gray-300 font-medium">Home</Link>
+                                <Link to="/courses" className="block text-gray-700 dark:text-gray-300 font-medium">Language Training</Link>
+                                <Link to="/skills" className="block text-gray-700 dark:text-gray-300 font-medium">Skill Training</Link>
+                                <Link to="/career" className="block text-gray-700 dark:text-gray-300 font-medium">Career Abroad</Link>
+                                <Link to="/about" className="block text-gray-700 dark:text-gray-300 font-medium">About</Link>
+                                <div className="pt-4 flex flex-col gap-3">
+                                    <Link to="/login" className="text-center text-gray-700 dark:text-white font-medium py-2">Sign In</Link>
+                                    <Link to="/register">
+                                        <Button className="w-full bg-[#d6b161] text-[#0a192f] font-semibold rounded-full">
+                                            Enroll Now
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </nav>
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden py-20 lg:py-32">
+            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
+                            initial={{ opacity: 0, x: -50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
                         >
-                            <div className="inline-flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                                <Star className="w-4 h-4 fill-current" />
-                                <span>150+ Students Learning German</span>
+                            <div className="inline-block px-4 py-2 bg-[#d6b161]/10 rounded-full mb-6 border border-[#d6b161]/20">
+                                <span className="text-[#d6b161] font-medium text-sm flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-[#d6b161]"></span>
+                                    New: Summer 2025 Batches Now Open
+                                </span>
                             </div>
 
-                            <h1 className="text-5xl lg:text-6xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
-                                Master German with{' '}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-                                    SprachWeg
-                                </span>
+                            <h1 className="font-serif text-5xl lg:text-7xl font-medium text-gray-900 dark:text-white leading-tight mb-6">
+                                SprachWeg <br />
+                                <span className="text-[#d6b161]">Skills, Languages</span> <br />
+                                & Global Careers
                             </h1>
 
-                            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                                Your comprehensive path to German fluency. Live classes, expert trainers, and a proven curriculum from A1 to C2.
+                            <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-xl">
+                                Master German from A1 to B2 with live interactive classes, prepare for Goethe exams, and unlock career opportunities in Germany through our proven pathways.
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                            <div className="flex flex-col sm:flex-row gap-4">
                                 <Link to="/register">
-                                    <Button size="lg" className="w-full sm:w-auto">
-                                        Start Learning Free
-                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                    <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-semibold px-8 py-6 text-lg rounded-full w-full sm:w-auto flex items-center justify-center gap-2">
+                                        Start A1 Trial
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                                     </Button>
                                 </Link>
-                                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                                    <Video className="w-5 h-5 mr-2" />
-                                    Watch Demo
-                                </Button>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="flex -space-x-3">
-                                    {[1, 2, 3, 4].map((i) => (
-                                        <div
-                                            key={i}
-                                            className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 border-2 border-white dark:border-gray-900 flex items-center justify-center text-white font-semibold"
-                                        >
-                                            {String.fromCharCode(64 + i)}
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-sm">
-                                    <div className="flex items-center gap-1 text-orange-500">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <Star key={i} className="w-4 h-4 fill-current" />
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-600 dark:text-gray-400">
-                                        Trusted by <strong>150+ students</strong>
-                                    </p>
-                                </div>
+                                <Link to="/consult">
+                                    <Button variant="outline" className="border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 px-8 py-6 text-lg rounded-full w-full sm:w-auto flex items-center justify-center gap-2">
+                                        <Play className="w-5 h-5" />
+                                        Book Free Consult
+                                    </Button>
+                                </Link>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
                             className="relative"
                         >
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                            <div className="relative rounded-[2rem] overflow-hidden border-8 border-white dark:border-white/5 shadow-2xl">
                                 <img
-                                    src="/api/placeholder/600/700"
-                                    alt="Student learning German"
-                                    className="w-full h-auto"
+                                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80"
+                                    alt="Students in library"
+                                    className="w-full h-auto object-cover"
                                 />
 
                                 {/* Floating Cards */}
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.8, duration: 0.5 }}
-                                    className="absolute top-8 left-8 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="absolute top-8 left-[-1rem] lg:left-[-2rem] bg-[#1a2b4b] p-4 rounded-xl shadow-xl flex items-center gap-4 max-w-xs border border-white/10"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                                            <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-semibold text-gray-900 dark:text-white">Live Class</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">Starting in 30 min</div>
-                                        </div>
+                                    <div className="w-10 h-10 rounded-full bg-[#2a3b5b] flex items-center justify-center text-[#d6b161]">
+                                        <CheckCircle className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <div className="text-white font-medium">Goethe Certified</div>
+                                        <div className="text-gray-400 text-xs">Exam Prep Program</div>
                                     </div>
                                 </motion.div>
 
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 1, duration: 0.5 }}
-                                    className="absolute bottom-8 right-8 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.7 }}
+                                    className="absolute bottom-24 right-[-1rem] lg:right-[-2rem] bg-[#1a2b4b] p-4 rounded-xl shadow-xl flex items-center gap-4 max-w-xs border border-white/10"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                                            <GraduationCap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-semibold text-gray-900 dark:text-white">B1 Certified</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">Achievement Unlocked!</div>
-                                        </div>
+                                    <div className="w-10 h-10 rounded-full bg-[#d6b161]/20 flex items-center justify-center text-[#d6b161]">
+                                        <Globe className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <div className="text-white font-medium">150+</div>
+                                        <div className="text-gray-400 text-xs">Placements in Germany</div>
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.9 }}
+                                    className="absolute bottom-8 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-2xl flex items-center gap-4"
+                                >
+                                    <div className="w-12 h-12 rounded-full bg-[#d6b161] flex items-center justify-center text-[#0a192f]">
+                                        <Play className="w-6 h-6 fill-current" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="text-white font-medium">Live Class Starting</div>
+                                        <div className="text-gray-300 text-xs">German A1 • 12 students joined</div>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-red-500 bg-red-500/10 px-2 py-1 rounded-full">
+                                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                                        <span className="text-xs font-bold">LIVE</span>
                                     </div>
                                 </motion.div>
                             </div>
@@ -217,153 +290,409 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Stats Section */}
-            <section className="py-12 bg-gradient-to-r from-orange-500 via-pink-500 to-orange-500 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                        {stats.map((stat, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className="text-center"
-                            >
-                                <div className="text-4xl lg:text-5xl font-black text-white dark:text-orange-400 mb-2">
-                                    {stat.value}
-                                </div>
-                                <div className="text-white/90 dark:text-gray-400 font-medium">{stat.label}</div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section id="features" className="py-20 lg:py-32">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4">
-                            Everything You Need to{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-                                Master German
+            {/* Partners Section */}
+            <section className="py-10 border-t border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-[#0d1f3a]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <p className="text-sm tracking-widest text-gray-500 dark:text-gray-400 uppercase mb-8">Recognized & Partnered With</p>
+                    <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+                        {partners.map((partner, i) => (
+                            <span key={i} className="text-xl lg:text-2xl font-serif font-bold text-gray-400 dark:text-gray-500 hover:text-[#d6b161] transition-colors cursor-default">
+                                {partner}
                             </span>
-                        </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Our comprehensive platform provides all the tools for your German learning journey
-                        </p>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {features.map((feature, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                            >
-                                <Card hover className="h-full">
-                                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600 dark:text-orange-400 mb-4">
-                                        {feature.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                        {feature.title}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-400">{feature.description}</p>
-                                </Card>
-                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-20">
+            {/* Pathways Section */}
+            <section className="py-24 bg-[#0a192f]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative rounded-3xl bg-gradient-to-r from-orange-500 via-pink-500 to-orange-500 p-12 lg:p-16 text-center overflow-hidden"
-                    >
-                        <div className="relative z-10">
-                            <h2 className="text-4xl lg:text-5xl font-black text-white mb-6">
-                                Start Your German Journey Today
-                            </h2>
-                            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                                Join 150+ students already learning with SprachWeg. First week free, no credit card required.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Link to="/register">
-                                    <Button size="lg" variant="secondary" className="!bg-white !text-orange-600 hover:!bg-gray-100">
-                                        Get Started Free
-                                        <ArrowRight className="w-5 h-5 ml-2" />
-                                    </Button>
-                                </Link>
-                                <Button size="lg" variant="outline" className="!border-white !text-white hover:!bg-white/10">
-                                    Learn More
-                                </Button>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Ausbildung */}
+                        <div className="bg-[#112240] rounded-[2rem] overflow-hidden group hover:shadow-2xl hover:shadow-[#d6b161]/10 transition-all duration-300 border border-white/5 relative">
+                            <div className="h-64 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ausbildung" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#112240] to-transparent"></div>
+                                <div className="absolute top-6 left-6 w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10">
+                                    <GraduationCap className="w-6 h-6 text-white" />
+                                </div>
+                                <h3 className="absolute bottom-6 left-6 font-serif text-2xl text-white">Ausbildung Programs</h3>
+                            </div>
+                            <div className="p-8">
+                                <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                                    Paid vocational training in Germany with work permit and pathway to permanent residence.
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div>
+                                        <div className="text-2xl font-bold text-[#d6b161]">85+</div>
+                                        <div className="text-xs text-gray-500">Placed</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">€1,200/m</div>
+                                        <div className="text-xs text-gray-500">Avg. Salary</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">2-3 yrs</div>
+                                        <div className="text-xs text-gray-500">Timeline</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-8">
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        Earn while you learn
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        German B1 required
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        Free accommodation support
+                                    </div>
+                                </div>
+
+                                <Button className="w-full bg-white text-[#0a192f] hover:bg-gray-100 font-semibold rounded-xl">Learn More</Button>
                             </div>
                         </div>
-                    </motion.div>
+
+                        {/* Nursing */}
+                        <div className="bg-[#112240] rounded-[2rem] overflow-hidden group hover:shadow-2xl hover:shadow-[#d6b161]/10 transition-all duration-300 border border-white/5 relative">
+                            <div className="h-64 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nursing" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#112240] to-transparent"></div>
+                                <div className="absolute top-6 left-6 w-12 h-12 rounded-xl bg-[#ff7e5f]/20 backdrop-blur-md flex items-center justify-center border border-[#ff7e5f]/20">
+                                    <svg className="w-6 h-6 text-[#ff7e5f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                </div>
+                                <h3 className="absolute bottom-6 left-6 font-serif text-2xl text-white">Nursing Pathway</h3>
+                            </div>
+                            <div className="p-8">
+                                <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                                    Fast-track to nursing career in Germany with recognition support and employer matching.
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div>
+                                        <div className="text-2xl font-bold text-[#d6b161]">120+</div>
+                                        <div className="text-xs text-gray-500">Placed</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">€2,800/m</div>
+                                        <div className="text-xs text-gray-500">Avg. Salary</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">6-12 mo</div>
+                                        <div className="text-xs text-gray-500">Timeline</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-8">
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        Direct hospital placements
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        German B2 required
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        Visa assistance
+                                    </div>
+                                </div>
+
+                                <Button className="w-full bg-white text-[#0a192f] hover:bg-gray-100 font-semibold rounded-xl">Learn More</Button>
+                            </div>
+                        </div>
+
+                        {/* Direct Job */}
+                        <div className="bg-[#112240] rounded-[2rem] overflow-hidden group hover:shadow-2xl hover:shadow-[#d6b161]/10 transition-all duration-300 border border-white/5 relative">
+                            <div className="h-64 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Direct Job" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#112240] to-transparent"></div>
+                                <div className="absolute top-6 left-6 w-12 h-12 rounded-xl bg-[#d6b161]/20 backdrop-blur-md flex items-center justify-center border border-[#d6b161]/20">
+                                    <svg className="w-6 h-6 text-[#d6b161]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <h3 className="absolute bottom-6 left-6 font-serif text-2xl text-white">Direct Job Placement</h3>
+                            </div>
+                            <div className="p-8">
+                                <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                                    Connect with German employers hiring international talent across various sectors.
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div>
+                                        <div className="text-2xl font-bold text-[#d6b161]">45+</div>
+                                        <div className="text-xs text-gray-500">Placed</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">€3,500/m</div>
+                                        <div className="text-xs text-gray-500">Avg. Salary</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">3-6 mo</div>
+                                        <div className="text-xs text-gray-500">Timeline</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-8">
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        IT, Engineering, Finance
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        German B1-B2 required
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                        Interview preparation
+                                    </div>
+                                </div>
+
+                                <Button className="w-full bg-white text-[#0a192f] hover:bg-gray-100 font-semibold rounded-xl">Learn More</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials Section */}
+            <section className="py-24 bg-white dark:bg-[#0a192f] overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <span className="text-[#d6b161] font-medium mb-2 block">Success Stories</span>
+                        <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mb-6">Hear From Our Students</h2>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                            Join thousands of successful learners who have transformed their careers through our German language and career programs.
+                        </p>
+                    </div>
+
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                        <div className="bg-[#fcf8f1] dark:bg-[#112240] p-12 rounded-[2rem] border border-[#d6b161]/20 relative">
+                            <div className="text-[#d6b161]/20 absolute top-8 left-8">
+                                <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.05 17.07 15 17.07 13.01C17.07 10 16.53 10 16 10C13.55 10 12.002 12.19 12.002 14L12.002 2H10.003L10.003 14C10.003 20 16.037 21 16.037 21H14.017ZM8.01 21L8.01 18C8.01 16.05 11.07 15 11.07 13.01C11.07 10 10.53 10 10.002 10C7.552 10 6.004 12.19 6.004 14L6.004 2H4.004L4.004 14C4.004 20 10.038 21 10.038 21H8.01Z"></path></svg>
+                            </div>
+                            <div className="relative z-10">
+                                <p className="font-serif text-xl lg:text-2xl text-gray-800 dark:text-gray-200 leading-relaxed mb-8">
+                                    "SoVir Akademie transformed my career. From zero German to B2 in 10 months, and now I'm working as a nurse in Berlin. The live classes were engaging, and the career support was exceptional."
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Student" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-gray-900 dark:text-white">Priya Sharma</div>
+                                        <div className="text-sm text-gray-500">Registered Nurse, Berlin</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="relative">
+                            <div className="bg-white dark:bg-[#112240] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-white/5 mb-8 transform -rotate-2">
+                                <div className="text-[#d6b161] text-sm font-bold tracking-widest uppercase mb-2">Program Completed</div>
+                                <h3 className="font-serif text-2xl text-gray-900 dark:text-white">German B2 + Nursing Pathway</h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Student 1" className="w-full h-40 object-cover rounded-2xl border-4 border-white dark:border-[#112240] shadow-lg transform translate-y-4" />
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Student 2" className="w-full h-40 object-cover rounded-2xl border-4 border-white dark:border-[#112240] shadow-lg" />
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Student 3" className="w-full h-40 object-cover rounded-2xl border-4 border-white dark:border-[#112240] shadow-lg transform -translate-y-4" />
+                                <div className="w-full h-40 bg-gray-100 dark:bg-[#112240] rounded-2xl border-4 border-white dark:border-[#112240] shadow-lg flex items-center justify-center">
+                                    <span className="text-[#d6b161] font-bold text-xl">+1500</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Featured Courses */}
+            <section className="py-24 bg-white dark:bg-[#0a192f]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mb-16">
+                        <span className="text-[#d6b161] font-medium mb-2 block">Our Programs</span>
+                        <div className="flex flex-col lg:flex-row justify-between items-end gap-6">
+                            <div>
+                                <h2 className="font-serif text-4xl lg:text-5xl font-medium text-gray-900 dark:text-white mb-4">Featured Courses</h2>
+                                <p className="text-gray-600 dark:text-gray-400 max-w-xl">
+                                    Choose from our expertly designed German language courses, from beginner A1 to advanced B2 levels.
+                                </p>
+                            </div>
+                            <div className="flex gap-2 bg-gray-100 dark:bg-white/5 p-1 rounded-full">
+                                <button className="px-6 py-2 bg-[#d6b161] text-[#0a192f] rounded-full text-sm font-semibold shadow-lg">All Courses</button>
+                                <button className="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-white transition-colors text-sm font-medium">Live Classes</button>
+                                <button className="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-white transition-colors text-sm font-medium">Hybrid</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {courses.map((course, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                className="bg-white dark:bg-[#112240] rounded-[2rem] border border-gray-100 dark:border-white/5 overflow-hidden hover:border-[#d6b161]/50 transition-colors group shadow-lg dark:shadow-none"
+                            >
+                                <div className="h-48 relative overflow-hidden bg-gray-200 dark:bg-gray-800">
+                                    <img
+                                        src={[
+                                            "https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                                            "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                                            "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                        ][index % 3]}
+                                        alt={course.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                    <div className="absolute top-4 left-4 flex gap-2">
+                                        <span className="bg-[#d6b161] text-[#0a192f] text-xs font-bold px-3 py-1 rounded-full">
+                                            {course.level}
+                                        </span>
+                                        {course.popular && (
+                                            <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" /></svg>
+                                                Popular
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="absolute bottom-4 left-4">
+                                        <span className="bg-[#0a192f]/80 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full border border-white/10 flex items-center gap-2">
+                                            <Play className="w-3 h-3 fill-current" />
+                                            {course.mode}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-8">
+                                    <div className="flex items-center gap-2 mb-2 text-sm text-yellow-400">
+                                        <Star className="w-4 h-4 fill-current" />
+                                        <span className="font-bold text-gray-900 dark:text-white">{course.rating}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">({course.students} students)</span>
+                                    </div>
+                                    <h3 className="font-serif text-2xl font-medium text-gray-900 dark:text-white mb-1 group-hover:text-[#d6b161] transition-colors">{course.title}</h3>
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{course.subtitle}</p>
+
+                                    <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-[#d6b161]"></div>
+                                            {course.duration}
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-[#d6b161]"></div>
+                                            {course.startDate}
+                                        </div>
+                                    </div>
+
+                                    <ul className="space-y-2 mb-8">
+                                        <li className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                            <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                            Live interactive sessions
+                                        </li>
+                                        <li className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                            <CheckCircle className="w-4 h-4 text-[#d6b161]" />
+                                            1-on-1 speaking practice
+                                        </li>
+                                    </ul>
+
+                                    <div className="flex items-center justify-between mt-auto pt-6 border-t border-gray-100 dark:border-white/5">
+                                        <div>
+                                            <span className="text-2xl font-bold text-gray-900 dark:text-white block">{course.price}</span>
+                                            <span className="text-sm text-gray-400 line-through">{course.originalPrice}</span>
+                                        </div>
+                                        <Link to="/register">
+                                            <Button className="bg-[#1a2b4b] dark:bg-[#d6b161] text-white dark:text-[#0a192f] hover:bg-[#2a3b5b] dark:hover:bg-[#c4a055] rounded-full px-6 py-2 text-sm font-semibold">
+                                                Enroll
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="bg-gray-900 dark:bg-black text-white py-12">
+            <footer className="bg-[#050c18] border-t border-white/5 text-white pt-20 pb-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
                         <div>
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl flex items-center justify-center">
-                                    <span className="text-white font-black">SW</span>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 rounded-full bg-[#d6b161] flex items-center justify-center">
+                                    <span className="font-serif font-bold text-xl text-[#0a192f]">S</span>
                                 </div>
-                                <span className="text-xl font-bold">SprachWeg</span>
+                                <div className="flex flex-col">
+                                    <span className="font-serif font-bold text-xl leading-none text-white">SprachWeg</span>
+                                    <span className="text-xs tracking-wider text-gray-400">AKADEMIE</span>
+                                </div>
                             </div>
-                            <p className="text-gray-400 text-sm">
-                                Your comprehensive path to German fluency with expert-led courses and live classes.
+                            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                                Your gateway to language mastery and international career opportunities. Join thousands of successful learners worldwide.
                             </p>
+                            <div className="space-y-3 text-sm text-gray-400">
+                                <a href="mailto:info@sprachweg.com" className="flex items-center gap-3 hover:text-[#d6b161] transition-colors"><Mail className="w-4 h-4" /> info@sprachweg.com</a>
+                                <a href="tel:+4930123456" className="flex items-center gap-3 hover:text-[#d6b161] transition-colors"><Phone className="w-4 h-4" /> +49 30 123 456 789</a>
+                                <div className="flex items-center gap-3"><MapPin className="w-4 h-4 shrink-0" /> Friedrichstraße 123, 10117 Berlin</div>
+                            </div>
                         </div>
 
                         <div>
-                            <h3 className="font-bold mb-4">Platform</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Courses</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Certificates</a></li>
+                            <h3 className="font-bold text-white mb-6">Language Training</h3>
+                            <ul className="space-y-3 text-sm text-gray-400">
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">English Training</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Spanish Classes</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">French Courses</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">German A1-B2</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Japanese & Chinese</Link></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="font-bold mb-4">Company</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                            <h3 className="font-bold text-white mb-6">Company</h3>
+                            <ul className="space-y-3 text-sm text-gray-400">
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">About Us</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Our Team</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Careers</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Press & Media</Link></li>
+                                <li><Link to="#" className="hover:text-[#d6b161] transition-colors">Contact</Link></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="font-bold mb-4">Legal</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Cookie Policy</a></li>
-                            </ul>
+                            <h3 className="font-serif text-2xl mb-4">Stay Updated</h3>
+                            <p className="text-gray-400 text-sm mb-6">Get the latest courses, career tips, and exclusive offers.</p>
+                            <div className="flex gap-2">
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#d6b161] w-full"
+                                />
+                                <Button className="bg-[#d6b161] text-[#0a192f] font-bold px-6 rounded-lg pointer-events-none">
+                                    Subscribe
+                                </Button>
+                            </div>
+                            <div className="flex items-center gap-4 mt-8">
+                                <span className="text-sm text-gray-400">Follow us</span>
+                                <div className="flex gap-2">
+                                    <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"><Facebook className="w-4 h-4" /></a>
+                                    <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"><Instagram className="w-4 h-4" /></a>
+                                    <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"><Linkedin className="w-4 h-4" /></a>
+                                    <a href="#" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"><Youtube className="w-4 h-4" /></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
-                        <p>&copy; 2025 SprachWeg. All rights reserved.</p>
+                    <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+                        <p>&copy; 2025 SprachWeg Akademie. All rights reserved.</p>
+                        <div className="flex gap-6">
+                            <Link to="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+                            <Link to="#" className="hover:text-white transition-colors">Terms of Service</Link>
+                            <Link to="#" className="hover:text-white transition-colors">Cookie Policy</Link>
+                        </div>
                     </div>
                 </div>
             </footer>
