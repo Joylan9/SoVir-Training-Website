@@ -89,28 +89,13 @@ const LandingPage: React.FC = () => {
                         </div>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden lg:flex items-center gap-8">
-                            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Home</Link>
-                            <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">About Us</a>
-                            <a href="#skill-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Skill Training</a>
-                            <a href="#language-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Language Training</a>
-                            <a href="#exam-prep" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Exam Preparation</a>
-                            <a href="#careers" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Careers Abroad</a>
-
-                            <div className="group relative">
-                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
-                                    Skill Training <ChevronDown className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            <div className="group relative">
-                                <button className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">
-                                    Career Abroad <ChevronDown className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">About</Link>
-                            <Link to="/contact" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors">Contact</Link>
+                        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+                            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">Home</Link>
+                            <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">About Us</a>
+                            <a href="#skill-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">Skill Training</a>
+                            <a href="#language-training" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">Language Training</a>
+                            <a href="#exam-prep" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">Exam Prep</a>
+                            <a href="#careers" className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm xl:text-base">Careers Abroad</a>
                         </div>
 
                         {/* Right Area */}
@@ -160,10 +145,11 @@ const LandingPage: React.FC = () => {
                         >
                             <div className="px-4 py-6 space-y-4">
                                 <Link to="/" className="block text-gray-700 dark:text-gray-300 font-medium">Home</Link>
-                                <Link to="/courses" className="block text-gray-700 dark:text-gray-300 font-medium">Language Training</Link>
-                                <Link to="/skills" className="block text-gray-700 dark:text-gray-300 font-medium">Skill Training</Link>
-                                <Link to="/career" className="block text-gray-700 dark:text-gray-300 font-medium">Career Abroad</Link>
-                                <Link to="/about" className="block text-gray-700 dark:text-gray-300 font-medium">About</Link>
+                                <a href="#about" className="block text-gray-700 dark:text-gray-300 font-medium" onClick={() => setIsMenuOpen(false)}>About Us</a>
+                                <a href="#skill-training" className="block text-gray-700 dark:text-gray-300 font-medium" onClick={() => setIsMenuOpen(false)}>Skill Training</a>
+                                <a href="#language-training" className="block text-gray-700 dark:text-gray-300 font-medium" onClick={() => setIsMenuOpen(false)}>Language Training</a>
+                                <a href="#exam-prep" className="block text-gray-700 dark:text-gray-300 font-medium" onClick={() => setIsMenuOpen(false)}>Exam Preparation</a>
+                                <a href="#careers" className="block text-gray-700 dark:text-gray-300 font-medium" onClick={() => setIsMenuOpen(false)}>Careers Abroad</a>
                                 <div className="pt-4 flex flex-col gap-3">
                                     <Link to="/login" className="text-center text-gray-700 dark:text-white font-medium py-2">Sign In</Link>
                                     <Link to="/register">
