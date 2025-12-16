@@ -461,7 +461,7 @@ const LanguageTraining: React.FC = () => {
                             variants={fadeInUp}
                             className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold text-[#0a192f] dark:text-white mb-4 text-center mx-auto"
                         >
-                            Why Choose SoVir Akademie?
+                            Why Choose SoVir Academy?
                         </motion.h2>
                         <motion.p
                             variants={fadeInUp}

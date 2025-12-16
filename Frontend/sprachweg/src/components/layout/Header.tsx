@@ -42,7 +42,7 @@ const Header: React.FC = () => {
                         <div className="w-8 h-8 rounded-full bg-[#d6b161] flex items-center justify-center flex-shrink-0">
                             <span className="font-serif font-bold text-lg text-[#0a192f]">S</span>
                         </div>
-                        <span className="font-serif font-bold text-base lg:text-lg text-gray-900 dark:text-white">SoVir Akademie</span>
+                        <span className="font-serif font-bold text-base lg:text-lg text-gray-900 dark:text-white">SoVir Academy</span>
                     </Link>
 
                     {/* Desktop Navigation */}

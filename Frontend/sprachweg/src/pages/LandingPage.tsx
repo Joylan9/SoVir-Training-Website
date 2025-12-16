@@ -98,7 +98,7 @@ const LandingPage: React.FC = () => {
                             </div>
 
                             <h1 className="font-sans text-5xl lg:text-7xl font-medium text-gray-900 dark:text-white leading-tight mb-6">
-                                SoVir Akademie <br />
+                                SoVir Academy <br />
                                 <span className="text-[#d6b161]">Skills, Languages</span> <br />
                                 & Global Careers
                             </h1>
@@ -241,16 +241,16 @@ const LandingPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* About SoVir Akademie */}
+                        {/* About SoVir Academy */}
                         <div className="bg-gray-50 dark:bg-[#112240] rounded-[2rem] p-10 border border-gray-100 dark:border-white/5">
                             <div className="w-14 h-14 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-6">
                                 <GraduationCap className="w-7 h-7 text-[#d6b161]" />
                             </div>
                             <h3 className="font-sans text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                                About SoVir Akademie
+                                About SoVir Academy
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                                SoVir Akademie is the training and education wing of SoVir Technologies LLP. Our academy is built to deliver practical learning, certification-oriented training, and career-focused guidance for students, working professionals, and international aspirants.
+                                SoVir Academy is the training and education wing of SoVir Technologies LLP. Our academy is built to deliver practical learning, certification-oriented training, and career-focused guidance for students, working professionals, and international aspirants.
                             </p>
                             <div className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400">
                                 <CheckCircle className="w-5 h-5 text-[#d6b161] flex-shrink-0 mt-0.5" />
@@ -801,7 +801,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="relative z-10">
                                 <p className="font-sans text-xl lg:text-2xl text-gray-800 dark:text-gray-200 leading-relaxed mb-8">
-                                    "SoVir Akademie transformed my career. From zero German to B2 in 10 months, and now I'm working as a nurse in Berlin. The live classes were engaging, and the career support was exceptional."
+                                    "SoVir Academy transformed my career. From zero German to B2 in 10 months, and now I'm working as a nurse in Berlin. The live classes were engaging, and the career support was exceptional."
                                 </p>
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-full overflow-hidden">

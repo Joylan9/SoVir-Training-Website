@@ -42,7 +42,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                                 <h1 className="font-serif font-bold text-lg text-gray-900 dark:text-white">
                                     Admin Panel
                                 </h1>
-                                <p className="text-xs text-gray-500">SoVir Akademie</p>
+                                <p className="text-xs text-gray-500">SoVir Academy</p>
                             </div>
                         </Link>
                     </div>

@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
                                 <span className="font-serif font-bold text-xl text-[#0a192f]">S</span>
                             </div>
                             <div>
-                                <span className="font-serif font-bold text-lg leading-tight text-white block">SoVir Akademie</span>
+                                <span className="font-serif font-bold text-lg leading-tight text-white block">SoVir Academy</span>
                                 <span className="text-xs tracking-wider text-gray-400">A Division of SoVir Technologies LLP</span>
                             </div>
                         </div>
@@ -135,7 +135,7 @@ const Footer: React.FC = () => {
 
                 {/* Copyright & Links */}
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-                    <p>&copy; 2025 SoVir Akademie. All rights reserved.</p>
+                    <p>&copy; 2025 SoVir Academy. All rights reserved.</p>
                     <div className="flex flex-wrap gap-4 justify-center">
                         <Link to="#" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
                         <Link to="#" className="hover:text-gray-300 transition-colors">Terms of Service</Link>
