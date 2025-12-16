@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { X, ChevronLeft, Check, AlertCircle, Phone, Mail, User, Globe, BookOpen, ChevronDown } from 'lucide-react';
+import { ChevronLeft, Check, AlertCircle, Mail, User, Globe, BookOpen, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // npm packages: framer-motion, lucide-react, react-router-dom
