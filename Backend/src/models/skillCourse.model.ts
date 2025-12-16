@@ -16,6 +16,18 @@ export interface ISkillCourse extends Document {
     startDate: string;
     mode: string;
     popular: boolean;
+    levels: {
+        name: string;
+        duration: string;
+        price: string;
+        features: string[];
+        outcome: string;
+        examPrep?: {
+            title: string;
+            details: string;
+            price: string;
+        };
+    }[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -37,6 +49,18 @@ const SkillCourseSchema: Schema = new Schema(
         startDate: { type: String, required: false },
         mode: { type: String, required: false, default: 'Live' },
         popular: { type: Boolean, default: false },
+        levels: [{
+            name: { type: String },
+            duration: { type: String },
+            price: { type: String },
+            features: [String],
+            outcome: { type: String },
+            examPrep: {
+                title: String,
+                details: String,
+                price: String
+            }
+        }],
     },
     { timestamps: true }
 );

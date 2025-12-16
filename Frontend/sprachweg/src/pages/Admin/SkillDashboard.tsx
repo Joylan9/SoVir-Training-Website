@@ -27,6 +27,18 @@ const SkillDashboard: React.FC = () => {
         features: [''],
         category: 'General',
         image: null as File | null,
+        levels: [] as {
+            name: string;
+            duration: string;
+            price: string;
+            features: string[];
+            outcome: string;
+            examPrep?: {
+                title: string;
+                details: string;
+                price: string;
+            };
+        }[],
     });
 
     useEffect(() => {
@@ -65,6 +77,7 @@ const SkillDashboard: React.FC = () => {
             formDataToSend.append('popular', String(formData.popular));
             formDataToSend.append('features', JSON.stringify(formData.features.filter(f => f.trim())));
             formDataToSend.append('category', formData.category);
+            formDataToSend.append('levels', JSON.stringify(formData.levels));
 
             if (formData.image) {
                 formDataToSend.append('image', formData.image);
@@ -104,6 +117,7 @@ const SkillDashboard: React.FC = () => {
             features: course.features?.length > 0 ? course.features : [''],
             category: course.category,
             image: null,
+            levels: course.levels || [],
         });
         setEditingId(course._id || null);
         setShowForm(true);
@@ -141,6 +155,7 @@ const SkillDashboard: React.FC = () => {
             features: [''],
             category: 'General',
             image: null,
+            levels: [],
         });
         setEditingId(null);
     };
@@ -163,6 +178,57 @@ const SkillDashboard: React.FC = () => {
         setFormData(prev => ({
             ...prev,
             features: prev.features.map((f, i) => i === index ? value : f)
+        }));
+    };
+
+    // Level Management Methods
+    const addLevel = () => {
+        setFormData(prev => ({
+            ...prev,
+            levels: [...prev.levels, {
+                name: '', duration: '', price: '', features: [], outcome: '',
+                examPrep: { title: '', details: '', price: '' }
+            }]
+        }));
+    };
+
+    const removeLevel = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            levels: prev.levels.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateLevel = (index: number, field: string, value: any) => {
+        setFormData(prev => ({
+            ...prev,
+            levels: prev.levels.map((lvl, i) => i === index ? { ...lvl, [field]: value } : lvl)
+        }));
+    };
+
+    const updateLevelFeature = (levelIndex: number, featureIndex: number, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            levels: prev.levels.map((lvl, i) => {
+                if (i !== levelIndex) return lvl;
+                const newFeatures = [...lvl.features];
+                newFeatures[featureIndex] = value;
+                return { ...lvl, features: newFeatures };
+            })
+        }));
+    };
+
+    const addLevelFeature = (levelIndex: number) => {
+        setFormData(prev => ({
+            ...prev,
+            levels: prev.levels.map((lvl, i) => i === levelIndex ? { ...lvl, features: [...lvl.features, ''] } : lvl)
+        }));
+    };
+
+    const removeLevelFeature = (levelIndex: number, featureIndex: number) => {
+        setFormData(prev => ({
+            ...prev,
+            levels: prev.levels.map((lvl, i) => i === levelIndex ? { ...lvl, features: lvl.features.filter((_, fi) => fi !== featureIndex) } : lvl)
         }));
     };
 
@@ -300,6 +366,54 @@ const SkillDashboard: React.FC = () => {
                                         ))}
                                     </div>
                                     <button type="button" onClick={addFeature} className="mt-2 text-[#d6b161] hover:text-[#c4a055] text-sm font-medium">+ Add Feature</button>
+                                </div>
+
+                                {/* Levels Editor */}
+                                <div className="border-t border-gray-200 dark:border-gray-800 pt-6">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <label className="block text-lg font-medium text-gray-900 dark:text-white">Course Levels / Packages</label>
+                                        <button type="button" onClick={addLevel} className="text-sm bg-[#d6b161]/10 text-[#d6b161] px-3 py-1 rounded-lg hover:bg-[#d6b161]/20">+ Add Level</button>
+                                    </div>
+                                    <div className="space-y-6">
+                                        {formData.levels.map((level, lIndex) => (
+                                            <div key={lIndex} className="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                                                <div className="flex justify-between mb-4">
+                                                    <h4 className="font-bold dark:text-white">Level {lIndex + 1}</h4>
+                                                    <button type="button" onClick={() => removeLevel(lIndex)} className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                                    <input type="text" placeholder="Name (e.g. Beginner/N5)" value={level.name} onChange={(e) => updateLevel(lIndex, 'name', e.target.value)} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-[#0a192f] dark:text-white" />
+                                                    <input type="text" placeholder="Duration (e.g. 40 Hours)" value={level.duration} onChange={(e) => updateLevel(lIndex, 'duration', e.target.value)} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-[#0a192f] dark:text-white" />
+                                                    <input type="text" placeholder="Price (e.g. ₹9,999)" value={level.price} onChange={(e) => updateLevel(lIndex, 'price', e.target.value)} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-[#0a192f] dark:text-white" />
+                                                    <input type="text" placeholder="Outcome" value={level.outcome} onChange={(e) => updateLevel(lIndex, 'outcome', e.target.value)} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-[#0a192f] dark:text-white" />
+                                                </div>
+
+                                                {/* Level Features */}
+                                                <div className="mb-4">
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase">Features</label>
+                                                    <div className="space-y-2 mt-2">
+                                                        {level.features.map((feat, fIndex) => (
+                                                            <div key={fIndex} className="flex gap-2">
+                                                                <input type="text" value={feat} onChange={(e) => updateLevelFeature(lIndex, fIndex, e.target.value)} className="flex-1 px-3 py-1 rounded bg-white dark:bg-[#112240] border border-gray-300 dark:border-gray-600 text-sm dark:text-white" />
+                                                                <button type="button" onClick={() => removeLevelFeature(lIndex, fIndex)} className="text-red-400"><X className="w-4 h-4" /></button>
+                                                            </div>
+                                                        ))}
+                                                        <button type="button" onClick={() => addLevelFeature(lIndex)} className="text-xs text-[#d6b161] font-semibold">+ Add Feature</button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Exam Prep Optional */}
+                                                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                                                    <label className="text-xs font-semibold text-gray-500 uppercase mb-2 block">Exam Prep Add-on (Optional)</label>
+                                                    <div className="grid grid-cols-3 gap-2">
+                                                        <input type="text" placeholder="Title" value={level.examPrep?.title || ''} onChange={(e) => updateLevel(lIndex, 'examPrep', { ...level.examPrep, title: e.target.value })} className="px-3 py-1 rounded bg-white dark:bg-[#112240] border border-gray-300 dark:border-gray-600 text-sm dark:text-white" />
+                                                        <input type="text" placeholder="Details" value={level.examPrep?.details || ''} onChange={(e) => updateLevel(lIndex, 'examPrep', { ...level.examPrep, details: e.target.value })} className="px-3 py-1 rounded bg-white dark:bg-[#112240] border border-gray-300 dark:border-gray-600 text-sm dark:text-white" />
+                                                        <input type="text" placeholder="Add-on Price" value={level.examPrep?.price || ''} onChange={(e) => updateLevel(lIndex, 'examPrep', { ...level.examPrep, price: e.target.value })} className="px-3 py-1 rounded bg-white dark:bg-[#112240] border border-gray-300 dark:border-gray-600 text-sm dark:text-white" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">

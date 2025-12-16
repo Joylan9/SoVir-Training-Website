@@ -7,7 +7,8 @@ export const createCourse = async (req: Request, res: Response) => {
     try {
         const {
             title, subtitle, level, description, features, category,
-            price, originalPrice, rating, students, duration, startDate, mode, popular
+            price, originalPrice, rating, students, duration, startDate, mode, popular,
+            levels
         } = req.body;
 
         let imagePath = '';
@@ -33,6 +34,7 @@ export const createCourse = async (req: Request, res: Response) => {
             mode: mode || 'Live',
             popular: popular === 'true' || popular === true,
             image: imagePath,
+            levels: typeof levels === 'string' ? JSON.parse(levels) : levels || [],
         });
 
         const savedCourse = await newCourse.save();
@@ -56,7 +58,8 @@ export const updateCourse = async (req: Request, res: Response) => {
         const { id } = req.params;
         const {
             title, subtitle, level, description, features, category,
-            price, originalPrice, rating, students, duration, startDate, mode, popular
+            price, originalPrice, rating, students, duration, startDate, mode, popular,
+            levels
         } = req.body;
 
         const course = await SkillCourse.findById(id);
@@ -77,7 +80,9 @@ export const updateCourse = async (req: Request, res: Response) => {
         if (duration) course.duration = duration;
         if (startDate) course.startDate = startDate;
         if (mode) course.mode = mode;
+        if (mode) course.mode = mode;
         if (typeof popular !== 'undefined') course.popular = popular === 'true' || popular === true;
+        if (levels) course.levels = typeof levels === 'string' ? JSON.parse(levels) : levels;
 
         if (req.file) {
             // Delete old image if it exists

@@ -4,9 +4,6 @@ export interface SkillCourse {
     subtitle?: string;
     level?: string;
     description: string;
-    features: string[];
-    image: string;
-    category: string;
     price?: string;
     originalPrice?: string;
     rating?: string;
@@ -15,6 +12,21 @@ export interface SkillCourse {
     startDate?: string;
     mode?: string;
     popular?: boolean;
+    features: string[];
+    category: string;
+    image?: string;
+    levels?: {
+        name: string;
+        duration: string;
+        price: string;
+        features: string[];
+        outcome: string;
+        examPrep?: {
+            title: string;
+            details: string;
+            price: string;
+        };
+    }[];
     createdAt?: Date;
     updatedAt?: Date;
 }
