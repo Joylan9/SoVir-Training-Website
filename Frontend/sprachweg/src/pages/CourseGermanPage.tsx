@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Check, ChevronRight, Clock, Target, Award, Shield, Globe } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import EnrollmentModal from '../components/ui/EnrollmentModal';
 import { languageAPI } from '../lib/api';
 import type { SkillCourse } from '../types/skill';
 
@@ -34,14 +34,14 @@ const HeroBackground: React.FC = () => {
 interface CourseLevelCardProps {
   level: NonNullable<SkillCourse['levels']>[number];
   index: number;
+  onEnroll: () => void;
 }
 
-const CourseLevelCard: React.FC<CourseLevelCardProps> = ({ level, index }) => {
-  const navigate = useNavigate();
+const CourseLevelCard: React.FC<CourseLevelCardProps> = ({ level, index, onEnroll }) => {
   const shouldReduceMotion = useReducedMotion();
 
   const handleEnroll = () => {
-    navigate('/register');
+    onEnroll();
   };
 
 
@@ -185,6 +185,7 @@ const CourseGermanPage: React.FC = () => {
   const [course, setCourse] = useState<SkillCourse | null>(null);
   const [loading, setLoading] = useState(true);
   const [openFAQ, setOpenFAQ] = useState<string | null>(null);
+  const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -315,6 +316,7 @@ const CourseGermanPage: React.FC = () => {
                   key={index}
                   level={level}
                   index={index}
+                  onEnroll={() => setIsEnrollModalOpen(true)}
                 />
               ))}
             </div>
@@ -376,6 +378,12 @@ const CourseGermanPage: React.FC = () => {
       </main>
 
       <Footer />
+      <EnrollmentModal
+        isOpen={isEnrollModalOpen}
+        onClose={() => setIsEnrollModalOpen(false)}
+        origin="german"
+        originPath="/training/german"
+      />
     </div>
   );
 };

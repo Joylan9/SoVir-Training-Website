@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+// ... imports
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView, useAnimation, type Easing } from 'framer-motion';
 import {
@@ -15,8 +16,9 @@ import {
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import BookingForm from '../components/ui/BookingForm';
 
-// Typed easing value
+// ... (keep all existing constants and subcomponents like stats, languageCards, benefits, StarRating, LanguageCard, BenefitCard)
 const easeOut: Easing = [0.0, 0.0, 0.2, 1];
 
 // Animation variants
@@ -300,13 +302,15 @@ const BenefitCard: React.FC<{
 
 // Main Component
 const LanguageTraining: React.FC = () => {
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
             <Header />
 
             {/* Hero Section */}
             <section className="relative bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden">
-                {/* Animated background elements */}
+                {/* ... (animated background) */}
                 <div className="absolute inset-0 overflow-hidden">
                     <motion.div
                         animate={{
@@ -358,15 +362,14 @@ const LanguageTraining: React.FC = () => {
 
                         {/* CTA Buttons */}
                         <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/book-trial">
-                                <motion.button
-                                    whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(214, 177, 97, 0.3)' }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-[#d6b161] text-[#0a192f] font-bold rounded-xl hover:bg-[#c4a055] transition-all shadow-lg"
-                                >
-                                    Start Learning Today
-                                </motion.button>
-                            </Link>
+                            <motion.button
+                                onClick={() => setIsBookingOpen(true)}
+                                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(214, 177, 97, 0.3)' }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 bg-[#d6b161] text-[#0a192f] font-bold rounded-xl hover:bg-[#c4a055] transition-all shadow-lg"
+                            >
+                                Start Learning Today
+                            </motion.button>
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -508,15 +511,14 @@ const LanguageTraining: React.FC = () => {
                             variants={fadeInUp}
                             className="flex flex-col sm:flex-row gap-4 justify-center"
                         >
-                            <Link to="/book-trial">
-                                <motion.button
-                                    whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(214, 177, 97, 0.4)' }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-[#d6b161] text-[#0a192f] font-bold rounded-xl hover:bg-[#c4a055] transition-all shadow-lg"
-                                >
-                                    Book Free Trial
-                                </motion.button>
-                            </Link>
+                            <motion.button
+                                onClick={() => setIsBookingOpen(true)}
+                                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(214, 177, 97, 0.4)' }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 bg-[#d6b161] text-[#0a192f] font-bold rounded-xl hover:bg-[#c4a055] transition-all shadow-lg"
+                            >
+                                Book Free Trial
+                            </motion.button>
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -529,6 +531,7 @@ const LanguageTraining: React.FC = () => {
                 </div>
             </section>
 
+            <BookingForm isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
             <Footer />
         </div>
     );
