@@ -147,13 +147,8 @@ const LandingPage: React.FC = () => {
                                     transition={{ delay: 0.5 }}
                                     className="absolute top-8 left-[-1rem] lg:left-[-2rem] bg-[#1a2b4b] p-4 rounded-xl shadow-xl flex items-center gap-4 max-w-xs border border-white/10"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-[#2a3b5b] flex items-center justify-center text-[#d6b161]">
-                                        <CheckCircle className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <div className="text-white font-medium">Goethe Certified</div>
-                                        <div className="text-gray-400 text-xs">Exam Prep Program</div>
-                                    </div>
+
+
                                 </motion.div>
 
                                 <motion.div
@@ -675,11 +670,11 @@ const LandingPage: React.FC = () => {
                             <div className="w-12 h-12 rounded-xl bg-[#d6b161]/10 flex items-center justify-center mb-4">
                                 <Globe className="w-6 h-6 text-[#d6b161]" />
                             </div>
-                            <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white mb-3">French Language</h3>
+                            <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white mb-3">German Language</h3>
                             <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Beginner to Advanced</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Conversational French</li>
-                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Written French</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Conversational German</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-[#d6b161] mt-0.5" /> Written German</li>
                             </ul>
                         </div>
 
