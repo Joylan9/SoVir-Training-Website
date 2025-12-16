@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     BookOpen, Video, TrendingUp, Award, User, Settings,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/layout';
+import { dashboardAPI } from '../lib/api';
 
 // --- Types & Interfaces ---
 
@@ -35,6 +36,17 @@ interface WeekGroup {
     lessons: { id: string; title: string; duration: string; isCompleted: boolean }[];
 }
 
+interface DashboardData {
+    courses: Course[];
+    upcomingClasses: LiveClass[];
+    stats: {
+        streak: number;
+        certificates: number;
+        weeklyGoalHours: number;
+        completedHours: number;
+    };
+}
+
 // --- Framer Motion Variants ---
 
 const variants = {
@@ -57,48 +69,7 @@ const variants = {
     }
 };
 
-// --- Mock Data ---
-
-const MOCK_COURSES: Course[] = [
-    {
-        id: 'c1',
-        title: 'German A1: Absolute Beginner',
-        progress: 45,
-        lastWatched: '2h ago',
-        difficulty: 'Beginner',
-        thumbnail: '🇩🇪',
-        totalLessons: 24,
-        completedLessons: 11
-    },
-    {
-        id: 'c2',
-        title: 'Business German Communication',
-        progress: 12,
-        lastWatched: '1d ago',
-        difficulty: 'Intermediate',
-        thumbnail: '💼',
-        totalLessons: 18,
-        completedLessons: 2
-    },
-    {
-        id: 'c3',
-        title: 'Japanese N5 Prep',
-        progress: 0,
-        lastWatched: 'Never',
-        difficulty: 'Beginner',
-        thumbnail: '🇯🇵',
-        totalLessons: 30,
-        completedLessons: 0
-    }
-];
-
-const MOCK_LIVE_CLASS: LiveClass = {
-    id: 'l1',
-    title: 'German Pronunciation Masterclass',
-    startsAt: new Date(Date.now() + 1000 * 60 * 15).toISOString(), // Starts in 15 mins
-    instructor: 'Dr. Schmidt',
-    status: 'upcoming'
-};
+// --- Mock Data (Retained for structure fallback / Timeline) ---
 
 const MOCK_TIMELINE: WeekGroup[] = [
     {
@@ -123,7 +94,7 @@ const MOCK_TIMELINE: WeekGroup[] = [
 
 // --- Components ---
 
-const HeroCard: React.FC<{ user: any }> = ({ user }) => (
+const HeroCard: React.FC<{ user: any; stats: DashboardData['stats'] }> = ({ user, stats }) => (
     <motion.div
         variants={variants.pageEntry}
         initial="initial"
@@ -134,7 +105,7 @@ const HeroCard: React.FC<{ user: any }> = ({ user }) => (
             <div>
                 <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name || 'Student'}! 👋</h1>
                 <p className="text-orange-50 opacity-90 text-lg max-w-xl">
-                    You're on a 5-day streak! Keep it up to reach your weekly goal of 10 hours.
+                    You're on a {stats?.streak || 0}-day streak! Keep it up to reach your weekly goal of {stats?.weeklyGoalHours || 10} hours.
                 </p>
                 <div className="mt-6 flex gap-4">
                     <button className="bg-white text-orange-600 px-6 py-3 rounded-xl font-bold hover:bg-orange-50 transition-colors shadow-sm flex items-center gap-2">
@@ -153,7 +124,7 @@ const HeroCard: React.FC<{ user: any }> = ({ user }) => (
                         <circle cx="40" cy="40" r="32" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/20" />
                         <motion.circle
                             initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 0.65 }}
+                            animate={{ pathLength: (stats?.completedHours || 0) / (stats?.weeklyGoalHours || 10) }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
                             cx="40" cy="40" r="32"
                             stroke="currentColor"
@@ -163,10 +134,12 @@ const HeroCard: React.FC<{ user: any }> = ({ user }) => (
                             className="text-white"
                         />
                     </svg>
-                    <div className="absolute inset-0 flex items-center justify-center font-bold text-lg">65%</div>
+                    <div className="absolute inset-0 flex items-center justify-center font-bold text-lg">
+                        {Math.round(((stats?.completedHours || 0) / (stats?.weeklyGoalHours || 10)) * 100)}%
+                    </div>
                 </div>
                 <div>
-                    <div className="text-2xl font-bold">6.5h</div>
+                    <div className="text-2xl font-bold">{stats?.completedHours || 0}h</div>
                     <div className="text-sm opacity-80">Weekly Goal</div>
                 </div>
             </div>
@@ -203,7 +176,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => (
                 {course.difficulty}
             </span>
             <span className="text-xs text-gray-400 flex items-center gap-1">
-                <Clock className="w-3 h-3" /> {course.lastWatched}
+                <Clock className="w-3 h-3" /> {course.lastWatched || 'Never'}
             </span>
         </div>
 
@@ -242,11 +215,11 @@ const LiveClassWidget: React.FC<{ liveClass: LiveClass }> = ({ liveClass }) => (
 
         <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{liveClass.title}</h4>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex items-center gap-2">
-            <User className="w-4 h-4" /> {liveClass.instructor} • Starts in 15m
+            <User className="w-4 h-4" /> {liveClass.instructor} • {new Date(liveClass.startsAt).toLocaleString()}
         </p>
 
         <button className="w-full py-3 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-            Join Waitlist
+            Join Class
         </button>
     </div>
 );
@@ -287,20 +260,20 @@ const TimelineWidget: React.FC = () => (
     </div>
 );
 
-const UserStats: React.FC = () => (
+const UserStats: React.FC<{ stats: DashboardData['stats'] }> = ({ stats }) => (
     <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-orange-50 dark:bg-orange-900/10 p-4 rounded-2xl">
             <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600 mb-3">
                 <TrendingUp className="w-5 h-5" />
             </div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">12</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.streak || 0}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">Day Streak</div>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-2xl">
             <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 mb-3">
                 <Award className="w-5 h-5" />
             </div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">4</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.certificates || 0}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">Certificates</div>
         </div>
     </div>
@@ -310,6 +283,30 @@ const UserStats: React.FC = () => (
 
 const DashboardPage: React.FC = () => {
     const { user } = useAuth();
+    const [data, setData] = useState<DashboardData | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            try {
+                const result = await dashboardAPI.getStudentData();
+                setData(result);
+            } catch (error) {
+                console.error("Failed to fetch dashboard data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDashboard();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
@@ -353,7 +350,7 @@ const DashboardPage: React.FC = () => {
                     {/* MAIN CONTENT AREA */}
                     <div className="col-span-12 lg:col-span-7 space-y-8">
                         {/* 1. Hero Section */}
-                        <HeroCard user={user} />
+                        <HeroCard user={user} stats={data?.stats!} />
 
                         {/* 2. Continued Learning Carousel */}
                         <section>
@@ -369,11 +366,18 @@ const DashboardPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
-                                {MOCK_COURSES.map(course => (
-                                    <div key={course.id} className="snap-start">
-                                        <CourseCard course={course} />
+                                {data?.courses && data.courses.length > 0 ? (
+                                    data.courses.map(course => (
+                                        <div key={course.id} className="snap-start">
+                                            <CourseCard course={course} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-12 p-8 text-center bg-gray-100 dark:bg-gray-800 rounded-2xl">
+                                        <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                                        <p className="text-gray-500">No courses enrolled yet.</p>
                                     </div>
-                                ))}
+                                )}
                             </div>
                         </section>
 
@@ -387,10 +391,16 @@ const DashboardPage: React.FC = () => {
                     {/* RIGHT SIDEBAR (Sticky) */}
                     <div className="col-span-12 lg:col-span-3 space-y-6">
                         {/* Live Class Widget */}
-                        <LiveClassWidget liveClass={MOCK_LIVE_CLASS} />
+                        {data?.upcomingClasses && data.upcomingClasses.length > 0 ? (
+                            <LiveClassWidget liveClass={data.upcomingClasses[0]} />
+                        ) : (
+                            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-sm">
+                                <p className="text-gray-400 text-sm">No upcoming classes</p>
+                            </div>
+                        )}
 
                         {/* Quick Stats */}
-                        <UserStats />
+                        <UserStats stats={data?.stats!} />
 
                         {/* Timeline (Desktop) */}
                         <div className="hidden lg:block">

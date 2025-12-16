@@ -40,6 +40,37 @@ export const authAPI = {
     },
 };
 
+// Dashboard API
+export const dashboardAPI = {
+    getStudentData: async () => {
+        const response = await api.get('/dashboard/student');
+        return response.data;
+    },
+    getTrainerData: async () => {
+        const response = await api.get('/dashboard/trainer');
+        return response.data;
+    }
+};
+
+export const enrollmentAPI = {
+    enroll: async (courseId: string) => {
+        const response = await api.post('/enrollment/enroll', { courseId });
+        return response.data;
+    },
+    getPending: async () => {
+        const response = await api.get('/enrollment/pending');
+        return response.data;
+    },
+    accept: async (enrollmentId: string) => {
+        const response = await api.post('/enrollment/accept', { enrollmentId });
+        return response.data;
+    },
+    reject: async (enrollmentId: string) => {
+        const response = await api.post('/enrollment/reject', { enrollmentId });
+        return response.data;
+    }
+};
+
 // Skill Course API
 export const skillAPI = {
     async getAll() {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Users, Calendar, CheckSquare, DollarSign,
@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 
 import { Header } from '../components/layout';
+import { dashboardAPI, enrollmentAPI } from '../lib/api';
 
 // --- Types ---
 
@@ -17,6 +18,13 @@ interface Student {
     attendance: number;
     lastActive: string;
     status: 'active' | 'at-risk' | 'inactive';
+}
+
+interface PendingEnrollment {
+    _id: string;
+    studentId: { _id: string; name: string; email: string };
+    courseId: { _id: string; title: string };
+    createdAt: string;
 }
 
 interface Batch {
@@ -37,6 +45,17 @@ interface ClassSession {
     status: 'upcoming' | 'live' | 'completed';
 }
 
+interface TrainerDashboardData {
+    stats: {
+        totalStudents: number;
+        avgAttendance: number;
+        earnings: number;
+    };
+    batches: Batch[];
+    upcomingClasses: ClassSession[];
+    students: Student[];
+}
+
 // --- Framer Motion Variants ---
 
 const variants = {
@@ -53,25 +72,6 @@ const variants = {
         open: { x: 0, opacity: 1, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] as const } }
     }
 };
-
-// --- Mock Data ---
-
-const MOCK_BATCHES: Batch[] = [
-    { id: 'b1', name: 'Batch A - Morning', course: 'German A1', students: 24, attendance: 92, nextClass: 'Today, 10:00 AM' },
-    { id: 'b2', name: 'Batch B - Evening', course: 'Business German', students: 18, attendance: 85, nextClass: 'Tomorrow, 6:00 PM' },
-];
-
-const MOCK_CLASSES: ClassSession[] = [
-    { id: 'c1', title: 'Modal Verbs Practice', time: '10:00 AM - 11:30 AM', batch: 'Batch A', attendees: 22, status: 'upcoming' },
-];
-
-const MOCK_STUDENTS: Student[] = [
-    { id: 's1', name: 'Rahul Verma', email: 'rahul@example.com', attendance: 95, lastActive: '2h ago', status: 'active' },
-    { id: 's2', name: 'Priya Singh', email: 'priya@example.com', attendance: 82, lastActive: '1d ago', status: 'active' },
-    { id: 's3', name: 'Amit Kumar', email: 'amit@example.com', attendance: 60, lastActive: '5d ago', status: 'at-risk' },
-    { id: 's4', name: 'Sneha Gupta', email: 'sneha@example.com', attendance: 98, lastActive: '10m ago', status: 'active' },
-    { id: 's5', name: 'Vikram Malhotra', email: 'vikram@example.com', attendance: 45, lastActive: '2w ago', status: 'inactive' },
-];
 
 // --- Components ---
 
@@ -229,6 +229,46 @@ const GradingDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
 
 const TrainerDashboard: React.FC = () => {
     const [isGradingOpen, setIsGradingOpen] = useState(false);
+    const [data, setData] = useState<TrainerDashboardData | null>(null);
+    const [pendingEnrollments, setPendingEnrollments] = useState<PendingEnrollment[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchDashboard = async () => {
+        try {
+            const result = await dashboardAPI.getTrainerData();
+            setData(result);
+            const pending = await enrollmentAPI.getPending();
+            setPendingEnrollments(pending);
+        } catch (error) {
+            console.error("Failed to fetch trainer dashboard", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDashboard();
+    }, []);
+
+    const handleAcceptEnrollment = async (enrollmentId: string) => {
+        try {
+            await enrollmentAPI.accept(enrollmentId);
+            // Refresh data
+            fetchDashboard();
+            alert('Student enrolled successfully!');
+        } catch (error) {
+            console.error("Failed to accept enrollment", error);
+            alert('Failed to accept enrollment');
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
@@ -264,26 +304,56 @@ const TrainerDashboard: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <StatCard
                                 title="Total Students"
-                                value="142"
+                                value={data?.stats.totalStudents.toString() || "0"}
                                 subtext="vs last month"
                                 icon={Users}
                                 color="bg-blue-500"
                             />
                             <StatCard
                                 title="Avg. Attendance"
-                                value="88%"
+                                value={`${data?.stats.avgAttendance || 0}%`}
                                 subtext="vs last month"
                                 icon={CheckSquare}
                                 color="bg-green-500"
                             />
                             <StatCard
                                 title="Est. Earnings"
-                                value="€ 2,840"
+                                value={`€ ${data?.stats.earnings || 0}`}
                                 subtext="this month"
                                 icon={DollarSign}
                                 color="bg-purple-500"
                             />
                         </div>
+
+                        {/* Pending Enrollments Section */}
+                        {pendingEnrollments.length > 0 && (
+                            <section className="bg-yellow-50 dark:bg-yellow-900/10 rounded-2xl border border-yellow-100 dark:border-yellow-900/30 p-6">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Pending Enrollment Requests</h2>
+                                <div className="space-y-3">
+                                    {pendingEnrollments.map(req => (
+                                        <div key={req._id} className="bg-white dark:bg-gray-800 p-4 rounded-xl flex items-center justify-between shadow-sm">
+                                            <div>
+                                                <h4 className="font-bold text-gray-900 dark:text-white">{req.studentId.name}</h4>
+                                                <p className="text-xs text-gray-500">Requesting: {req.courseId.title}</p>
+                                                <p className="text-xs text-gray-400">{req.studentId.email}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleAcceptEnrollment(req._id)}
+                                                    className="px-4 py-2 bg-green-600 text-white text-xs font-bold rounded-lg hover:bg-green-700"
+                                                >
+                                                    Accept
+                                                </button>
+                                                <button className="px-4 py-2 bg-red-100 text-red-600 text-xs font-bold rounded-lg hover:bg-red-200">
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
 
                         {/* Active Batches */}
                         <section>
@@ -292,9 +362,14 @@ const TrainerDashboard: React.FC = () => {
                                 <button className="text-sm text-indigo-600 font-semibold hover:underline">View All</button>
                             </h2>
                             <div className="grid md:grid-cols-2 gap-6">
-                                {MOCK_BATCHES.map(batch => (
+                                {data?.batches.map(batch => (
                                     <BatchCard key={batch.id} batch={batch} />
                                 ))}
+                                {(!data?.batches || data.batches.length === 0) && (
+                                    <div className="col-span-2 text-center text-gray-500 py-8 bg-white dark:bg-gray-800 rounded-xl">
+                                        No active batches found.
+                                    </div>
+                                )}
                             </div>
                         </section>
 
@@ -329,7 +404,7 @@ const TrainerDashboard: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                                        {MOCK_STUDENTS.map(student => (
+                                        {data?.students.map(student => (
                                             <motion.tr
                                                 key={student.id}
                                                 variants={variants.tableRowHover}
@@ -380,6 +455,13 @@ const TrainerDashboard: React.FC = () => {
                                                 </td>
                                             </motion.tr>
                                         ))}
+                                        {(!data?.students || data.students.length === 0) && (
+                                            <tr>
+                                                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                                                    No students found in active batches.
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -396,7 +478,7 @@ const TrainerDashboard: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-4">Upcoming Classes</h3>
                             <div className="space-y-4">
-                                {MOCK_CLASSES.map(cls => (
+                                {data?.upcomingClasses.map(cls => (
                                     <div key={cls.id} className="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700/50">
                                         <div className="flex justify-between items-start mb-2">
                                             <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded uppercase">
@@ -408,13 +490,18 @@ const TrainerDashboard: React.FC = () => {
                                         </div>
                                         <h4 className="font-bold text-gray-900 dark:text-white mb-1">{cls.title}</h4>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1">
-                                            <Clock className="w-3 h-3" /> {cls.time}
+                                            <Clock className="w-3 h-3" /> {new Date(cls.time).toLocaleString()}
                                         </p>
                                         <button className="w-full py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-colors">
                                             Start Class
                                         </button>
                                     </div>
                                 ))}
+                                {(!data?.upcomingClasses || data.upcomingClasses.length === 0) && (
+                                    <div className="text-center text-gray-500 text-sm">
+                                        No upcoming classes.
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -445,5 +532,4 @@ const TrainerDashboard: React.FC = () => {
         </div>
     );
 };
-
 export default TrainerDashboard;

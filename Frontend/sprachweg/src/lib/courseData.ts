@@ -57,7 +57,6 @@ export interface Trainer {
   linkedinUrl?: string;
   twitterUrl?: string;
 }
-import { useEffect, useState } from 'react';
 
 export interface CourseData {
   slug: 'english' | 'german' | 'japanese';

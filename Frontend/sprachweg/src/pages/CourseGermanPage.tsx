@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { germanCourseData } from '../lib/courseData';
-import type { Batch, CurriculumModule, FAQItem, PricingPlan, Review, Trainer, CurriculumItemType } from '../lib/courseData';
+import type { Batch, CurriculumModule, PricingPlan, Review, Trainer, FAQItem, CurriculumItemType } from '../lib/courseData';
+import { enrollmentAPI, skillAPI } from '../lib/api';
 
 
 // --- LOCAL DATA EXTENSIONS (INLINE ONLY) ---
@@ -472,9 +473,10 @@ const CourseHero: React.FC<CourseHeroProps> = ({
 // 3. BatchCard (Restored)
 interface BatchCardProps {
   batch: Batch;
+  onEnroll: () => void;
 }
 
-const BatchCard: React.FC<BatchCardProps> = ({ batch }) => {
+const BatchCard: React.FC<BatchCardProps> = ({ batch, onEnroll }) => {
   const isAlmostFull = batch.seatsLeft > 0 && batch.seatsLeft <= 5;
   const capacityPercent = batch.seatsLeft > 0 ? (batch.seatsLeft / 20) * 100 : 0; // Assuming max 20 seats
 
@@ -538,6 +540,7 @@ const BatchCard: React.FC<BatchCardProps> = ({ batch }) => {
         type="button"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={onEnroll}
         className="mt-6 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-[#0a192f] px-4 py-3 text-sm font-semibold text-white hover:bg-[#112240] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b161] focus-visible:ring-offset-2 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200"
       >
         {batch.isWaitlist ? 'Join Waitlist' : 'Enroll in this Batch'}
@@ -780,7 +783,7 @@ const AnimatedCounter: React.FC<{ value: number; suffix?: string }> = ({ value, 
 
   return (
     <span className="font-semibold text-[#0a192f] dark:text-gray-50">
-      {shouldReduceMotion ? value : (rounded as unknown as number)}
+      {shouldReduceMotion ? value : <motion.span>{rounded}</motion.span>}
       {suffix}
     </span>
   );
@@ -929,6 +932,36 @@ const CourseGermanPage: React.FC = () => {
       descriptionMeta.setAttribute('content', course.metaDescription);
     }
   }, [course.metaTitle, course.metaDescription]);
+
+  // Enrollment Logic
+  const [dbCourseId, setDbCourseId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDbCourse = async () => {
+      try {
+        const courses = await skillAPI.getAll();
+        // Simple fuzzy match for prototype
+        const found = courses.find((c: any) => c.title.toLowerCase().includes('german'));
+        if (found) setDbCourseId(found._id);
+      } catch (e) {
+        console.error("Failed to fetch DB courses", e);
+      }
+    };
+    fetchDbCourse();
+  }, []);
+
+  const handleEnroll = async () => {
+    if (!dbCourseId) {
+      alert("Course not found in database. Please contact support.");
+      return;
+    }
+    try {
+      await enrollmentAPI.enroll(dbCourseId);
+      alert("Enrollment request sent! Please wait for trainer approval.");
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Enrollment failed");
+    }
+  };
 
   const activePricing = activeTrack === 'LIVE' ? course.pricingLive : course.pricingRecorded;
 
@@ -1086,7 +1119,7 @@ const CourseGermanPage: React.FC = () => {
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {course.batchesLive.map((batch) => (
-                    <BatchCard key={batch.id} batch={batch} />
+                    <BatchCard key={batch.id} batch={batch} onEnroll={handleEnroll} />
                   ))}
                 </div>
               </section>
