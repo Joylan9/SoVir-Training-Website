@@ -32,6 +32,14 @@ api.interceptors.response.use(
     }
 );
 
+// Auth API
+export const authAPI = {
+    async resetPassword(data: { email: string; otp: string; newPassword: string }) {
+        const response = await api.post('/auth/reset-password', data);
+        return response.data;
+    },
+};
+
 // Skill Course API
 export const skillAPI = {
     async getAll() {
