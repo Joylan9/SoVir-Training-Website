@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
     BookOpen,
     Users,
     Video,
     Upload,
     FileText,
-    TrendingUp,
     DollarSign,
     Bell,
     Calendar,
@@ -137,11 +136,10 @@ const StatCard: React.FC<{
 };
 
 const CourseManagementCard: React.FC<{ course: TrainerCourse }> = ({ course }) => {
-    const shouldReduceMotion = useReducedMotion();
 
     return (
         <motion.div
-            whileHover={shouldReduceMotion ? {} : { y: -4 }}
+            whileHover={{ y: -4 }}
             className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
         >
             <div className="mb-4 flex items-start justify-between">
@@ -197,9 +195,6 @@ const TrainerDashboard: React.FC = () => {
     const [liveSession, setLiveSession] = useState<LiveSession>(mockLiveSession);
     const [students] = useState<StudentPerformance[]>(mockStudents);
     const [pendingGrading] = useState<PendingGrading[]>(mockPendingGrading);
-    const [showUploadModal, setShowUploadModal] = useState(false);
-    const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
-    const shouldReduceMotion = useReducedMotion();
 
     const handleStartLiveClass = () => {
         // TODO: Integrate with backend
@@ -221,7 +216,7 @@ const TrainerDashboard: React.FC = () => {
 
     const handleUploadMaterial = () => {
         // TODO: Integrate with backend
-        setShowUploadModal(true);
+        alert('Upload modal would open here');
     };
 
     return (
@@ -430,7 +425,7 @@ const TrainerDashboard: React.FC = () => {
                             <h3 className="mb-4 text-lg font-bold text-[#0a192f] dark:text-white">Quick Actions</h3>
                             <div className="space-y-2">
                                 <button
-                                    onClick={() => setShowAnnouncementModal(true)}
+                                    onClick={() => alert('Announcement modal would open here')}
                                     className="flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
                                 >
                                     <Bell className="h-5 w-5 text-[#d6b161]" />

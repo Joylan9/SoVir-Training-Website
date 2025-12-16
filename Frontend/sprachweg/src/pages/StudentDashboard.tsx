@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
     BookOpen,
     Clock,
@@ -11,7 +11,6 @@ import {
     Download,
     Play,
     CheckCircle,
-    AlertCircle,
     Bell,
     CreditCard,
     User,
@@ -190,7 +189,6 @@ const ProgressRing: React.FC<{ progress: number; size?: number }> = ({ progress,
 };
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
-    const shouldReduceMotion = useReducedMotion();
 
     const handleJoinLive = () => {
         // TODO: Integrate with backend
@@ -203,7 +201,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
 
     return (
         <motion.div
-            whileHover={shouldReduceMotion ? {} : { y: -4 }}
+            whileHover={{ y: -4 }}
             className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
         >
             <div className="mb-4 flex items-start justify-between">
@@ -227,16 +225,16 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
 
             <div className="flex gap-3">
                 <motion.button
-                    whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleJoinLive}
                     className="flex-1 rounded-lg bg-[#d6b161] px-4 py-2 text-sm font-semibold text-[#0a192f] transition-colors hover:bg-[#c4a055]"
                 >
                     Join Live
                 </motion.button>
                 <motion.button
-                    whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className="flex-1 rounded-lg border-2 border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-[#d6b161] hover:text-[#d6b161] dark:border-gray-600 dark:text-gray-300"
                 >
                     View Schedule
@@ -276,7 +274,6 @@ const StudentDashboard: React.FC = () => {
     const [recordings] = useState<Recording[]>(mockRecordings);
     const [assignments] = useState<Assignment[]>(mockAssignments);
     const [announcements] = useState<Announcement[]>(mockAnnouncements);
-    const shouldReduceMotion = useReducedMotion();
 
     // TODO: Replace with actual API call
     useEffect(() => {
