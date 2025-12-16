@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Users, Calendar, CheckSquare, BarChart2, DollarSign, MessageSquare,
-    MoreHorizontal, Search, X, Check, Filter, ChevronDown, Download,
-    Video, Edit3, Eye, FileText, Send, Mic, Clock
+    Users, Calendar, CheckSquare, DollarSign,
+    MoreHorizontal, Search, X, Filter,
+    Video, Edit3, FileText, Send, Clock
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+
 import { Header } from '../components/layout';
 
 // --- Types ---
@@ -42,7 +42,7 @@ interface ClassSession {
 const variants = {
     pageEntry: {
         initial: { opacity: 0, y: 12 },
-        enter: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] } },
+        enter: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] as const } },
     },
     tableRowHover: {
         rest: { scale: 1, y: 0, zIndex: 1, boxShadow: "0 0 0 rgba(0,0,0,0)" },
@@ -50,7 +50,7 @@ const variants = {
     },
     drawerOpen: {
         closed: { x: "100%", opacity: 0, transition: { duration: 0.2 } },
-        open: { x: 0, opacity: 1, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] } }
+        open: { x: 0, opacity: 1, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] as const } }
     }
 };
 
@@ -228,7 +228,6 @@ const GradingDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
 // --- Main Trainer Dashboard Component ---
 
 const TrainerDashboard: React.FC = () => {
-    const { user } = useAuth();
     const [isGradingOpen, setIsGradingOpen] = useState(false);
 
     return (

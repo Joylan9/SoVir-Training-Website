@@ -911,7 +911,7 @@ const CourseEnglishPage: React.FC = () => {
 
   const [activeTrack, setActiveTrack] = React.useState<'LIVE' | 'RECORDED'>('LIVE');
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(false);
+  const [error] = React.useState(false);
 
   // Simulate loading effect
   useEffect(() => {

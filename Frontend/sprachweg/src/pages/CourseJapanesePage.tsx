@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence, useMotionValue, useAnimationFrame, useInView } from 'framer-motion';
-import { Star, Check, Users, Award, TrendingUp, Clock, Calendar, ChevronRight, ArrowRight, BookOpen, Target, Zap, Shield, Globe } from 'lucide-react';
+import { Star, Check, Users, Award, TrendingUp, Clock, Calendar, ChevronRight, ArrowRight, BookOpen, Target, Zap, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -911,7 +911,7 @@ const CourseJapanesePage: React.FC = () => {
 
   const [activeTrack, setActiveTrack] = React.useState<'LIVE' | 'RECORDED'>('LIVE');
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(false);
+  const [error] = React.useState(false);
 
   // Simulate loading effect
   useEffect(() => {

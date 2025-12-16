@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { } from 'react';
+import { motion } from 'framer-motion';
 import {
-    BookOpen, Video, TrendingUp, Award, Bell, Settings, User,
+    BookOpen, Video, TrendingUp, Award, User, Settings,
     Home, Calendar, Clock, ChevronRight, Play, CheckCircle,
-    MoreHorizontal, Search, Menu, X, Mic, Camera, Wifi
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/layout';
 
@@ -42,17 +40,17 @@ interface WeekGroup {
 const variants = {
     pageEntry: {
         initial: { opacity: 0, y: 12 },
-        enter: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] } },
+        enter: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] as const } },
         exit: { opacity: 0, y: 8, transition: { duration: 0.18 } }
     },
     cardHover: {
         rest: { scale: 1, y: 0 },
-        hover: { scale: 1.02, y: -4, transition: { duration: 0.18, ease: [0.2, 0, 0, 1] } },
+        hover: { scale: 1.02, y: -4, transition: { duration: 0.18, ease: [0.2, 0, 0, 1] as const } },
         tap: { scale: 0.98, transition: { duration: 0.1 } }
     },
     drawerOpen: {
         closed: { x: "100%", opacity: 0, transition: { duration: 0.2 } },
-        open: { x: 0, opacity: 1, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] } }
+        open: { x: 0, opacity: 1, transition: { duration: 0.32, ease: [0.2, 0.8, 0.2, 1] as const } }
     },
     pulseLive: {
         pulse: { scale: [1, 1.2, 1], opacity: [1, 0.5, 1], transition: { repeat: Infinity, duration: 2 } }
@@ -199,8 +197,8 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => (
 
         <div className="flex justify-between items-start mb-2">
             <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${course.difficulty === 'Beginner' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                    course.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                        'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                course.difficulty === 'Intermediate' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                    'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
                 }`}>
                 {course.difficulty}
             </span>
@@ -333,8 +331,8 @@ const DashboardPage: React.FC = () => {
                                 <button
                                     key={i}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${item.active
-                                            ? 'bg-white dark:bg-gray-800 text-orange-600 shadow-sm font-semibold'
-                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                        ? 'bg-white dark:bg-gray-800 text-orange-600 shadow-sm font-semibold'
+                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                                         }`}
                                 >
                                     <item.icon className="w-5 h-5" />
