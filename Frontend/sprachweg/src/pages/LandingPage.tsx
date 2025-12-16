@@ -75,7 +75,7 @@ const LandingPage: React.FC = () => {
         }
     ];
 
-    const partners = ['Goethe Institut', 'TELC', 'TestDaF', 'ÖSD', 'Make it in Germany', 'IHK'];
+    const partners = ['Goethe', 'TELC', 'TestDaF', 'ÖSD', 'ILETS'];
 
     return (
         <div className="min-h-screen bg-white dark:bg-[#0a192f] transition-colors duration-300 font-sans">
@@ -364,7 +364,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="p-8">
                                 <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                                    Fast-track to nursing career in Germany with recognition support and employer matching.
+                                    Fast-track to nursing career in Canada with recognition support and employer matching.
                                 </p>
 
                                 <div className="grid grid-cols-3 gap-4 mb-8">
@@ -413,7 +413,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div className="p-8">
                                 <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                                    Connect with German employers hiring international talent across various sectors.
+                                    Connect with Japanese Tech employers hiring international talent across various sectors.
                                 </p>
 
                                 <div className="grid grid-cols-3 gap-4 mb-8">
