@@ -286,7 +286,7 @@ const Header: React.FC = () => {
                                     <div>
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Destinations</h3>
                                         <div className="space-y-3">
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🇨🇦</span>
                                                 </div>
@@ -304,7 +304,7 @@ const Header: React.FC = () => {
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">German work programs</p>
                                                 </div>
                                             </Link>
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🇦🇺</span>
                                                 </div>
@@ -313,7 +313,7 @@ const Header: React.FC = () => {
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">Australian job placement</p>
                                                 </div>
                                             </Link>
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🇬🇧</span>
                                                 </div>
@@ -329,7 +329,7 @@ const Header: React.FC = () => {
                                     <div>
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Services</h3>
                                         <div className="space-y-3">
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">📄</span>
                                                 </div>
@@ -338,7 +338,7 @@ const Header: React.FC = () => {
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">Complete visa support</p>
                                                 </div>
                                             </Link>
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">💼</span>
                                                 </div>
@@ -347,7 +347,7 @@ const Header: React.FC = () => {
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">Direct employment</p>
                                                 </div>
                                             </Link>
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🎤</span>
                                                 </div>
@@ -363,7 +363,7 @@ const Header: React.FC = () => {
                                     <div>
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Resources</h3>
                                         <div className="space-y-3">
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">📋</span>
                                                 </div>
@@ -372,7 +372,7 @@ const Header: React.FC = () => {
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">Required paperwork</p>
                                                 </div>
                                             </Link>
-                                            <Link to="#" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🤝</span>
                                                 </div>
