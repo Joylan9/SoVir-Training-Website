@@ -102,5 +102,36 @@ export const skillAPI = {
     },
 };
 
+// Language Course API
+export const languageAPI = {
+    async getAll() {
+        const response = await api.get('/languages');
+        return response.data;
+    },
+
+    async create(data: FormData) {
+        const response = await api.post('/languages', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    },
+
+    async update(id: string, data: FormData) {
+        const response = await api.put(`/languages/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    },
+
+    async delete(id: string) {
+        const response = await api.delete(`/languages/${id}`);
+        return response.data;
+    },
+};
+
 export default api;
 

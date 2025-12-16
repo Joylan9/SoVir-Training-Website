@@ -4,7 +4,7 @@ import { Check, ChevronRight, Clock, Target, Award, Shield, Globe } from 'lucide
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { skillAPI } from '../lib/api';
+import { languageAPI } from '../lib/api';
 import type { SkillCourse } from '../types/skill';
 
 // Animated Hero Background
@@ -190,8 +190,8 @@ const CourseGermanPage: React.FC = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const courses = await skillAPI.getAll();
-        const germanCourse = courses.find((c: SkillCourse) => c.title.includes('German'));
+        const courses = await languageAPI.getAll();
+        const germanCourse = courses.find((c: any) => c.title.includes('German'));
         if (germanCourse) {
           setCourse(germanCourse);
         }

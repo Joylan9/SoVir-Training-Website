@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import SkillCourse from './models/skillCourse.model';
+import LanguageCourse from './models/languageCourse.model';
 
 dotenv.config();
 
-const courses = [
+const languageCourses = [
     {
         title: 'German Language Training',
         subtitle: 'Master practical German for relocation, university study, and workplace integration in Germany.',
         category: 'Language',
         description: 'A complete German program focusing on real-life communication, visa interviews, and integration scenarios.',
-        image: 'german-course.jpg', // Placeholder, admin can update
+        image: 'german-course.jpg',
         popular: true,
         levels: [
             {
@@ -186,17 +187,35 @@ const courses = [
     }
 ];
 
+const skillCourses: any[] = [
+    // Add any existing skill courses here if any, or keep it empty for now
+    // Example: { title: 'Web Development', category: 'Tech', ... }
+];
+
 const seedDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/sprachweg');
         console.log('Connected to MongoDB');
 
-        // Clear existing courses with these titles to avoid duplicates (optional, strictly for development seeding)
-        await SkillCourse.deleteMany({ title: { $in: courses.map(c => c.title) } });
-        console.log('Cleared existing courses');
+        // Clear existing Language courses
+        await LanguageCourse.deleteMany({ title: { $in: languageCourses.map(c => c.title) } });
+        console.log('Cleared existing language courses');
 
-        await SkillCourse.insertMany(courses);
-        console.log('Database seeded with courses!');
+        // Insert Language courses
+        await LanguageCourse.insertMany(languageCourses);
+        console.log('Database seeded with language courses!');
+
+        // Optional: Manage Skill courses separately (keeping existing logic mostly intact but clearing mixed ones)
+        // For now, if we assume skill courses were mixed, we should probably remove the "Language" ones from SkillCourse collection
+        await SkillCourse.deleteMany({ category: 'Language' });
+        console.log('Removed language courses from SkillCourse collection to avoid duplicates');
+
+        // If there are skill courses to seed:
+        if (skillCourses.length > 0) {
+            await SkillCourse.deleteMany({ title: { $in: skillCourses.map(c => c.title) } });
+            await SkillCourse.insertMany(skillCourses);
+            console.log('Database seeded with skill courses!');
+        }
 
         process.exit();
     } catch (error) {

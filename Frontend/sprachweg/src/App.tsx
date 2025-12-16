@@ -11,6 +11,7 @@ import RegisterPage from './pages/RegisterPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TrainerDashboard from './pages/TrainerDashboard';
 import SkillDashboard from './pages/Admin/SkillDashboard';
+import LanguageDashboard from './pages/Admin/LanguageDashboard';
 import LanguageTraining from './pages/LanguageTraining';
 import CourseEnglishPage from './pages/CourseEnglishPage';
 import CourseGermanPage from './pages/CourseGermanPage';
@@ -116,6 +117,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <SkillDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/languages"
+                element={
+                  <ProtectedRoute>
+                    <LanguageDashboard />
                   </ProtectedRoute>
                 }
               />

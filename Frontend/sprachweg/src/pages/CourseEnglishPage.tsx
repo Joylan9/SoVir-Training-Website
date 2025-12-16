@@ -4,7 +4,7 @@ import { Check, ChevronRight, BookOpen, Clock, Target, Award, Shield, Zap } from
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { skillAPI } from '../lib/api';
+import { languageAPI } from '../lib/api';
 import type { SkillCourse } from '../types/skill';
 
 // Animated Hero Background
@@ -191,8 +191,8 @@ const CourseEnglishPage: React.FC = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const courses = await skillAPI.getAll();
-        const englishCourse = courses.find((c: SkillCourse) => c.title.includes('English'));
+        const courses = await languageAPI.getAll();
+        const englishCourse = courses.find((c: any) => c.title.includes('English'));
         if (englishCourse) {
           setCourse(englishCourse);
         }

@@ -23,6 +23,7 @@ app.use(express.json());
 import itemRoutes from './routes/item.routes';
 import authRoutes from './routes/auth.routes';
 import skillRoutes from './routes/skillCourse.routes';
+import languageRoutes from './routes/languageCourse.routes';
 
 // ... (middlewares)
 
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/enrollment', enrollmentRoutes);
+app.use('/api/languages', languageRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');
