@@ -22,7 +22,6 @@ interface FormData {
     countryCode: string;
     phone: string;
     email: string;
-    isUnder18: boolean;
     guardianName: string;
     guardianPhone: string;
     language: string;
@@ -36,7 +35,6 @@ const initialFormData: FormData = {
     countryCode: '+91',
     phone: '',
     email: '',
-    isUnder18: false,
     guardianName: '',
     guardianPhone: '',
     language: '',
@@ -126,10 +124,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ isOpen, onClose, originPath, 
         if (!formData.phone.trim()) { newErrors.phone = 'Phone number is required'; isValid = false; }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { newErrors.email = 'Valid email is required'; isValid = false; }
 
-        if (formData.isUnder18) {
-            if (!formData.guardianName.trim()) { newErrors.guardianName = 'Guardian name is required'; isValid = false; }
-            if (!formData.guardianPhone.trim()) { newErrors.guardianPhone = 'Guardian phone is required'; isValid = false; }
-        }
+        if (!formData.guardianName.trim()) { newErrors.guardianName = 'Guardian name is required'; isValid = false; }
+        if (!formData.guardianPhone.trim()) { newErrors.guardianPhone = 'Guardian phone is required'; isValid = false; }
 
         setErrors(prev => ({ ...prev, ...newErrors }));
         return isValid;
@@ -343,47 +339,24 @@ const BookingForm: React.FC<BookingFormProps> = ({ isOpen, onClose, originPath, 
                                                 />
                                             </div>
 
-                                            {/* Under 18 Check */}
-                                            <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-800/50">
-                                                <input
-                                                    type="checkbox"
-                                                    id="under18"
-                                                    checked={formData.isUnder18}
-                                                    onChange={e => handleInputChange('isUnder18', e.target.checked)}
-                                                    className="h-5 w-5 rounded border-gray-300 text-[#d6b161] focus:ring-[#d6b161]"
-                                                />
-                                                <label htmlFor="under18" className="select-none text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
-                                                    I am under 18 years old
-                                                </label>
-                                            </div>
-
                                             {/* Guardian Fields */}
-                                            <AnimatePresence>
-                                                {formData.isUnder18 && (
-                                                    <motion.div
-                                                        initial={{ height: 0, opacity: 0 }}
-                                                        animate={{ height: 'auto', opacity: 1 }}
-                                                        exit={{ height: 0, opacity: 0 }}
-                                                        className="grid gap-6 overflow-hidden md:grid-cols-2"
-                                                    >
-                                                        <InputField
-                                                            label="Guardian Name"
-                                                            required
-                                                            value={formData.guardianName}
-                                                            onChange={v => handleInputChange('guardianName', v)}
-                                                            error={errors.guardianName}
-                                                        />
-                                                        <InputField
-                                                            label="Guardian Phone"
-                                                            required
-                                                            type="tel"
-                                                            value={formData.guardianPhone}
-                                                            onChange={v => handleInputChange('guardianPhone', v)}
-                                                            error={errors.guardianPhone}
-                                                        />
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <InputField
+                                                    label="Guardian Name"
+                                                    required
+                                                    value={formData.guardianName}
+                                                    onChange={v => handleInputChange('guardianName', v)}
+                                                    error={errors.guardianName}
+                                                />
+                                                <InputField
+                                                    label="Guardian Phone"
+                                                    required
+                                                    type="tel"
+                                                    value={formData.guardianPhone}
+                                                    onChange={v => handleInputChange('guardianPhone', v)}
+                                                    error={errors.guardianPhone}
+                                                />
+                                            </div>
 
                                             <div className="pt-4">
                                                 <button
@@ -472,7 +445,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ isOpen, onClose, originPath, 
                                                     Optional Comments
                                                 </label>
                                                 <textarea
-                                                    rows={3}
+                                                    rows={4}
                                                     className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#d6b161] dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                                                     placeholder="Any specific goals or questions?"
                                                     value={formData.comments}

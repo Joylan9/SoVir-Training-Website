@@ -488,20 +488,31 @@ const Header: React.FC = () => {
                         <div className="px-4 py-4 space-y-2">
                             <Link to="/" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>Home</Link>
 
-                            <Link
-                                to="/language-training"
+                            <button
+                                onClick={() => toggleDropdown('language')}
                                 className="w-full text-left text-gray-700 dark:text-gray-300 font-medium py-2 text-sm flex items-center justify-between"
-                                onClick={() => { toggleDropdown('language'); }}
                             >
                                 Language Training
                                 <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'language' ? 'rotate-180' : ''}`} />
-                            </Link>
+                            </button>
                             {openDropdown === 'language' && (
-                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 space-y-1">
-                                    <Link to="/language-details/english" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>English Training</Link>
-                                    <Link to="/language-details/german" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>German Training</Link>
-                                    <Link to="/language-details/japanese" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Japanese Training</Link>
-                                    <Link to="/language-training" className="block text-[#d6b161] font-medium py-1 text-xs" onClick={() => setIsMenuOpen(false)}>View All Languages →</Link>
+                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
+                                    {/* Languages */}
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Languages</h4>
+                                        <Link to="/training/english" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>English</Link>
+                                        <Link to="/training/german" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>German</Link>
+                                        <Link to="/training/japanese" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Japanese</Link>
+                                        <Link to="/language-training" className="block text-gray-600 dark:text-gray-400 py-1 text-xs font-medium" onClick={() => setIsMenuOpen(false)}>View All Languages</Link>
+                                    </div>
+
+                                    {/* Learning Modes */}
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Learning Modes</h4>
+                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Live Classes</p>
+                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Self-Paced</p>
+                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Hybrid</p>
+                                    </div>
                                 </div>
                             )}
 
@@ -513,11 +524,29 @@ const Header: React.FC = () => {
                                 <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'skill' ? 'rotate-180' : ''}`} />
                             </button>
                             {openDropdown === 'skill' && (
-                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 space-y-1">
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Web Development</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Mobile Development</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Data Science</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Cloud Computing</Link>
+                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
+                                    {/* Industrial Automation */}
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Industrial Automation</h4>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>PLC Programming</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>HMI & SCADA</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Robotics</Link>
+                                    </div>
+
+                                    {/* Technology Training */}
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Technology</h4>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Industrial IoT</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Data Analytics</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Cloud Computing</Link>
+                                    </div>
+
+                                    {/* Corporate */}
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Corporate</h4>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Team Upskilling</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Custom Programs</Link>
+                                    </div>
                                 </div>
                             )}
 
@@ -529,12 +558,19 @@ const Header: React.FC = () => {
                                 <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'career' ? 'rotate-180' : ''}`} />
                             </button>
                             {openDropdown === 'career' && (
-                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 space-y-1">
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Work in Canada</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Career in Germany</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Jobs in Australia</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Visa Assistance</Link>
-                                    <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Job Placement</Link>
+                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Destinations</h4>
+                                        <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Work in Canada</Link>
+                                        <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Career in Germany</Link>
+                                        <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Jobs in Australia</Link>
+                                        <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>UK Employment</Link>
+                                    </div>
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Services</h4>
+                                        <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Visa Assistance</Link>
+                                        <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Job Placement</Link>
+                                    </div>
                                 </div>
                             )}
 
