@@ -4,7 +4,9 @@ import User from '../models/user.model';
 export const updateProfile = async (req: Request, res: Response) => {
     try {
         const userId = (req as any).user._id;
-        const { phoneNumber, guardianName, guardianPhone, qualification } = req.body;
+        const { phoneNumber, guardianName, guardianPhone, qualification, dateOfBirth } = req.body;
+        console.log('Update Profile Body:', req.body);
+        console.log('Date of Birth received:', dateOfBirth);
 
         const user = await User.findById(userId);
         if (!user) {
@@ -15,6 +17,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         if (guardianName) user.guardianName = guardianName;
         if (guardianPhone) user.guardianPhone = guardianPhone;
         if (qualification) user.qualification = qualification;
+        if (dateOfBirth) user.dateOfBirth = new Date(dateOfBirth);
 
         await user.save();
 
@@ -27,9 +30,11 @@ export const updateProfile = async (req: Request, res: Response) => {
             phoneNumber: user.phoneNumber,
             guardianName: user.guardianName,
             guardianPhone: user.guardianPhone,
-            qualification: user.qualification
+            qualification: user.qualification,
+            dateOfBirth: user.dateOfBirth
         });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }
 };
+

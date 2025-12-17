@@ -98,7 +98,8 @@ export const verifyOtp = async (req: Request, res: Response) => {
                 phoneNumber: (user as any).phoneNumber,
                 guardianName: (user as any).guardianName,
                 guardianPhone: (user as any).guardianPhone,
-                qualification: (user as any).qualification
+                qualification: (user as any).qualification,
+                dateOfBirth: (user as any).dateOfBirth
             }
         });
     } catch (error) {
@@ -167,7 +168,8 @@ export const login = async (req: Request, res: Response) => {
                 phoneNumber: (user as any).phoneNumber,
                 guardianName: (user as any).guardianName,
                 guardianPhone: (user as any).guardianPhone,
-                qualification: (user as any).qualification
+                qualification: (user as any).qualification,
+                dateOfBirth: (user as any).dateOfBirth
             }
         });
     } catch (error) {
@@ -225,7 +227,8 @@ export const googleLogin = async (req: Request, res: Response) => {
                 phoneNumber: (user as any).phoneNumber,
                 guardianName: (user as any).guardianName,
                 guardianPhone: (user as any).guardianPhone,
-                qualification: (user as any).qualification
+                qualification: (user as any).qualification,
+                dateOfBirth: (user as any).dateOfBirth
             }
         });
     } catch (error) {
@@ -248,7 +251,8 @@ export const getMe = async (req: Request, res: Response) => {
             phoneNumber: user.phoneNumber,
             guardianName: user.guardianName,
             guardianPhone: user.guardianPhone,
-            qualification: user.qualification
+            qualification: user.qualification,
+            dateOfBirth: user.dateOfBirth
         });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });

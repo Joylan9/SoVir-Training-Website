@@ -13,6 +13,7 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({ isOpen 
         phoneNumber: '',
         guardianName: '',
         guardianPhone: '',
+        dateOfBirth: '',
         qualification: 'High School',
     });
     const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({ isOpen 
                 phoneNumber: user.phoneNumber || '',
                 guardianName: user.guardianName || '',
                 guardianPhone: user.guardianPhone || '',
+                dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
                 qualification: user.qualification || 'High School',
             }));
         }
@@ -125,6 +127,19 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({ isOpen 
                                 id="guardianPhone"
                                 required
                                 value={formData.guardianPhone}
+                                onChange={handleChange}
+                                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#d6b161] focus:outline-none focus:ring-[#d6b161] sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date of Birth <span className="text-red-500">*</span></label>
+                            <input
+                                type="date"
+                                name="dateOfBirth"
+                                id="dateOfBirth"
+                                required
+                                value={formData.dateOfBirth}
                                 onChange={handleChange}
                                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#d6b161] focus:outline-none focus:ring-[#d6b161] sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             />

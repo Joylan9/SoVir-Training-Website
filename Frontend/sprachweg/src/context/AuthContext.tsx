@@ -12,6 +12,7 @@ interface User {
     guardianName?: string;
     guardianPhone?: string;
     qualification?: string;
+    dateOfBirth?: string;
 }
 
 interface AuthContextType {

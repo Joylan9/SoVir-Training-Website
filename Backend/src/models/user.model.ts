@@ -11,6 +11,7 @@ export interface IUser extends Document {
     guardianName?: string;
     guardianPhone?: string;
     qualification?: string;
+    dateOfBirth?: Date;
     role: string;
     isVerified: boolean;
     otp?: string;
@@ -29,6 +30,7 @@ const UserSchema: Schema = new Schema({
     guardianName: { type: String },
     guardianPhone: { type: String },
     qualification: { type: String },
+    dateOfBirth: { type: Date },
     role: { type: String, default: 'student' },
     isVerified: { type: Boolean, default: false },
     otp: { type: String }, // Hashed

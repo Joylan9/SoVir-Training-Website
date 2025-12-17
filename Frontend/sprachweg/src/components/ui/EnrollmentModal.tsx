@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, Check, AlertCircle, GraduationCap, Phone, Mail, User, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 // Tokens
 // --brand-navy: #0a192f
@@ -16,8 +17,7 @@ interface EnrollmentModalProps {
 }
 
 interface FormData {
-    firstName: string;
-    lastName: string;
+    name: string;
     phone: string;
     countryCode: string;
     email: string;
@@ -29,8 +29,7 @@ interface FormData {
 }
 
 const initialFormData: FormData = {
-    firstName: '',
-    lastName: '',
+    name: '',
     phone: '',
     countryCode: '+91',
     email: '',
@@ -43,6 +42,7 @@ const initialFormData: FormData = {
 
 const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, origin, originPath }) => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const shouldReduceMotion = useReducedMotion();
     const modalRef = useRef<HTMLDivElement>(null);
     const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -50,6 +50,34 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [isUnder18, setIsUnder18] = useState(false);
+
+    // Autofill from User Context
+    useEffect(() => {
+        if (user && isOpen) {
+            let formattedDob = '';
+            if (user.dateOfBirth) {
+                try {
+                    const date = new Date(user.dateOfBirth);
+                    if (!isNaN(date.getTime())) {
+                        formattedDob = date.toISOString().split('T')[0];
+                    }
+                } catch (e) {
+                    console.error("Invalid DOB in profile", e);
+                }
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phoneNumber || '',
+                education: user.qualification || '',
+                guardianName: user.guardianName || '',
+                guardianPhone: user.guardianPhone || '',
+                dob: formattedDob,
+            }));
+        }
+    }, [user, isOpen]);
 
     // Focus trap
     useEffect(() => {
@@ -94,7 +122,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
         }
     }, [isOpen]);
 
-    // Age validation
+    // Age validation removed/simplified as per request (Guardian info mandatory for all)
+    // We still track it if we need it for other logic, but validation won't depend on it for hiding fields.
     useEffect(() => {
         if (formData.dob) {
             const birthDate = new Date(formData.dob);
@@ -112,8 +141,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
         const newErrors: Partial<Record<keyof FormData, string>> = {};
         let isValid = true;
 
-        if (!formData.firstName.trim()) { newErrors.firstName = 'First name is required'; isValid = false; }
-        if (!formData.lastName.trim()) { newErrors.lastName = 'Last name is required'; isValid = false; }
+        if (!formData.name.trim()) { newErrors.name = 'Name is required'; isValid = false; }
         if (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
             newErrors.phone = 'Valid phone number is required (10 digits)'; isValid = false;
         }
@@ -142,10 +170,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
             newErrors.educationOther = 'Please specify your education'; isValid = false;
         }
 
-        if (isUnder18) {
-            if (!formData.guardianName.trim()) { newErrors.guardianName = 'Guardian name is required (under 18)'; isValid = false; }
-            if (!formData.guardianPhone.trim()) { newErrors.guardianPhone = 'Guardian phone is required (under 18)'; isValid = false; }
-        }
+        // Mandatory Guardian Info for ALL users
+        if (!formData.guardianName.trim()) { newErrors.guardianName = 'Guardian name is required'; isValid = false; }
+        if (!formData.guardianPhone.trim()) { newErrors.guardianPhone = 'Guardian phone is required'; isValid = false; }
 
         setErrors(newErrors);
         return isValid;
@@ -271,20 +298,15 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
                                                 <User className="h-4 w-4" /> Personal Information
                                             </h4>
                                             <div className="grid gap-4 md:grid-cols-2">
-                                                <InputField
-                                                    label="First Name"
-                                                    required
-                                                    error={errors.firstName}
-                                                    value={formData.firstName}
-                                                    onChange={(v: string) => handleInputChange('firstName', v)}
-                                                />
-                                                <InputField
-                                                    label="Last Name"
-                                                    required
-                                                    error={errors.lastName}
-                                                    value={formData.lastName}
-                                                    onChange={(v: string) => handleInputChange('lastName', v)}
-                                                />
+                                                <div className="md:col-span-2">
+                                                    <InputField
+                                                        label="Name"
+                                                        required
+                                                        error={errors.name}
+                                                        value={formData.name}
+                                                        onChange={(v: string) => handleInputChange('name', v)}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
 
@@ -364,6 +386,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
                                                         <option value="Master">Master Degree</option>
                                                         <option value="PhD">PhD</option>
                                                         <option value="Other">Other</option>
+                                                        {formData.education && !["High School", "Diploma", "Bachelor", "Master", "PhD", "Other", ""].includes(formData.education) && (
+                                                            <option value={formData.education}>{formData.education}</option>
+                                                        )}
                                                     </select>
                                                     {errors.education && <span className="mt-1 text-xs text-red-500">{errors.education}</span>}
 
@@ -383,35 +408,29 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
                                             </div>
                                         </div>
 
-                                        {/* Guardian Info (Conditional) */}
-                                        {isUnder18 && (
-                                            <motion.div
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                className="md:col-span-2 rounded-xl bg-blue-50 p-4 dark:bg-blue-900/20"
-                                            >
-                                                <h4 className="flex items-center gap-2 mb-4 text-sm font-semibold text-[#0a192f] dark:text-blue-100">
-                                                    <ShieldIcon className="h-4 w-4" /> Guardian Information (Required if Under 18)
-                                                </h4>
-                                                <div className="grid gap-4 md:grid-cols-2">
-                                                    <InputField
-                                                        label="Guardian Name"
-                                                        required
-                                                        error={errors.guardianName}
-                                                        value={formData.guardianName}
-                                                        onChange={(v: string) => handleInputChange('guardianName', v)}
-                                                    />
-                                                    <InputField
-                                                        label="Guardian Phone"
-                                                        type="tel"
-                                                        required
-                                                        error={errors.guardianPhone}
-                                                        value={formData.guardianPhone}
-                                                        onChange={(v: string) => handleInputChange('guardianPhone', v)}
-                                                    />
-                                                </div>
-                                            </motion.div>
-                                        )}
+                                        {/* Guardian Info (Mandatory) */}
+                                        <div className="md:col-span-2 rounded-xl bg-blue-50 p-4 dark:bg-blue-900/20">
+                                            <h4 className="flex items-center gap-2 mb-4 text-sm font-semibold text-[#0a192f] dark:text-blue-100">
+                                                <ShieldIcon className="h-4 w-4" /> Guardian Information
+                                            </h4>
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <InputField
+                                                    label="Guardian Name"
+                                                    required
+                                                    error={errors.guardianName}
+                                                    value={formData.guardianName}
+                                                    onChange={(v: string) => handleInputChange('guardianName', v)}
+                                                />
+                                                <InputField
+                                                    label="Guardian Phone"
+                                                    type="tel"
+                                                    required
+                                                    error={errors.guardianPhone}
+                                                    value={formData.guardianPhone}
+                                                    onChange={(v: string) => handleInputChange('guardianPhone', v)}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/* Submission Error Summary */}
