@@ -1,8 +1,9 @@
-import { Router } from 'express';
-import { register, verifyOtp, resendOtp, login, getMe, googleLogin } from '../controllers/auth.controller';
+import express from 'express';
+import { register, verifyOtp, resendOtp, login, googleLogin, getMe } from '../controllers/auth.controller';
+import { updateProfile } from '../controllers/user.controller';
 import { protect } from '../middlewares/auth.middleware';
 
-const router = Router();
+const router = express.Router();
 
 router.post('/register', register);
 router.post('/verify-otp', verifyOtp);
@@ -10,5 +11,6 @@ router.post('/resend-otp', resendOtp);
 router.post('/login', login);
 router.post('/google', googleLogin);
 router.get('/me', protect, getMe);
+router.put('/profile/complete', protect, updateProfile);
 
 export default router;

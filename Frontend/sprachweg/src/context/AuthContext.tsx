@@ -8,6 +8,10 @@ interface User {
     phoneNumber?: string;
     role: string;
     isEmailVerified: boolean;
+    isProfileComplete?: boolean;
+    guardianName?: string;
+    guardianPhone?: string;
+    qualification?: string;
 }
 
 interface AuthContextType {
@@ -20,6 +24,7 @@ interface AuthContextType {
     resendOtp: (email: string) => Promise<void>;
     logout: () => void;
     refreshUser: () => Promise<void>;
+    updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -102,6 +107,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(userData);
     };
 
+    const updateProfile = async (data: Partial<User>) => {
+        const response = await api.put('/auth/profile/complete', data);
+        const updatedUser = response.data;
+
+        // Merge with existing token if needed, but usually we just update user data
+        // API returns full user object
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -120,6 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 resendOtp,
                 logout,
                 refreshUser,
+                updateProfile,
             }}
         >
             {children}

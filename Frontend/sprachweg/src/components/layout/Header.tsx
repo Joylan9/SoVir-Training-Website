@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
 import Button from '../ui/Button';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const { theme, toggleTheme } = useTheme();
+    const { user } = useAuth();
     const navRef = useRef<HTMLElement>(null);
 
     const toggleDropdown = (dropdown: string) => {
@@ -435,14 +437,25 @@ const Header: React.FC = () => {
                         >
                             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                         </button>
-                        <Link to="/login" className="text-gray-700 dark:text-white font-medium hover:text-[#d6b161] transition-colors text-sm">
-                            Sign In
-                        </Link>
-                        <Link to="/register">
-                            <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-semibold px-6 py-2 rounded-full text-sm">
-                                Enroll Now
-                            </Button>
-                        </Link>
+
+                        {user ? (
+                            <Link to={`/${user.role}-dashboard`} className="text-gray-700 dark:text-white font-medium hover:text-[#d6b161] transition-colors text-sm">
+                                <Button className="bg-[#0a192f] hover:bg-[#112240] text-white font-semibold px-6 py-2 rounded-full text-sm dark:bg-gray-700 dark:hover:bg-gray-600">
+                                    Dashboard
+                                </Button>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link to="/login" className="text-gray-700 dark:text-white font-medium hover:text-[#d6b161] transition-colors text-sm">
+                                    Sign In
+                                </Link>
+                                <Link to="/register">
+                                    <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-semibold px-6 py-2 rounded-full text-sm">
+                                        Enroll Now
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}

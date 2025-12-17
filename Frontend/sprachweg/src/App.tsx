@@ -1,8 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ScrollToTop from './components/layout/ScrollToTop';
+import ProfileCompletionModal from './components/auth/ProfileCompletionModal';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -63,85 +65,103 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
+const AppContent = () => {
+  const { user } = useAuth();
+
+  // Determine if profile is incomplete
+  // user.isProfileComplete is virtual from backend, so it relies on the response
+  // If undefined, we assume false or check specific fields if needed. 
+  // But safer to rely on flag if backend sends it.
+  const isProfileIncomplete = user && user.isProfileComplete === false;
+
+  return (
+    <>
+      <ScrollToTop />
+      <ProfileCompletionModal isOpen={!!isProfileIncomplete} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/language-training" element={<LanguageTraining />} />
+        <Route path="/training/english" element={<CourseEnglishPage />} />
+        <Route path="/training/german" element={<CourseGermanPage />} />
+        <Route path="/training/japanese" element={<CourseJapanesePage />} />
+
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPasswordPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* Protected Routes */}
+        <Route
+          path="/student-dashboard"
+          element={
+            <ProtectedRoute>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trainer-dashboard"
+          element={
+            <ProtectedRoute>
+              <TrainerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/skills"
+          element={
+            <ProtectedRoute>
+              <SkillDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/languages"
+          element={
+            <ProtectedRoute>
+              <LanguageDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<NotFound404 />} />
+      </Routes>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID"}>
       <ThemeProvider>
         <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/language-training" element={<LanguageTraining />} />
-              <Route path="/training/english" element={<CourseEnglishPage />} />
-              <Route path="/training/german" element={<CourseGermanPage />} />
-              <Route path="/training/japanese" element={<CourseJapanesePage />} />
-
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <LoginPage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <PublicRoute>
-                    <RegisterPage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/forgot-password"
-                element={
-                  <PublicRoute>
-                    <ForgotPasswordPage />
-                  </PublicRoute>
-                }
-              />
-
-              {/* Protected Routes */}
-              <Route
-                path="/student-dashboard"
-                element={
-                  <ProtectedRoute>
-                    <StudentDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/trainer-dashboard"
-                element={
-                  <ProtectedRoute>
-                    <TrainerDashboard />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Admin Routes */}
-              <Route
-                path="/admin/skills"
-                element={
-                  <ProtectedRoute>
-                    <SkillDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/languages"
-                element={
-                  <ProtectedRoute>
-                    <LanguageDashboard />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Fallback */}
-              <Route path="*" element={<NotFound404 />} />
-            </Routes>
-          </Router>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
         </AuthProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>

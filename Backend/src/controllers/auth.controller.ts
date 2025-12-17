@@ -87,7 +87,20 @@ export const verifyOtp = async (req: Request, res: Response) => {
         const payload = { id: (user as any)._id, role: user.role };
         const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions);
 
-        res.status(200).json({ token, user: { id: (user as any)._id, name: user.name, email: user.email, role: user.role } });
+        res.status(200).json({
+            token,
+            user: {
+                id: (user as any)._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isProfileComplete: (user as any).isProfileComplete,
+                phoneNumber: (user as any).phoneNumber,
+                guardianName: (user as any).guardianName,
+                guardianPhone: (user as any).guardianPhone,
+                qualification: (user as any).qualification
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }
@@ -143,7 +156,20 @@ export const login = async (req: Request, res: Response) => {
         const payload = { id: (user as any)._id, role: user.role };
         const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions);
 
-        res.status(200).json({ token, user: { id: (user as any)._id, name: user.name, email: user.email, role: user.role } });
+        res.status(200).json({
+            token,
+            user: {
+                id: (user as any)._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isProfileComplete: (user as any).isProfileComplete,
+                phoneNumber: (user as any).phoneNumber,
+                guardianName: (user as any).guardianName,
+                guardianPhone: (user as any).guardianPhone,
+                qualification: (user as any).qualification
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }
@@ -188,7 +214,20 @@ export const googleLogin = async (req: Request, res: Response) => {
         const jwtPayload = { id: (user as any)._id, role: user.role };
         const token = jwt.sign(jwtPayload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE } as jwt.SignOptions);
 
-        res.status(200).json({ token, user: { id: (user as any)._id, name: user.name, email: user.email, role: user.role } });
+        res.status(200).json({
+            token,
+            user: {
+                id: (user as any)._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isProfileComplete: (user as any).isProfileComplete,
+                phoneNumber: (user as any).phoneNumber,
+                guardianName: (user as any).guardianName,
+                guardianPhone: (user as any).guardianPhone,
+                qualification: (user as any).qualification
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }
@@ -201,8 +240,15 @@ export const getMe = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json({
+            id: (user as any)._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role: user.role,
+            isProfileComplete: (user as any).isProfileComplete,
+            phoneNumber: user.phoneNumber,
+            guardianName: user.guardianName,
+            guardianPhone: user.guardianPhone,
+            qualification: user.qualification
         });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
