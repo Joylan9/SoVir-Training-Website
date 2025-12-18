@@ -15,6 +15,8 @@ import StudentDashboard from './pages/StudentDashboard';
 import TrainerDashboard from './pages/TrainerDashboard';
 import SkillDashboard from './pages/Admin/SkillDashboard';
 import LanguageDashboard from './pages/Admin/LanguageDashboard';
+import LanguageEnrollmentDetails from './pages/Admin/LanguageEnrollmentDetails';
+import LanguageBatches from './pages/Admin/LanguageBatches';
 import LanguageTraining from './pages/LanguageTraining';
 import CourseEnglishPage from './pages/CourseEnglishPage';
 import CourseGermanPage from './pages/CourseGermanPage';
@@ -143,6 +145,22 @@ const AppContent = () => {
           element={
             <ProtectedRoute>
               <LanguageDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/language-enrollment-details"
+          element={
+            <ProtectedRoute>
+              <LanguageEnrollmentDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/language-batches"
+          element={
+            <ProtectedRoute>
+              <LanguageBatches />
             </ProtectedRoute>
           }
         />

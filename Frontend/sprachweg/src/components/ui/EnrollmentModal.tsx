@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, Check, AlertCircle, GraduationCap, Phone, Mail, User, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../lib/api';
 
 // Tokens
 // --brand-navy: #0a192f
@@ -14,7 +15,10 @@ interface EnrollmentModalProps {
     onClose: () => void;
     origin: 'english' | 'german' | 'japanese';
     originPath?: string;
+    selectedLevel?: string;
 }
+
+
 
 interface FormData {
     name: string;
@@ -40,7 +44,7 @@ const initialFormData: FormData = {
     guardianPhone: '',
 };
 
-const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, origin, originPath }) => {
+const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, origin, originPath, selectedLevel }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const shouldReduceMotion = useReducedMotion();
@@ -172,14 +176,24 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, orig
         if (!validate()) return;
 
         setIsSubmitting(true);
-        // Transient success toast simulation
-        await new Promise(resolve => setTimeout(resolve, 800)); // Simulate validation/prep
 
-        setIsSubmitting(false);
-        setShowSuccess(true);
+        try {
+            // Map form data to backend expected format
+            // Backend expects: { courseTitle, levelName }
+            const payload = {
+                courseTitle: origin.charAt(0).toUpperCase() + origin.slice(1), // e.g. "German", "English"
+                name: selectedLevel || 'Beginner',
+            };
 
-        // TODO: POST to /api/enroll
-        console.log('Enrolling user:', formData, 'Origin:', origin);
+            await api.post('/language-training/enroll', payload);
+
+            setShowSuccess(true);
+        } catch (error: any) {
+            console.error('Enrollment error:', error);
+            alert(error.response?.data?.message || 'Enrollment failed');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleBack = () => {

@@ -1,0 +1,205 @@
+import { Request, Response } from "express";
+import Enrollment from "../models/language.enrollment.model";
+import Batch from "../models/language.batch.model";
+
+/* ============================
+   STUDENT APIs
+============================ */
+
+// POST /api/language-training/enroll
+export const applyEnrollment = async (req: Request, res: Response) => {
+  try {
+    const { courseTitle, name } = req.body;
+
+    if (!courseTitle || !name) {
+      return res.status(400).json({ message: "courseTitle and name required" });
+    }
+
+    const exists = await Enrollment.findOne({
+      userId: (req as any).user._id,
+      courseTitle,
+      name,
+    });
+
+    if (exists) {
+      if (exists.status === "REJECTED") {
+        exists.status = "PENDING";
+        exists.batchId = undefined;
+        await exists.save();
+        return res.status(200).json({
+          message: "Re-enrollment submitted successfully.",
+          enrollment: exists,
+        });
+      }
+      return res.status(409).json({ message: "Already enrolled or pending approval" });
+    }
+
+    const enrollment = await Enrollment.create({
+      userId: (req as any).user._id,
+      courseTitle,
+      name,
+    });
+
+    res.status(201).json({
+      message: "Enrollment request submitted. Await admin approval.",
+      enrollment,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Enrollment failed" });
+  }
+};
+
+// GET /api/language-training/my-enrollments
+export const getMyEnrollments = async (req: Request, res: Response) => {
+  const enrollments = await Enrollment.find({
+    userId: (req as any).user._id,
+  }).populate("batchId", "courseTitle name");
+
+  res.json(enrollments);
+};
+
+/* ============================
+   ADMIN APIs
+============================ */
+
+// GET /api/language-training/admin/enrollments?status=PENDING
+export const getEnrollments = async (req: Request, res: Response) => {
+  const filter = req.query.status ? { status: req.query.status } : {};
+
+  const enrollments = await Enrollment.find(filter)
+    .populate("userId", "name email");
+
+  res.json(enrollments);
+};
+
+// POST /api/language-training/admin/enroll/:id/approve
+export const approveEnrollment = async (req: Request, res: Response) => {
+  try {
+    const enrollment = await Enrollment.findById(req.params.id);
+
+    if (!enrollment || enrollment.status !== "PENDING") {
+      return res.status(400).json({ message: "Invalid enrollment" });
+    }
+
+    let batch = await Batch.findOne({
+      courseTitle: enrollment.courseTitle,
+      name: enrollment.name,
+    });
+
+    if (!batch) {
+      batch = await Batch.create({
+        courseTitle: enrollment.courseTitle,
+        name: enrollment.name,
+        students: [],
+      });
+    }
+
+    if (!batch.students.some(id => id.equals(enrollment.userId))) {
+      batch.students.push(enrollment.userId);
+      await batch.save();
+    }
+
+    enrollment.status = "APPROVED";
+    enrollment.batchId = batch._id;
+    await enrollment.save();
+
+    res.json({
+      message: "Enrollment approved and assigned to batch",
+      enrollment,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Approval failed" });
+  }
+};
+
+// POST /api/language-training/admin/enroll/:id/reject
+export const rejectEnrollment = async (req: Request, res: Response) => {
+  const enrollment = await Enrollment.findById(req.params.id);
+
+  if (!enrollment || enrollment.status !== "PENDING") {
+    return res.status(400).json({ message: "Invalid enrollment" });
+  }
+
+  enrollment.status = "REJECTED";
+  await enrollment.save();
+
+  res.json({ message: "Enrollment rejected" });
+};
+
+// GET /api/language-training/admin/batches
+export const getBatches = async (req: Request, res: Response) => {
+  const batches = await Batch.find()
+    .populate("students", "name email");
+
+  res.json(batches);
+};
+
+// DELETE /api/language-training/admin/batches/:batchId/students/:studentId
+export const removeStudentFromBatch = async (req: Request, res: Response) => {
+  try {
+    const { batchId, studentId } = req.params;
+
+    // 1. Remove from Batch
+    const batch = await Batch.findById(batchId);
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    batch.students = batch.students.filter(id => id.toString() !== studentId);
+    await batch.save();
+
+    // 2. Update Enrollment Status
+    // Find enrollment for this user & this batch
+    const enrollment = await Enrollment.findOne({
+      userId: studentId,
+      batchId: batchId
+    });
+
+    if (enrollment) {
+      enrollment.status = "REJECTED"; // Or set to a new status like "DROPPED" if preferred
+      enrollment.batchId = undefined; // Unlink batch
+      await enrollment.save();
+    }
+
+    res.json({ message: "Student removed from batch successfully" });
+  } catch (error) {
+    console.error("Error removing student:", error);
+    res.status(500).json({ message: "Failed to remove student" });
+  }
+};
+
+// DELETE /api/language-training/admin/batches/:id
+export const deleteBatch = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const batch = await Batch.findById(id);
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    // Un-enroll all students in this batch (Reject them)
+    // We strictly look for enrollments linked to this batch, or logic matching course/name
+    // Best to use batchId if we linked them.
+    // If enrollments have batchId populated, use that.
+
+    // Update enrollments
+    await Enrollment.updateMany(
+      { batchId: id },
+      { $set: { status: "REJECTED", batchId: null } }
+    );
+
+    // Update enrollments based on course/name matching just in case (legacy safety)
+    await Enrollment.updateMany(
+      { courseTitle: batch.courseTitle, name: batch.name, status: "APPROVED" },
+      { $set: { status: "REJECTED", batchId: null } }
+    );
+
+    await batch.deleteOne();
+
+    res.json({ message: "Batch deleted and students un-enrolled" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete batch" });
+  }
+};

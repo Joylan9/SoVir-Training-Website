@@ -12,7 +12,7 @@ app.use(helmet({
 
 // CORS Configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000','https://training.sovirtechnologies.in'], // Allow frontend origins
+    origin: ['http://localhost:5173', 'http://localhost:3000', 'https://training.sovirtechnologies.in'], // Allow frontend origins
     credentials: true, // Allow cookies and credentials
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -24,7 +24,7 @@ import itemRoutes from './routes/item.routes';
 import authRoutes from './routes/auth.routes';
 import skillRoutes from './routes/skillCourse.routes';
 import languageRoutes from './routes/languageCourse.routes';
-
+import languageTrainingRoutes from './routes/language.training.routes';
 // ... (middlewares)
 
 import dashboardRoutes from './routes/dashboard.routes';
@@ -38,9 +38,8 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/enrollment', enrollmentRoutes);
 app.use('/api/languages', languageRoutes);
+app.use('/api/language-training', languageTrainingRoutes);
 
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
+
 
 export default app;

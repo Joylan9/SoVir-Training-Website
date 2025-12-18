@@ -216,6 +216,7 @@ const CourseGermanPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [openFAQ, setOpenFAQ] = useState<string | null>(null);
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
+  const [selectedLevelName, setSelectedLevelName] = useState("");
 
 
   useEffect(() => {
@@ -338,7 +339,10 @@ const CourseGermanPage: React.FC = () => {
                     key={index}
                     level={level}
                     index={index}
-                    onEnroll={() => setIsEnrollModalOpen(true)}
+                    onEnroll={() => {
+                      setSelectedLevelName(level.name);
+                      setIsEnrollModalOpen(true);
+                    }}
                   />
                 ))}
               </div>
@@ -411,6 +415,7 @@ const CourseGermanPage: React.FC = () => {
         onClose={() => setIsEnrollModalOpen(false)}
         origin="german"
         originPath="/training/german"
+        selectedLevel={selectedLevelName}
       />
     </div>
   );

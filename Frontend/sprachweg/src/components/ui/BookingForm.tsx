@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, Check, AlertCircle, Mail, User, Globe, BookOpen, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // npm packages: framer-motion, lucide-react, react-router-dom
 
@@ -159,18 +160,38 @@ const BookingForm: React.FC<BookingFormProps> = ({ isOpen, onClose, originPath, 
         if (!validateStep2()) return;
 
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        setIsSubmitting(true);
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            };
 
-        // TODO: POST to /api/book-trial
-        console.log('Booking Data:', formData);
+            // Map form data to backend expected format
+            // Backend expects: { courseTitle, levelName }
+            const payload = {
+                courseTitle: formData.course, // Assuming course name maps to title
+                levelName: formData.prepLevel || 'Beginner' // Default or specific level
+            };
 
-        setIsSubmitting(false);
-        setShowSuccess(true);
+            await axios.post('http://localhost:5000/api/language-training/enroll', payload, config);
 
-        setTimeout(() => {
-            handleClose(true);
-        }, 2000);
+            console.log('Booking Data Submitted:', formData);
+            setShowSuccess(true);
+
+            setTimeout(() => {
+                handleClose(true);
+            }, 2000);
+        } catch (error: any) {
+            console.error('Enrollment error:', error);
+            // Show error to user (you might want to add a state for apiError)
+            alert(error.response?.data?.message || 'Enrollment failed');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleClose = (success = false) => {
