@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
                     <div className="space-y-6 lg:col-span-1">
                         <div className="flex items-center gap-3">
                             <img
-                                src="/src/assets/sovir-logo.png"
+                                src="/sovir-logo.png"
                                 alt="SoVir Logo"
                                 className="h-10 w-auto object-contain"
                             />
