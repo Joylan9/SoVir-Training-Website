@@ -63,7 +63,7 @@ const LandingPage: React.FC = () => {
             courses: 38,
             rating: 4.8,
             reviews: '2.4k',
-            levels: ['A1', 'A2', 'B1', 'B2', 'TELC / Goethe'],
+            levels: ['A1', 'A2', 'B1', 'B2', 'TELC', 'Goethe'],
             categories: [],
             price: '₹15,999',
             bgColor: 'bg-pink-50 dark:bg-pink-950/30',
