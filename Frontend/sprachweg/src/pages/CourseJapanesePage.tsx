@@ -1,36 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { Check, ChevronRight, Clock, Target, Award, Shield, Languages } from 'lucide-react';
+import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Check, ChevronRight, Clock, Target, Award, Shield, Languages, Star } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import EnrollmentModal from '../components/ui/EnrollmentModal';
 import { languageAPI } from '../lib/api';
 import type { SkillCourse } from '../types/skill';
 
-// Animated Hero Background
+// --- Premium Animation Variants ---
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (custom: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay: custom * 0.1, ease: [0.22, 1, 0.36, 1] }
+  })
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+};
+
+// --- Components ---
+
+// Elevated Hero Background
 const HeroBackground: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 300], [0, shouldReduceMotion ? 0 : -50]);
-  const y2 = useTransform(scrollY, [0, 300], [0, shouldReduceMotion ? 0 : -30]);
+  const y1 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
+  const y2 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : -150]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   return (
-    <>
+    <motion.div
+      style={{ opacity }}
+      className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
       <motion.div
         style={{ y: y1 }}
-        className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-[#d6b161]/20 blur-3xl"
-        aria-hidden="true"
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#d6b161]/20 to-pink-500/10 blur-[120px]"
       />
       <motion.div
         style={{ y: y2 }}
-        className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl"
-        aria-hidden="true"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.4, 0.2]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[100px]"
       />
-    </>
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    </motion.div>
   );
 };
 
-// Course Level Card Component
+// Premium Course Card
 interface CourseLevelCardProps {
   level: NonNullable<SkillCourse['levels']>[number];
   index: number;
@@ -40,98 +74,90 @@ interface CourseLevelCardProps {
 const CourseLevelCard: React.FC<CourseLevelCardProps> = ({ level, index, onEnroll }) => {
   const shouldReduceMotion = useReducedMotion();
 
-  const handleEnroll = () => {
-    onEnroll();
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : index * 0.1 }}
-      whileHover={shouldReduceMotion ? {} : { y: -6 }}
-      className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 sm:p-8"
+      variants={fadeInUp}
+      custom={index}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      whileHover={shouldReduceMotion ? {} : { y: -8, transition: { duration: 0.3 } }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-lg transition-all duration-500 hover:shadow-2xl dark:border-gray-800 dark:bg-gray-800/95 dark:backdrop-blur-sm"
     >
-      {/* Level Badge */}
-      <div className="mb-4 flex items-center justify-between">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[#0a192f] px-4 py-2 text-sm font-bold text-white dark:bg-gray-700">
-          <Languages className="h-4 w-4 text-[#d6b161]" />
-          JLPT {level.name}
-        </span>
-        <div className="text-right">
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Duration</p>
-          <p className="flex items-center gap-1 text-sm font-bold text-[#0a192f] dark:text-gray-100">
-            <Clock className="h-4 w-4 text-[#d6b161]" />
+      {/* Decorative Top Accent */}
+      <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-pink-500 via-[#d6b161] to-[#0a192f]" />
+
+      <div className="flex flex-1 flex-col p-8">
+        {/* Header */}
+        <div className="mb-6 flex items-start justify-between">
+          <div className="inline-flex items-center gap-2 rounded-full bg-pink-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-pink-900 dark:bg-pink-900/30 dark:text-pink-100">
+            <Languages className="h-3.5 w-3.5 text-pink-600 dark:text-pink-400" />
+            <span>JLPT {level.name}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+            <Clock className="h-4 w-4" />
             {level.duration}
-          </p>
-        </div>
-      </div>
-
-      {/* Price */}
-      <div className="mb-6">
-        <p className="text-4xl font-bold text-[#0a192f] dark:text-gray-100">{level.price}</p>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Complete course package</p>
-      </div>
-
-      {/* Curriculum */}
-      <div className="mb-6 flex-1">
-        <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-gray-700 dark:text-gray-300">
-          <Target className="h-4 w-4 text-[#d6b161]" />
-          What You'll Learn
-        </h3>
-        <ul className="space-y-2">
-          {level.features.slice(0, 8).map((item, idx) => (
-            <li key={idx} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Outcome Badge */}
-      <div className="mb-6 rounded-lg bg-gray-50 p-3 dark:bg-gray-700/50">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Outcome</p>
-        <p className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{level.outcome}</p>
-      </div>
-
-      {/* Exam Special Pill (Optional) */}
-      {level.examPrep && level.examPrep.title && (
-        <div className="mb-6">
-          <div className="rounded-xl border-2 border-dashed border-[#d6b161] bg-[#d6b161]/5 p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <Award className="h-5 w-5 text-[#d6b161]" />
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{level.examPrep.title}</span>
-            </div>
-            <p className="mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100">{level.examPrep.title}</p>
-            <p className="mb-2 text-xs text-gray-600 dark:text-gray-400">{level.examPrep.details}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {level.examPrep.price}
-              </span>
-            </div>
           </div>
         </div>
-      )}
 
-      {/* Action Buttons */}
-      <div className="flex flex-col gap-3 sm:flex-row">
+        {/* Price & Title */}
+        <div className="mb-8">
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">{level.price}</span>
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">/ package</span>
+          </div>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Complete JLPT {level.name} prep</p>
+        </div>
+
+        {/* Features List */}
+        <div className="mb-8 flex-1 space-y-4">
+          <h4 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            <Target className="h-4 w-4" />
+            What You'll Learn
+          </h4>
+          <ul className="space-y-3">
+            {level.features.slice(0, 8).map((item, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-200">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#d6b161]" />
+                <span className="leading-relaxed">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Outcome Box */}
+        <div className="mb-8 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-100 dark:bg-gray-900/50 dark:ring-gray-800">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Target Outcome</p>
+          <p className="mt-1.5 text-sm font-medium leading-relaxed text-gray-900 dark:text-white">{level.outcome}</p>
+        </div>
+
+        {/* Exam Prep (Conditional) */}
+        {level.examPrep && level.examPrep.title && (
+          <div className="mb-8 rounded-xl border border-dashed border-[#d6b161]/40 bg-[#d6b161]/5 p-4">
+            <div className="mb-1 flex items-center gap-2 text-sm font-bold text-[#0a192f] dark:text-[#d6b161]">
+              <Award className="h-4 w-4" />
+              {level.examPrep.title}
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">{level.examPrep.details}</p>
+          </div>
+        )}
+
+        {/* CTA */}
         <motion.button
-          onClick={handleEnroll}
+          onClick={onEnroll}
           whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
           whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#0a192f] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#112240] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:ring-offset-2 dark:bg-gray-700 dark:hover:bg-gray-600"
+          className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a192f] py-4 text-sm font-bold text-white shadow-lg shadow-gray-900/20 transition-all hover:bg-[#112240] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:ring-offset-2 dark:bg-white dark:text-[#0a192f] dark:hover:bg-gray-100 dark:focus:ring-offset-gray-900"
         >
           Enroll Now
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </motion.button>
       </div>
     </motion.div>
   );
 };
 
-// FAQ Accordion Item
+// Premium FAQ Item
 const faqs = [
   {
     id: '1',
@@ -151,35 +177,40 @@ const faqs = [
 ];
 
 const FAQItem: React.FC<{ faq: typeof faqs[0]; isOpen: boolean; onToggle: () => void }> = ({ faq, isOpen, onToggle }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
-    <div className="rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+    <div className="overflow-hidden border-b border-gray-200 last:border-0 dark:border-gray-800">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d6b161]"
+        className="flex w-full items-center justify-between py-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b161] focus-visible:ring-inset"
         aria-expanded={isOpen}
       >
-        <span className="text-base font-semibold text-gray-900 dark:text-gray-100 pr-4">{faq.question}</span>
-        <span className={`flex-shrink-0 text-[#d6b161] transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+        <span className={`text-lg font-medium transition-colors ${isOpen ? 'text-[#d6b161]' : 'text-gray-900 dark:text-white'}`}>
+          {faq.question}
+        </span>
+        <span className={`ml-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-all ${isOpen ? 'bg-[#d6b161] text-white rotate-180' : 'bg-gray-100 text-gray-500 dark:bg-gray-800'}`}>
           <ChevronRight className="h-5 w-5 rotate-90" />
         </span>
       </button>
-      <motion.div
-        initial={false}
-        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
-        className="overflow-hidden"
-      >
-        <p className="px-5 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          {faq.answer}
-        </p>
-      </motion.div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <p className="pb-6 text-base leading-relaxed text-gray-600 dark:text-gray-400">
+              {faq.answer}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-// Main Component
+// --- Main Page Component ---
+
 const CourseJapanesePage: React.FC = () => {
   const [course, setCourse] = useState<SkillCourse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -206,172 +237,171 @@ const CourseJapanesePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="w-12 h-12 border-4 border-[#d6b161] border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#0a192f]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#d6b161] border-t-transparent"></div>
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <p className="text-xl text-gray-600 dark:text-gray-400">Course not found.</p>
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#0a192f]">
+        <p className="text-lg text-gray-500">Course not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="relative min-h-screen bg-white text-gray-900 selection:bg-[#d6b161]/30 dark:bg-[#0a192f] dark:text-gray-100">
       <Header />
 
-      {/* Skip to Content */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-[#0a192f] focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-[#d6b161]"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-lg focus:bg-white focus:px-6 focus:py-3 focus:font-bold focus:text-[#0a192f] focus:shadow-2xl focus:ring-2 focus:ring-[#d6b161]"
       >
         Skip to content
       </a>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d]">
+      <section className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
         <HeroBackground />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
-          {/* Badge */}
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-[#d6b161] backdrop-blur-sm"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="mx-auto max-w-4xl"
           >
-            <Award className="h-4 w-4" />
-            {course.subtitle || 'Learn Japanese'}
-          </motion.div>
+            <motion.div variants={fadeInUp} className="mb-8 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#d6b161]/20 bg-[#d6b161]/10 px-4 py-1.5 text-sm font-semibold text-[#d6b161] backdrop-blur-sm">
+                <Star className="h-4 w-4 fill-current" />
+                JLPT Certification Path
+              </span>
+            </motion.div>
 
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mx-auto mb-6 max-w-4xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl"
-          >
-            {course.title}
-          </motion.h1>
+            <motion.h1
+              variants={fadeInUp}
+              className="font-display mb-6 text-5xl font-bold tracking-tight text-[#0a192f] dark:text-white sm:text-6xl lg:text-7xl"
+            >
+              Master Japanese for <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-[#d6b161] to-[#b38f3f] bg-clip-text text-transparent">Your Future</span>
+            </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mx-auto mb-12 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg"
-          >
-            {course.description}
-          </motion.p>
+            <motion.p
+              variants={fadeInUp}
+              className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 sm:text-xl"
+            >
+              {course.description}
+            </motion.p>
 
-          {/* Trust Badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-300"
-          >
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-emerald-400" />
-              <span>Certified Curriculum</span>
-            </div>
-            <span className="hidden text-gray-500 sm:block">•</span>
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-emerald-400" />
-              <span>Native Instructors</span>
-            </div>
+            <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-2 rounded-lg bg-white/50 px-4 py-2 dark:bg-white/5">
+                <Shield className="h-5 w-5 text-emerald-500" />
+                <span>JLPT N5-N1 Prep</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-white/50 px-4 py-2 dark:bg-white/5">
+                <Languages className="h-5 w-5 text-[#d6b161]" />
+                <span>Cultural Immersion</span>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <main id="main-content" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        {/* Course Levels Section */}
-        <section className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center"
-          >
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
-              JLPT Proficiency Levels
-            </h2>
-            <p className="mx-auto max-w-2xl text-base text-gray-600 dark:text-gray-400">
-              Choose your path to fluency.
-            </p>
-          </motion.div>
+      <main id="main-content" className="relative z-10">
 
-          {course.levels && course.levels.length > 0 ? (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {course.levels.map((level, index) => (
-                <CourseLevelCard
-                  key={index}
-                  level={level}
-                  index={index}
-                  onEnroll={() => setIsEnrollModalOpen(true)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500">No levels defined for this course yet.</div>
-          )}
-        </section>
+        {/* Levels Grid */}
+        <section className="px-4 py-24 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-16 text-center"
+            >
+              <h2 className="text-3xl font-bold tracking-tight text-[#0a192f] dark:text-white sm:text-4xl">
+                Choose Your JLPT Level
+              </h2>
+              <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                Structured learning paths from beginner to native fluency.
+              </p>
+            </motion.div>
 
-        {/* FAQ Section */}
-        <section className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center"
-          >
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
-              Frequently Asked Questions
-            </h2>
-          </motion.div>
-
-          <div className="mx-auto max-w-3xl space-y-4">
-            {faqs.map((faq) => (
-              <FAQItem
-                key={faq.id}
-                faq={faq}
-                isOpen={openFAQ === faq.id}
-                onToggle={() => setOpenFAQ(openFAQ === faq.id ? null : faq.id)}
-              />
-            ))}
+            {course.levels && course.levels.length > 0 ? (
+              <div className="grid gap-8 lg:grid-cols-3">
+                {course.levels.map((level, index) => (
+                  <CourseLevelCard
+                    key={index}
+                    level={level}
+                    index={index}
+                    onEnroll={() => setIsEnrollModalOpen(true)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center text-gray-500">
+                No course levels available at the moment.
+              </div>
+            )}
           </div>
         </section>
 
-        {/* CTA Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="rounded-2xl bg-gradient-to-br from-[#0a192f] to-[#112240] p-8 text-center text-white sm:p-12"
-        >
-          <Languages className="mx-auto mb-4 h-12 w-12 text-[#d6b161]" />
-          <h2 className="mb-4 text-2xl font-bold sm:text-3xl">Start Learning Japanese</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-base text-gray-300">
-            Join a vibrant community of Japanese learners.
-          </p>
-          <motion.button
-            whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#d6b161] px-8 py-4 text-base font-semibold text-[#0a192f] shadow-lg transition-all hover:bg-[#c4a055] focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:ring-offset-2 focus:ring-offset-[#0a192f]"
-          >
-            View Levels
-            <ChevronRight className="h-5 w-5" />
-          </motion.button>
-        </motion.section>
+        {/* FAQ Section */}
+        <section className="bg-gray-50 px-4 py-24 dark:bg-[#0d1f3a]/30 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12 text-center"
+            >
+              <h2 className="text-3xl font-bold tracking-tight text-[#0a192f] dark:text-white sm:text-4xl">
+                Frequently Asked Questions
+              </h2>
+            </motion.div>
+
+            <div className="rounded-2xl bg-white p-6 shadow-xl shadow-gray-200/50 dark:bg-gray-900/50 dark:shadow-none sm:p-10">
+              {faqs.map((faq) => (
+                <FAQItem
+                  key={faq.id}
+                  faq={faq}
+                  isOpen={openFAQ === faq.id}
+                  onToggle={() => setOpenFAQ(openFAQ === faq.id ? null : faq.id)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="px-4 py-24 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-3xl bg-[#0a192f] px-6 py-16 text-center text-white shadow-2xl dark:bg-blue-600/10 dark:ring-1 dark:ring-white/10 sm:px-12 sm:py-20"
+            >
+              <div className="relative z-10">
+                <Languages className="mx-auto mb-6 h-12 w-12 text-[#d6b161]" />
+                <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
+                  Start Your Japanese Journey
+                </h2>
+                <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-300">
+                  Connect with culture, business, and innovation through language.
+                </p>
+                {/* Note: "View Level" button removed */}
+              </div>
+
+              {/* Background Accents */}
+              <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-[#d6b161]/10 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 -mb-10 -ml-10 h-64 w-64 rounded-full bg-pink-500/10 blur-3xl"></div>
+            </motion.div>
+          </div>
+        </section>
       </main>
 
       <Footer />
