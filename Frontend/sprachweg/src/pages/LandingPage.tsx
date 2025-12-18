@@ -81,6 +81,13 @@ const LandingPage: React.FC = () => {
 
     const partners = ['Goethe', 'TELC', 'TestDaF', 'ÖSD', 'ILETS'];
 
+    // Helper for formatting price
+    const formatPrice = (val: string | number) => {
+        if (!val) return '₹0';
+        if (String(val).includes('₹') || String(val).includes('$') || String(val).includes('€')) return val;
+        return `₹${Number(val).toLocaleString('en-IN')}`;
+    };
+
     return (
         <div className="min-h-screen bg-white dark:bg-[#0a192f] transition-colors duration-300 font-sans">
             {/* Header */}
@@ -477,110 +484,86 @@ const LandingPage: React.FC = () => {
                     ) : skillCourses.length > 0 ? (
                         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
                             {skillCourses.slice(0, 3).map((course) => (
-                                <div key={course._id} className="bg-white dark:bg-[#112240] rounded-[1.5rem] border border-gray-100 dark:border-white/5 hover:border-[#d6b161]/50 transition-all duration-300 group overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1">
-                                    {/* Image Section */}
-                                    <div className="relative h-64 overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#112240] via-transparent to-transparent z-10 opacity-60" />
+                                <div key={course._id} className="bg-white dark:bg-[#112240] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden group hover:shadow-lg transition-all duration-300 hover:border-[#d6b161]/50 animate-fade-in flex flex-col h-full">
+                                    {/* Image Area */}
+                                    <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
                                         {course.image ? (
                                             <img
                                                 src={`http://localhost:5000/uploads/${course.image}`}
                                                 alt={course.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                loading="lazy"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                                                <GraduationCap className="w-16 h-16 text-gray-400" />
+                                            <div className="flex items-center justify-center h-full text-gray-300">
+                                                <div className="text-center">
+                                                    <div className="mb-2 text-4xl">🎓</div>
+                                                    <span className="text-xs font-medium uppercase tracking-wider">No Image</span>
+                                                </div>
                                             </div>
                                         )}
 
-                                        {/* Top Left Badges */}
-                                        <div className="absolute top-4 left-4 z-20 flex gap-2">
-                                            {course.level && (
-                                                <div className="bg-[#d6b161] text-[#0a192f] text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-md">
-                                                    {course.level}
-                                                </div>
-                                            )}
-                                            {course.popular && (
-                                                <div className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 backdrop-blur-md">
-                                                    <Zap className="w-3 h-3 fill-current" />
-                                                    Popular
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Bottom Left Overlay */}
-                                        <div className="absolute bottom-4 left-4 z-20">
-                                            {course.mode === 'Live' && (
-                                                <div className="bg-[#0a192f]/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 border border-white/10">
-                                                    <Play className="w-3 h-3 fill-current" />
-                                                    Live
-                                                </div>
-                                            )}
-                                        </div>
+                                        {/* Floating Badges */}
+                                        {course.popular && (
+                                            <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                                Popular
+                                            </div>
+                                        )}
+                                        {course.level && (
+                                            <div className="absolute top-4 right-4 bg-[#d6b161] text-[#0a192f] text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                                                {course.level}
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Content Section */}
-                                    <div className="p-6 relative">
-                                        {/* Rating Row */}
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <Star className="w-4 h-4 text-[#d6b161] fill-current" />
-                                            <span className="text-sm font-bold text-gray-900 dark:text-white">{course.rating || '4.8'}</span>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">({course.students || '0'} students)</span>
+                                    {/* Content Area */}
+                                    <div className="p-6 flex-1 flex flex-col">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="text-[#d6b161] text-sm font-semibold">{course.category}</div>
+                                            {course.rating && (
+                                                <div className="flex items-center gap-1 text-sm text-yellow-500 font-semibold">
+                                                    <Star className="w-3.5 h-3.5 fill-current" /> {Number(course.rating).toFixed(1)}
+                                                </div>
+                                            )}
                                         </div>
 
-                                        {/* Title & Subtitle */}
-                                        <h3 className="font-sans text-2xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-1 group-hover:text-[#d6b161] transition-colors">
+                                        <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-1 line-clamp-2" title={course.title}>
                                             {course.title}
                                         </h3>
-                                        <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-5 block">
-                                            {course.subtitle || 'Beginner\'s Journey'}
-                                        </p>
 
-                                        {/* Metadata Row */}
-                                        <div className="flex items-center gap-6 text-xs font-medium text-gray-500 dark:text-gray-400 mb-6 pb-6 border-b border-gray-100 dark:border-white/5">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-[#d6b161]" />
-                                                {course.duration || '8 weeks'}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-[#d6b161]" />
-                                                {course.startDate || 'Jan 15, 2024'}
-                                            </div>
-                                        </div>
+                                        {course.subtitle && (
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-1">
+                                                {course.subtitle}
+                                            </p>
+                                        )}
 
-                                        {/* Features List */}
-                                        <div className="space-y-3 mb-8">
-                                            <div className="flex items-center gap-3">
-                                                <CheckCircle className="w-5 h-5 text-[#d6b161] flex-shrink-0" />
-                                                <span className="text-sm text-gray-600 dark:text-gray-300">Live interactive sessions</span>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <CheckCircle className="w-5 h-5 text-[#d6b161] flex-shrink-0" />
-                                                <span className="text-sm text-gray-600 dark:text-gray-300">1-on-1 speaking practice</span>
-                                            </div>
+                                        <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                            {course.duration && <span>⏱️ {course.duration}</span>}
+                                            {course.mode && <span>📍 {course.mode}</span>}
                                         </div>
 
                                         {/* Footer */}
-                                        <div className="flex items-center justify-between pt-2">
-                                            <div>
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                                                        {course.price || '€299'}
+                                        <div className="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-gray-800 mt-auto">
+                                            <div className="flex flex-col">
+                                                {course.originalPrice && (
+                                                    <span className="text-xs text-gray-400 line-through">
+                                                        {formatPrice(course.originalPrice)}
                                                     </span>
-                                                    {course.originalPrice && (
-                                                        <span className="text-sm text-gray-400 line-through decoration-gray-500">
-                                                            {course.originalPrice}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <span className="text-xs text-gray-400 hidden sm:block">All inclusive</span>
+                                                )}
+                                                <span className="text-lg font-bold text-[#0a192f] dark:text-white">
+                                                    {course.price ? formatPrice(course.price) : 'Free'}
+                                                </span>
                                             </div>
-                                            <Button className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transform transition-all active:scale-95">
-                                                Enroll
+                                            <Button
+                                                onClick={() => setIsEnrollmentModalOpen(true)}
+                                                className="bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] text-sm font-bold px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all"
+                                            >
+                                                Enroll Now
                                             </Button>
                                         </div>
                                     </div>
                                 </div>
+
                             ))}
                         </div>
                     ) : (
