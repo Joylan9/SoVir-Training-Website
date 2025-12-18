@@ -23,7 +23,11 @@ const LanguageEnrollmentDetails: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     // Extract unique levels for the filter dropdown
-    const levels = ["All", ...Array.from(new Set(enrollments.map(e => e.name)))];
+    const levels = ["All", ...Array.from(new Set(
+        Array.isArray(enrollments)
+            ? enrollments.map(e => e.name).filter(Boolean)
+            : []
+    ))];
 
     const fetchEnrollments = async () => {
         try {
@@ -36,9 +40,17 @@ const LanguageEnrollmentDetails: React.FC = () => {
                 "http://localhost:5000/api/language-training/admin/enrollments?status=PENDING",
                 config
             );
-            setEnrollments(data);
+
+            // Ensure data is an array before setting state
+            if (Array.isArray(data)) {
+                setEnrollments(data);
+            } else {
+                console.error("Expected array but got:", data);
+                setEnrollments([]);
+            }
             setLoading(false);
         } catch (err) {
+            console.error("Fetch error:", err);
             setError("Failed to fetch enrollments");
             setLoading(false);
         }
