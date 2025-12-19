@@ -13,6 +13,7 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TrainerDashboard from './pages/TrainerDashboard';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import SkillDashboard from './pages/Admin/SkillDashboard';
 import LanguageDashboard from './pages/Admin/LanguageDashboard';
 import LanguageEnrollmentDetails from './pages/Admin/LanguageEnrollmentDetails';
@@ -116,7 +117,7 @@ const AppContent = () => {
 
         {/* Protected Routes */}
         <Route
-          path="/student-dashboard"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <StudentDashboard />
@@ -133,6 +134,14 @@ const AppContent = () => {
         />
 
         {/* Admin Routes */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/skills"
           element={
