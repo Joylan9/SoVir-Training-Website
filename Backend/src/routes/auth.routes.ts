@@ -11,6 +11,7 @@ router.post('/verify-otp', verifyOtp);
 router.post('/resend-otp', resendOtp);
 router.post('/login', login);
 router.get('/google/url', protect, connectGoogle);
+router.post('/google', googleLogin);
 router.post('/google/callback', protect, googleCallback);
 router.get('/me', protect, getMe);
 router.put('/profile/complete', protect, updateProfile);
