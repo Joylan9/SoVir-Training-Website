@@ -18,6 +18,8 @@ import {
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
 
+import api from '../../lib/api';
+
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
@@ -48,6 +50,20 @@ interface PaymentIssue {
     type: 'refund' | 'dispute' | 'payout';
     amount: string;
     date: string;
+}
+
+interface Trainer {
+    _id: string;
+    name: string;
+    email: string;
+}
+
+interface Batch {
+    _id: string;
+    courseTitle: string;
+    name: string;
+    trainerId?: string;
+    students: any[];
 }
 
 // ============================================================================
@@ -201,6 +217,51 @@ const AdminDashboard: React.FC = () => {
     const [activeTrainers] = useState<ActiveTrainer[]>(mockActiveTrainers);
     const [paymentIssues] = useState<PaymentIssue[]>(mockPaymentIssues);
     const [searchQuery, setSearchQuery] = useState('');
+    const [batches, setBatches] = useState<Batch[]>([]);
+    const [trainers, setTrainers] = useState<Trainer[]>([]);
+    const [showBatchModal, setShowBatchModal] = useState(false);
+    const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
+    const [selectedTrainer, setSelectedTrainer] = useState('');
+
+    React.useEffect(() => {
+        fetchInitialData();
+    }, []);
+
+    const fetchInitialData = async () => {
+        try {
+            const [batchesRes, trainersRes] = await Promise.all([
+                api.get('/language-training/admin/batches'),
+                api.get('/language-training/admin/trainers')
+            ]);
+            setBatches(batchesRes.data);
+            setTrainers(trainersRes.data);
+        } catch (error) {
+            console.error("Failed to fetch admin data", error);
+        }
+    };
+
+    const handleAssignTrainer = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedBatch || !selectedTrainer) return;
+
+        try {
+            await api.put(`/language-training/admin/batches/${selectedBatch._id}/assign-trainer`, {
+                trainerId: selectedTrainer
+            });
+            setShowBatchModal(false);
+            fetchInitialData();
+            alert('Trainer assigned successfully');
+        } catch (error) {
+            console.error("Failed to assign trainer", error);
+            alert('Failed to assign trainer');
+        }
+    };
+
+    const openAssignModal = (batch: Batch) => {
+        setSelectedBatch(batch);
+        setSelectedTrainer(batch.trainerId || '');
+        setShowBatchModal(true);
+    };
 
     const handleApproveTrainer = (id: string) => {
         // TODO: Integrate with backend
@@ -387,6 +448,33 @@ const AdminDashboard: React.FC = () => {
                                 </table>
                             </div>
                         </section>
+
+                        {/* Batch Management Section */}
+                        <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+                            <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#0a192f] dark:text-white">
+                                <BookOpen className="h-5 w-5 text-[#d6b161]" />
+                                Batch Management
+                            </h3>
+                            <div className="space-y-4">
+                                {batches.map((batch) => (
+                                    <div key={batch._id} className="flex items-center justify-between rounded-lg border border-gray-100 p-3 dark:border-gray-700">
+                                        <div>
+                                            <p className="font-semibold text-gray-900 dark:text-white">{batch.courseTitle} - {batch.name}</p>
+                                            <p className="text-xs text-gray-500">
+                                                Trainer: {trainers.find(t => t._id === batch.trainerId)?.name || <span className="text-red-500">Unassigned</span>}
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => openAssignModal(batch)}
+                                            className="text-sm font-medium text-[#d6b161] hover:underline"
+                                        >
+                                            Assign
+                                        </button>
+                                    </div>
+                                ))}
+                                {batches.length === 0 && <p className="text-sm text-gray-500">No batches found.</p>}
+                            </div>
+                        </section>
                     </div>
 
                     {/* Sidebar */}
@@ -487,6 +575,49 @@ const AdminDashboard: React.FC = () => {
                         </section>
                     </div>
                 </div>
+
+                {/* Assign Trainer Modal */}
+                {showBatchModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-gray-800">
+                            <h2 className="mb-4 text-xl font-bold dark:text-white">Assign Trainer</h2>
+                            <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                                Assigning trainer for <strong>{selectedBatch?.courseTitle} - {selectedBatch?.name}</strong>
+                            </p>
+                            <form onSubmit={handleAssignTrainer} className="space-y-4">
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Select Trainer</label>
+                                    <select
+                                        value={selectedTrainer}
+                                        onChange={(e) => setSelectedTrainer(e.target.value)}
+                                        className="w-full rounded-lg border p-2 dark:bg-gray-700 dark:text-white"
+                                        required
+                                    >
+                                        <option value="">-- Select Trainer --</option>
+                                        {trainers.map(t => (
+                                            <option key={t._id} value={t._id}>{t.name} ({t.email})</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowBatchModal(false)}
+                                        className="flex-1 rounded-lg bg-gray-200 py-2 text-gray-800 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="flex-1 rounded-lg bg-[#d6b161] py-2 text-[#0a192f] transition-colors hover:bg-[#c4a055]"
+                                    >
+                                        Save Assignment
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </main>
 
             <Footer />

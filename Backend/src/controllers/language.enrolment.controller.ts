@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Enrollment from "../models/language.enrollment.model";
 import Batch from "../models/language.batch.model";
+import User from "../models/user.model";
 
 /* ============================
    STUDENT APIs
@@ -201,5 +202,39 @@ export const deleteBatch = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete batch" });
+  }
+};
+
+// PUT /api/language-training/admin/batches/:batchId/assign-trainer
+export const assignTrainer = async (req: Request, res: Response) => {
+  try {
+    const { batchId } = req.params;
+    const { trainerId } = req.body;
+
+    if (!trainerId) {
+      return res.status(400).json({ message: "trainerId is required" });
+    }
+
+    const batch = await Batch.findById(batchId);
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    batch.trainerId = trainerId;
+    await batch.save();
+
+    res.json({ message: "Trainer assigned successfully", batch });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to assign trainer", error });
+  }
+};
+
+// GET /api/language-training/admin/trainers
+export const getTrainers = async (req: Request, res: Response) => {
+  try {
+    const trainers = await User.find({ role: 'trainer' }).select('name email _id');
+    res.json(trainers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch trainers", error });
   }
 };

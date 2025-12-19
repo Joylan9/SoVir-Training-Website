@@ -25,6 +25,7 @@ import authRoutes from './routes/auth.routes';
 import skillRoutes from './routes/skillCourse.routes';
 import languageRoutes from './routes/languageCourse.routes';
 import languageTrainingRoutes from './routes/language.training.routes';
+import languageTrainerRoutes from './routes/language.trainer.routes';
 // ... (middlewares)
 
 import dashboardRoutes from './routes/dashboard.routes';
@@ -36,10 +37,11 @@ app.use('/api/items', itemRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+
 app.use('/api/enrollment', enrollmentRoutes);
 app.use('/api/languages', languageRoutes);
+
 app.use('/api/language-training', languageTrainingRoutes);
-
-
+app.use('/api/language-trainer', languageTrainerRoutes);
 
 export default app;

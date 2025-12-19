@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import api from '../lib/api';
 import {
     BookOpen,
-    Calendar,
-    Clock,
     User,
     Edit,
     Mail,
@@ -18,134 +18,35 @@ import Button from '../components/ui/Button';
 import ProfileCompletionModal from '../components/auth/ProfileCompletionModal';
 
 // ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-interface Course {
-    id: string;
-    name: string;
-    trainer: string;
-    progress: number;
-    nextClass: string;
-    batchSchedule: string;
-    status: 'active' | 'completed' | 'upcoming';
-}
-
-// ============================================================================
-// MOCK DATA (Replace with API calls)
-// ============================================================================
-
-const mockCourses: Course[] = [
-    {
-        id: '1',
-        name: 'German A2',
-        trainer: 'Dr. Schmidt',
-        progress: 65,
-        nextClass: '2025-12-17 10:00 AM',
-        batchSchedule: 'Mon, Wed, Fri • 10:00 AM',
-        status: 'active'
-    },
-    {
-        id: '2',
-        name: 'IELTS Preparation',
-        trainer: 'Sarah Johnson',
-        progress: 45,
-        nextClass: '2025-12-18 2:00 PM',
-        batchSchedule: 'Tue, Thu • 2:00 PM',
-        status: 'active'
-    }
-];
-
-// ============================================================================
 // COMPONENTS
 // ============================================================================
 
-const ProgressRing: React.FC<{ progress: number; size?: number }> = ({ progress, size = 120 }) => {
-    const radius = (size - 20) / 2;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progress / 100) * circumference;
+const CourseCard: React.FC<{ course: any }> = ({ course }) => {
+    const navigate = useNavigate();
 
-    return (
-        <div className="relative" style={{ width: size, height: size }}>
-            <svg width={size} height={size} className="transform -rotate-90">
-                <circle
-                    cx={size / 2}
-                    cy={size / 2}
-                    r={radius}
-                    stroke="currentColor"
-                    strokeWidth="8"
-                    fill="none"
-                    className="text-gray-200 dark:text-gray-700"
-                />
-                <circle
-                    cx={size / 2}
-                    cy={size / 2}
-                    r={radius}
-                    stroke="currentColor"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    className="text-[#d6b161] transition-all duration-500"
-                    strokeLinecap="round"
-                />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xl font-bold text-[#0a192f] dark:text-white">{progress}%</span>
-            </div>
-        </div>
-    );
-};
-
-const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
-    const handleJoinLive = () => {
-        if (typeof (window as any).api?.joinLiveClass === 'function') {
-            (window as any).api.joinLiveClass(course.id);
-        } else {
-            window.open(`/live-class/${course.id}`, '_blank');
-        }
+    const handleCardClick = () => {
+        navigate(`/language-batch/${course._id}`);
     };
 
     return (
         <motion.div
             whileHover={{ y: -4 }}
-            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
+            onClick={handleCardClick}
         >
             <div className="mb-4 flex items-start justify-between">
                 <div>
-                    <h3 className="text-xl font-bold text-[#0a192f] dark:text-white">{course.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">with {course.trainer}</p>
+                    <h3 className="text-xl font-bold text-[#0a192f] dark:text-white">{course.courseTitle}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{course.name}</p>
+                    <p className="text-xs text-gray-500 mt-1">Trainer: {course.trainerId?.name || 'Unknown'}</p>
                 </div>
-                <ProgressRing progress={course.progress} size={60} />
+                {/* Progress ring or other visuals if we have data */}
             </div>
 
-            <div className="mb-4 space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                    <Calendar className="h-4 w-4 text-[#d6b161]" />
-                    <span>{course.batchSchedule}</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                    <Clock className="h-4 w-4 text-[#d6b161]" />
-                    <span>Next class: {course.nextClass}</span>
-                </div>
-            </div>
-
-            <div className="flex gap-3">
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleJoinLive}
-                    className="flex-1 rounded-lg bg-[#d6b161] px-4 py-2 text-sm font-semibold text-[#0a192f] transition-colors hover:bg-[#c4a055]"
-                >
-                    Join Live
-                </motion.button>
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 rounded-lg border-2 border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-[#d6b161] hover:text-[#d6b161] dark:border-gray-600 dark:text-gray-300"
-                >
-                    View Schedule
-                </motion.button>
+            <div className="flex gap-3 mt-4">
+                <button className="w-full text-center text-[#d6b161] font-semibold hover:underline">
+                    View Course Content & Materials
+                </button>
             </div>
         </motion.div>
     );
@@ -157,8 +58,25 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
 
 const StudentDashboard: React.FC = () => {
     const { user } = useAuth();
-    const [courses] = useState<Course[]>(mockCourses);
+    const [courses, setCourses] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchBatches = async () => {
+            try {
+                const response = await api.get('/language-trainer/student/batches');
+                setCourses(response.data);
+            } catch (error) {
+                console.error("Failed to fetch student batches", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (user) {
+            fetchBatches();
+        }
+    }, [user]);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -280,23 +198,27 @@ const StudentDashboard: React.FC = () => {
                                 <BookOpen className="h-6 w-6 text-[#d6b161]" />
                                 Enrolled Courses
                             </h2>
-                            {courses.length > 0 ? (
-                                <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
-                                    {courses.map((course, idx) => (
-                                        <motion.div
-                                            key={course.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: idx * 0.1 }}
-                                        >
-                                            <CourseCard course={course} />
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
-                                    <p className="text-gray-500 dark:text-gray-400">You are not enrolled in any courses yet.</p>
-                                </div>
+                            {loading ? <p>Loading courses...</p> : (
+                                <>
+                                    {courses.length > 0 ? (
+                                        <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+                                            {courses.map((course, idx) => (
+                                                <motion.div
+                                                    key={course._id}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: idx * 0.1 }}
+                                                >
+                                                    <CourseCard course={course} />
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
+                                            <p className="text-gray-500 dark:text-gray-400">You are not enrolled in any courses yet.</p>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </section>
                     </div>

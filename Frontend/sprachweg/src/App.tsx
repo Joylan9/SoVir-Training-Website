@@ -17,6 +17,7 @@ import SkillDashboard from './pages/Admin/SkillDashboard';
 import LanguageDashboard from './pages/Admin/LanguageDashboard';
 import LanguageEnrollmentDetails from './pages/Admin/LanguageEnrollmentDetails';
 import LanguageBatches from './pages/Admin/LanguageBatches';
+import LanguageBatchDetails from './pages/LanguageBatchDetails';
 import LanguageTraining from './pages/LanguageTraining';
 import CourseEnglishPage from './pages/CourseEnglishPage';
 import CourseGermanPage from './pages/CourseGermanPage';
@@ -164,10 +165,18 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/language-batch/:batchId"
+          element={
+            <ProtectedRoute>
+              <LanguageBatchDetails />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Fallback */}
         <Route path="*" element={<NotFound404 />} />
-      </Routes>
+      </Routes >
     </>
   );
 };

@@ -9,30 +9,71 @@ interface Student {
     email: string;
 }
 
+interface Trainer {
+    _id: string;
+    name: string;
+    email: string;
+}
+
 interface Batch {
     _id: string;
     courseTitle: string;
-    name: string; // was levelName
+    name: string;
     students: Student[];
+    trainerId?: string;
 }
 
 const LanguageBatches: React.FC = () => {
     const [batches, setBatches] = useState<Batch[]>([]);
+    const [trainers, setTrainers] = useState<Trainer[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [expandedBatch, setExpandedBatch] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [filterCourse, setFilterCourse] = useState("All");
 
-    const fetchBatches = async () => {
+    // Trainer Assignment State
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
+    const [selectedTrainer, setSelectedTrainer] = useState("");
+
+    const fetchData = async () => {
         try {
-            const { data } = await api.get("/language-training/admin/batches");
-            setBatches(data);
+            const [batchesRes, trainersRes] = await Promise.all([
+                api.get("/language-training/admin/batches"),
+                api.get("/language-training/admin/trainers")
+            ]);
+            setBatches(batchesRes.data);
+            setTrainers(trainersRes.data);
             setLoading(false);
         } catch (err) {
-            setError("Failed to fetch batches");
+            setError("Failed to fetch data");
             setLoading(false);
         }
+    };
+
+    const handleAssignTrainer = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedBatch || !selectedTrainer) return;
+
+        try {
+            await api.put(`/language-training/admin/batches/${selectedBatch._id}/assign-trainer`, {
+                trainerId: selectedTrainer
+            });
+            setShowAssignModal(false);
+            fetchData(); // Refresh data to show updated trainer
+            alert('Trainer assigned successfully');
+        } catch (error) {
+            console.error("Failed to assign trainer", error);
+            alert('Failed to assign trainer');
+        }
+    };
+
+    const openAssignModal = (batch: Batch, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSelectedBatch(batch);
+        setSelectedTrainer(batch.trainerId || '');
+        setShowAssignModal(true);
     };
 
     const handleRemoveStudent = async (batchId: string, studentId: string) => {
@@ -72,7 +113,7 @@ const LanguageBatches: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchBatches();
+        fetchData();
     }, []);
 
     const toggleBatch = (id: string) => {
@@ -116,7 +157,7 @@ const LanguageBatches: React.FC = () => {
                             Active Classes
                         </h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            Manage your running batches and enrolled students.
+                            Manage your running batches, assign trainers, and view enrolled students.
                         </p>
                     </div>
                 </div>
@@ -126,7 +167,7 @@ const LanguageBatches: React.FC = () => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <input
                             type="text"
-                            placeholder="Search students by name or email..."
+                            placeholder="Search students or batches..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#0a192f] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#d6b161] focus:border-transparent outline-none transition-all"
@@ -174,6 +215,7 @@ const LanguageBatches: React.FC = () => {
                         {filteredBatches.map((batch) => {
                             const visibleStudents = getVisibleStudents(batch);
                             const shouldExpand = expandedBatch === batch._id || (searchTerm.length > 0 && visibleStudents.length > 0);
+                            const assignedTrainer = trainers.find(t => t._id === batch.trainerId);
 
                             return (
                                 <div
@@ -184,7 +226,7 @@ const LanguageBatches: React.FC = () => {
                                 >
                                     <div
                                         onClick={() => toggleBatch(batch._id)}
-                                        className="p-4 sm:p-6 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-[#0a192f]/50 transition-colors"
+                                        className="p-4 sm:p-6 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between hover:bg-gray-50 dark:hover:bg-[#0a192f]/50 transition-colors gap-4"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
@@ -197,13 +239,30 @@ const LanguageBatches: React.FC = () => {
                                                         {batch.name}
                                                     </span>
                                                 </h2>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-1">
-                                                    <Users className="w-4 h-4" />
-                                                    <span className="font-medium">{visibleStudents.length} / {batch.students.length}</span> Students Match
-                                                </p>
+                                                <div className="flex flex-wrap items-center gap-4 mt-1 text-sm">
+                                                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                                                        <Users className="w-4 h-4" />
+                                                        <span className="font-medium">{visibleStudents.length} / {batch.students.length}</span> Students Match
+                                                    </p>
+                                                    <span className="hidden sm:block text-gray-300 dark:text-gray-700">|</span>
+                                                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                                                        <span className="font-medium">Trainer:</span>
+                                                        {assignedTrainer ? (
+                                                            <span className="text-gray-900 dark:text-white">{assignedTrainer.name}</span>
+                                                        ) : (
+                                                            <span className="text-red-500 font-medium">Unassigned</span>
+                                                        )}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center justify-end gap-3">
+                                            <button
+                                                onClick={(e) => openAssignModal(batch, e)}
+                                                className="px-3 py-1.5 text-sm font-medium text-[#d6b161] border border-[#d6b161] rounded-lg hover:bg-[#d6b161]/10 transition-colors"
+                                            >
+                                                {assignedTrainer ? 'Reassign' : 'Assign Trainer'}
+                                            </button>
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
@@ -281,6 +340,54 @@ const LanguageBatches: React.FC = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                )}
+
+                {/* Assign Trainer Modal */}
+                {showAssignModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700">
+                            <h2 className="mb-4 text-xl font-bold dark:text-white">Assign Trainer</h2>
+                            <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                                Assigning trainer for <strong>{selectedBatch?.courseTitle} - {selectedBatch?.name}</strong>
+                            </p>
+                            <form onSubmit={handleAssignTrainer} className="space-y-4">
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Select Trainer</label>
+                                    <select
+                                        value={selectedTrainer}
+                                        onChange={(e) => setSelectedTrainer(e.target.value)}
+                                        className="w-full rounded-lg border p-2 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-[#d6b161] outline-none"
+                                        required
+                                    >
+                                        <option value="">-- Select Trainer --</option>
+                                        {trainers.map(t => (
+                                            <option key={t._id} value={t._id}>{t.name} ({t.email})</option>
+                                        ))}
+                                    </select>
+                                    {trainers.length === 0 && (
+                                        <p className="mt-1 text-xs text-red-500">
+                                            No trainers found. Use the CLI script to give a user the 'trainer' role.
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex gap-2 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAssignModal(false)}
+                                        className="flex-1 rounded-lg bg-gray-100 py-2.5 text-gray-800 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 font-medium"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="flex-1 rounded-lg bg-[#d6b161] py-2.5 text-[#0a192f] transition-colors hover:bg-[#c4a055] font-bold"
+                                    >
+                                        Save Assignment
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 )}
             </div>
