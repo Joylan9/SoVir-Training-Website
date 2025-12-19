@@ -14,12 +14,12 @@ import {
     UserCheck,
     Ban,
     ArrowLeft,
-    ChevronDown
+    
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
-import Button from '../components/ui/Button';
+
 import api from '../lib/api';
 
 interface Annotation {
