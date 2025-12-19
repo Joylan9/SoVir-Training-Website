@@ -238,10 +238,13 @@ export const googleLogin = async (req: Request, res: Response) => {
 
 export const getMe = async (req: Request, res: Response) => {
     try {
-        const user = (req as any).user;
+        // Fetch fresh user data including the private googleRefreshToken field
+        const user = await User.findById((req as any).user.id).select('+googleRefreshToken');
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         res.status(200).json({
             id: (user as any)._id,
             name: user.name,
@@ -252,7 +255,8 @@ export const getMe = async (req: Request, res: Response) => {
             guardianName: user.guardianName,
             guardianPhone: user.guardianPhone,
             qualification: user.qualification,
-            dateOfBirth: user.dateOfBirth
+            dateOfBirth: user.dateOfBirth,
+            googleRefreshToken: !!user.googleRefreshToken // Return boolean status
         });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });

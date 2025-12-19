@@ -17,6 +17,7 @@ export interface IUser extends Document {
     otp?: string;
     otpExpires?: Date;
     lastOtpSent?: Date;
+    googleRefreshToken?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -36,6 +37,7 @@ const UserSchema: Schema = new Schema({
     otp: { type: String }, // Hashed
     otpExpires: { type: Date },
     lastOtpSent: { type: Date },
+    googleRefreshToken: { type: String, select: false } // Store securely, don't return by default
 }, {
     timestamps: true,
     toJSON: { virtuals: true },

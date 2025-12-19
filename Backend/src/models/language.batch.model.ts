@@ -57,4 +57,11 @@ BatchSchema.virtual('materials', {
   foreignField: 'batchId'
 });
 
+// Virtual for classes
+BatchSchema.virtual('classes', {
+  ref: 'LanguageClass',
+  localField: '_id',
+  foreignField: 'batchId'
+});
+
 export default mongoose.model<IBatch>("LanguageBatch", BatchSchema);

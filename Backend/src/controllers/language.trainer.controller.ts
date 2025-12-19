@@ -4,7 +4,12 @@ import path from 'path';
 import LanguageBatch from '../models/language.batch.model';
 import LanguageMaterial from '../models/language.material.model';
 import LanguageAnnouncement from '../models/language.announcement.model';
+import LanguageClass from '../models/language.class.model';
+import User from '../models/user.model';
 import { AuthRequest } from '../middlewares/auth.middleware';
+import { GoogleCalendarService } from '../services/google.calendar.service';
+
+const googleService = new GoogleCalendarService();
 
 // Get all batches assigned to the trainer
 export const getTrainerBatches = async (req: AuthRequest, res: Response) => {
@@ -13,7 +18,8 @@ export const getTrainerBatches = async (req: AuthRequest, res: Response) => {
         const batches = await LanguageBatch.find({ trainerId })
             .populate('students', 'name email')
             .populate({ path: 'materials' })
-            .populate({ path: 'announcements' });
+            .populate({ path: 'announcements' })
+            .populate({ path: 'classes' });
 
         res.json(batches);
     } catch (error) {
@@ -28,7 +34,8 @@ export const getStudentBatches = async (req: AuthRequest, res: Response) => {
         const batches = await LanguageBatch.find({ students: studentId })
             .populate('trainerId', 'name')
             .populate({ path: 'materials' })
-            .populate({ path: 'announcements' });
+            .populate({ path: 'announcements' })
+            .populate({ path: 'classes' });
 
         res.json(batches);
     } catch (error) {
@@ -106,7 +113,8 @@ export const getBatchDetails = async (req: AuthRequest, res: Response) => {
         const batch = await LanguageBatch.findById(batchId)
             .populate('students', 'name email')
             .populate('materials')
-            .populate('announcements');
+            .populate('announcements')
+            .populate('classes');
 
         if (!batch) {
             return res.status(404).json({ message: 'Batch not found' });
@@ -193,5 +201,140 @@ export const deleteAnnouncement = async (req: AuthRequest, res: Response) => {
     } catch (error) {
         console.error("Error deleting announcement:", error);
         res.status(500).json({ message: 'Error deleting announcement', error });
+    }
+};
+
+// Schedule a Class
+export const scheduleClass = async (req: AuthRequest, res: Response) => {
+    try {
+        const { batchId, topic, startTime } = req.body; // Remove meetLink from req.body
+        const trainerId = req.user?._id;
+
+        // Verify trainer owns the batch
+        const batch = await LanguageBatch.findOne({ _id: batchId, trainerId }).populate('students');
+        if (!batch) {
+            return res.status(403).json({ message: 'Not authorized to schedule class for this batch' });
+        }
+
+        // Check if trainer has connected Google Calendar
+        const trainer = await User.findById(trainerId).select('+googleRefreshToken');
+        let meetLink = '';
+        let eventId = '';
+
+        if (trainer?.googleRefreshToken) {
+            try {
+                googleService.setCredentials(trainer.googleRefreshToken);
+
+                // Get student emails
+                const attendeeEmails = (batch.students as any[]).map(s => s.email);
+                // Also add trainer
+                if (trainer.email) attendeeEmails.push(trainer.email);
+
+                const event = await googleService.createMeeting(
+                    `Class: ${topic}`,
+                    `Live class for ${batch.courseTitle} - ${batch.name}`,
+                    new Date(startTime),
+                    60,
+                    attendeeEmails
+                );
+                meetLink = event.meetLink;
+                eventId = event.eventId;
+            } catch (err) {
+                console.error("Failed to create Google Meet event:", err);
+                // Fallback or Error? unique choice.
+                // If critical, return error. If optional, maybe let them paste or fail.
+                // Assuming "automatic specific", if it fails, maybe return error telling them to reconnect.
+                // But for robustness, let's allow fallback if we had a link input, but we are removing it.
+                // Better to throw error so they know integration failed.
+                return res.status(500).json({ message: 'Failed to create Google Meet event. Please reconnect Google Calendar.' });
+            }
+        } else {
+            // If not connected, we can't auto-generate.
+            // If manual link is allowed, we could check req.body.meetLink?
+            // But requirement is "automatically created".
+            // So we return error asking to connect.
+            // HOWEVER, to keep existing functionality working if they passed a link manually (fallback):
+            if (req.body.meetLink) {
+                meetLink = req.body.meetLink;
+            } else {
+                return res.status(400).json({ message: 'Google Calendar not connected. Please connect or provide a link manually.' });
+            }
+        }
+
+        const newClass = new LanguageClass({
+            batchId,
+            trainerId,
+            topic,
+            startTime,
+            meetLink,
+            eventId
+        });
+
+        await newClass.save();
+        res.status(201).json(newClass);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error scheduling class', error });
+    }
+};
+
+// Delete a Class
+export const deleteClass = async (req: AuthRequest, res: Response) => {
+    try {
+        const { classId } = req.params;
+        const trainerId = req.user?._id;
+
+        const languageClass = await LanguageClass.findById(classId);
+        if (!languageClass) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        // Verify trainer owns the batch
+        const batch = await LanguageBatch.findOne({ _id: languageClass.batchId, trainerId });
+        if (!batch) {
+            return res.status(403).json({ message: 'Not authorized to delete this class' });
+        }
+
+        // Delete from Google Calendar
+        if (languageClass.eventId) {
+            const trainer = await User.findById(trainerId).select('+googleRefreshToken');
+            if (trainer?.googleRefreshToken) {
+                googleService.setCredentials(trainer.googleRefreshToken);
+                await googleService.deleteEvent(languageClass.eventId);
+            }
+        }
+
+        await LanguageClass.findByIdAndDelete(classId);
+        res.json({ message: 'Class deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting class', error });
+    }
+};
+
+// Join Class (Record Attendance)
+export const joinClass = async (req: AuthRequest, res: Response) => {
+    try {
+        const { classId } = req.params;
+        const studentId = req.user?._id;
+
+        const languageClass = await LanguageClass.findById(classId);
+        if (!languageClass) {
+            return res.status(404).json({ message: 'Class not found' });
+        }
+
+        // Check if already joined
+        const alreadyJoined = languageClass.attendees.some(a => a.studentId.toString() === studentId?.toString());
+
+        if (!alreadyJoined && studentId) {
+            languageClass.attendees.push({
+                studentId: studentId as any,
+                joinedAt: new Date()
+            });
+            await languageClass.save();
+        }
+
+        res.json({ message: 'Attendance recorded', link: languageClass.meetLink });
+    } catch (error) {
+        res.status(500).json({ message: 'Error joining class', error });
     }
 };

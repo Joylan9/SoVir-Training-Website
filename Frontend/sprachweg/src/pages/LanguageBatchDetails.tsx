@@ -10,7 +10,8 @@ import {
     File as FileIcon,
     Image,
     X,
-    Trash2
+    Trash2,
+    Video
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -48,6 +49,15 @@ interface BatchDetails {
     materials: Material[];
     students: Student[];
     trainerId: string;
+    classes: LanguageClass[];
+}
+
+interface LanguageClass {
+    _id: string;
+    topic: string;
+    startTime: string;
+    meetLink: string;
+    attendees: { studentId: string; joinedAt: string }[];
 }
 
 const LanguageBatchDetails: React.FC = () => {
@@ -56,7 +66,7 @@ const LanguageBatchDetails: React.FC = () => {
     const { user } = useAuth();
     const [batch, setBatch] = useState<BatchDetails | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'announcements' | 'materials' | 'students'>('announcements');
+    const [activeTab, setActiveTab] = useState<'announcements' | 'materials' | 'students' | 'classes'>('announcements');
 
     // Forms State
     const [showAddModal, setShowAddModal] = useState(false);
@@ -65,13 +75,24 @@ const LanguageBatchDetails: React.FC = () => {
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
     const [content, setContent] = useState(''); // Used for Announcement Content OR Material Description
+    const [classDate, setClassDate] = useState('');
+    const [classTime, setClassTime] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [submitting, setSubmitting] = useState(false);
+    const [isGoogleConnected, setIsGoogleConnected] = useState(false);
 
     const isTrainer = user?.role === 'trainer' || user?._id === batch?.trainerId;
 
     useEffect(() => {
         fetchBatchDetails();
+
+        // Check if user just returned from Google OAuth
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('googleConnected') === 'true') {
+            alert('✅ Google Calendar successfully connected! Meeting links will now be auto-generated.');
+            // Clean up URL
+            window.history.replaceState({}, '', window.location.pathname);
+        }
     }, [batchId]);
 
     const fetchBatchDetails = async () => {
@@ -84,6 +105,21 @@ const LanguageBatchDetails: React.FC = () => {
             setLoading(false);
         }
     };
+
+    // Check Google Calendar connection status
+    useEffect(() => {
+        const checkGoogleConnection = async () => {
+            if (isTrainer) {
+                try {
+                    const response = await api.get('/auth/me');
+                    setIsGoogleConnected(!!response.data.googleRefreshToken);
+                } catch (error) {
+                    console.error('Failed to check Google connection', error);
+                }
+            }
+        };
+        checkGoogleConnection();
+    }, [isTrainer]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -103,6 +139,13 @@ const LanguageBatchDetails: React.FC = () => {
                     batchId,
                     title,
                     content
+                });
+            } else if (activeTab === 'classes') {
+                const startTime = new Date(`${classDate}T${classTime}`);
+                await api.post('/language-trainer/classes', {
+                    batchId,
+                    topic: title,
+                    startTime
                 });
             } else {
                 // For materials, use FormData to handle file upload
@@ -138,6 +181,8 @@ const LanguageBatchDetails: React.FC = () => {
         setTitle('');
         setSubtitle('');
         setContent('');
+        setClassDate('');
+        setClassTime('');
         setSelectedFile(null);
     };
 
@@ -162,6 +207,41 @@ const LanguageBatchDetails: React.FC = () => {
         } catch (error) {
             console.error("Failed to delete material", error);
             alert("Failed to delete material. Please try again.");
+        }
+    };
+
+    const handleDeleteClass = async (classId: string) => {
+        if (!window.confirm('Are you sure you want to delete this class?')) return;
+        try {
+            await api.delete(`/language-trainer/classes/${classId}`);
+            fetchBatchDetails();
+        } catch (error) {
+            console.error("Failed to delete class", error);
+        }
+    };
+
+    const handleJoinClass = async (classId: string, link: string) => {
+        try {
+            // Record attendance
+            await api.post(`/language-trainer/classes/${classId}/join`);
+            window.open(link, '_blank');
+        } catch (error) {
+            console.error("Failed to join class", error);
+            window.open(link, '_blank'); // Open anyway
+        }
+    };
+
+    const handleConnectGoogle = async () => {
+        try {
+            // Store current page URL in sessionStorage (more reliable than localStorage for redirects)
+            sessionStorage.setItem('googleOAuthReturnUrl', window.location.pathname);
+            console.log('Stored return URL:', window.location.pathname);
+
+            const response = await api.get('/auth/google/url');
+            window.location.href = response.data.url;
+        } catch (error) {
+            console.error("Failed to get Google Auth URL", error);
+            alert("Failed to initiate Google Calendar connection");
         }
     };
 
@@ -256,6 +336,18 @@ const LanguageBatchDetails: React.FC = () => {
                             <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#d6b161]" />
                         )}
                     </button>
+                    <button
+                        onClick={() => setActiveTab('classes')}
+                        className={`px-6 py-4 text-sm font-medium transition-all relative ${activeTab === 'classes'
+                            ? 'text-[#d6b161]'
+                            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                            }`}
+                    >
+                        Live Classes
+                        {activeTab === 'classes' && (
+                            <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#d6b161]" />
+                        )}
+                    </button>
                 </div>
 
                 {/* Action Bar */}
@@ -266,14 +358,66 @@ const LanguageBatchDetails: React.FC = () => {
                             className="flex items-center gap-2 bg-[#d6b161] text-[#0a192f] hover:bg-[#c4a055] px-6 py-2.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg"
                         >
                             <Plus className="h-5 w-5" />
-                            Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}
+                            <Plus className="h-5 w-5" />
+                            Add {activeTab === 'announcements' ? 'Announcement' : activeTab === 'classes' ? 'Class' : 'Material'}
                         </Button>
                     </div>
                 )}
 
                 {/* Content Area */}
                 <div className="space-y-6">
-                    {activeTab === 'announcements' ? (
+                    {activeTab === 'classes' ? (
+                        <div className="space-y-4">
+                            {(!batch.classes || batch.classes.length === 0) && (
+                                <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                    <Video className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500 dark:text-gray-400">No live classes scheduled yet.</p>
+                                </div>
+                            )}
+
+                            {(batch.classes || []).map((cls) => (
+                                <div key={cls._id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500" />
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-start gap-4">
+                                            <div className="flex-shrink-0 rounded-full bg-green-50 p-3 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+                                                <Video className="h-6 w-6" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{cls.topic}</h3>
+                                                <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                                                    <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
+                                                        {new Date(cls.startTime).toLocaleDateString()}
+                                                    </span>
+                                                    <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
+                                                        {new Date(cls.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                    <span>• {cls.attendees?.length || 0} joined</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => handleJoinClass(cls._id, cls.meetLink)}
+                                                className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition w-full sm:w-auto text-sm"
+                                            >
+                                                Join Class
+                                            </button>
+                                            {isTrainer && (
+                                                <button
+                                                    onClick={() => handleDeleteClass(cls._id)}
+                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                                                    title="Delete Class"
+                                                >
+                                                    <Trash2 className="h-5 w-5" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : activeTab === 'announcements' ? (
                         <div className="space-y-4">
                             {(!batch.announcements || batch.announcements.length === 0) && (
                                 <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
@@ -408,7 +552,7 @@ const LanguageBatchDetails: React.FC = () => {
                         <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl dark:bg-gray-800 scale-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-bold font-serif dark:text-white">
-                                    Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}
+                                    {activeTab === 'classes' ? 'Schedule Live Class' : `Add ${activeTab === 'announcements' ? 'Announcement' : 'Material'}`}
                                 </h2>
                                 <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                     <X className="h-6 w-6" />
@@ -428,6 +572,69 @@ const LanguageBatchDetails: React.FC = () => {
                                     />
                                 </div>
 
+                                {activeTab === 'classes' && (
+                                    <>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Date</label>
+                                                <input
+                                                    type="date"
+                                                    value={classDate}
+                                                    onChange={e => setClassDate(e.target.value)}
+                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Time</label>
+                                                <input
+                                                    type="time"
+                                                    value={classTime}
+                                                    onChange={e => setClassTime(e.target.value)}
+                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Google Calendar Connection Status */}
+                                        <div className={`p-4 rounded-xl border ${isGoogleConnected
+                                                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                                                : 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800'
+                                            }`}>
+                                            <div className="flex items-center gap-3">
+                                                <div className={`p-2 rounded-full ${isGoogleConnected
+                                                        ? 'bg-green-100 dark:bg-green-800'
+                                                        : 'bg-blue-100 dark:bg-blue-800'
+                                                    }`}>
+                                                    <Video className={`h-5 w-5 ${isGoogleConnected
+                                                            ? 'text-green-600 dark:text-green-300'
+                                                            : 'text-blue-600 dark:text-blue-300'
+                                                        }`} />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="font-bold text-gray-900 dark:text-white text-sm">Google Calendar</h3>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {isGoogleConnected
+                                                            ? '✅ Connected - Meeting links auto-generated'
+                                                            : 'Not connected - Click to connect'}
+                                                    </p>
+                                                </div>
+                                                <Button
+                                                    type="button"
+                                                    onClick={handleConnectGoogle}
+                                                    className={`text-xs font-medium px-3 py-1.5 rounded-lg shadow-sm ${isGoogleConnected
+                                                            ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
+                                                            : 'bg-white border border-gray-200 hover:bg-gray-50 text-gray-700'
+                                                        }`}
+                                                >
+                                                    {isGoogleConnected ? 'Reconnect' : 'Connect'}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
                                 {activeTab === 'materials' && (
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Subtitle <span className="text-gray-400 font-normal">(Optional)</span></label>
@@ -441,19 +648,21 @@ const LanguageBatchDetails: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                                        {activeTab === 'announcements' ? 'Content' : 'Description'}
-                                    </label>
-                                    <textarea
-                                        placeholder={activeTab === 'announcements' ? 'Enter announcement details...' : 'Describe what this material is about...'}
-                                        value={content}
-                                        onChange={e => setContent(e.target.value)}
-                                        rows={4}
-                                        className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all resize-none"
-                                        required
-                                    />
-                                </div>
+                                {activeTab !== 'classes' && (
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                            {activeTab === 'announcements' ? 'Content' : 'Description'}
+                                        </label>
+                                        <textarea
+                                            placeholder={activeTab === 'announcements' ? 'Enter announcement details...' : 'Describe what this material is about...'}
+                                            value={content}
+                                            onChange={e => setContent(e.target.value)}
+                                            rows={4}
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all resize-none"
+                                            required
+                                        />
+                                    </div>
+                                )}
 
                                 {activeTab === 'materials' && (
                                     <div>
@@ -483,16 +692,16 @@ const LanguageBatchDetails: React.FC = () => {
                                         disabled={submitting}
                                         className="flex-1 bg-[#d6b161] text-[#0a192f] hover:bg-[#c4a055] py-3 rounded-xl font-bold shadow-lg shadow-[#d6b161]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        {submitting ? 'Adding...' : 'Add Item'}
+                                        {submitting ? 'Adding...' : activeTab === 'classes' ? 'Schedule Class' : 'Add Item'}
                                     </Button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 )}
-            </main>
+            </main >
             <Footer />
-        </div>
+        </div >
     );
 };
 

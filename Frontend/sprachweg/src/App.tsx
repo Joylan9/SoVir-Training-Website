@@ -25,6 +25,7 @@ import CourseGermanPage from './pages/CourseGermanPage';
 import CourseJapanesePage from './pages/CourseJapanesePage';
 import NotFound404 from './pages/NotFound404';
 import AboutPage from './pages/About';
+import GoogleCallback from './pages/GoogleCallback';
 
 
 // Protected Route Component
@@ -138,6 +139,7 @@ const AppContent = () => {
         />
 
         {/* Admin Routes */}
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route
           path="/admin"
           element={

@@ -7,7 +7,10 @@ import {
     getBatchDetails,
     getStudentBatches,
     deleteMaterial,
-    deleteAnnouncement
+    deleteAnnouncement,
+    scheduleClass,
+    deleteClass,
+    joinClass
 } from '../controllers/language.trainer.controller';
 import { upload } from '../middlewares/upload.middleware';
 
@@ -21,11 +24,14 @@ router.post('/materials', authorize('trainer'), upload.single('file'), addMateri
 router.delete('/materials/:materialId', authorize('trainer'), deleteMaterial);
 router.post('/announcements', authorize('trainer'), addAnnouncement);
 router.delete('/announcements/:announcementId', authorize('trainer'), deleteAnnouncement);
+router.post('/classes', authorize('trainer'), scheduleClass);
+router.delete('/classes/:classId', authorize('trainer'), deleteClass);
 
 // Student Routes
 router.get('/student/batches', getStudentBatches);
 
 // Shared Routes (Student & Trainer)
 router.get('/batch/:batchId', getBatchDetails);
+router.post('/classes/:classId/join', joinClass);
 
 export default router;
