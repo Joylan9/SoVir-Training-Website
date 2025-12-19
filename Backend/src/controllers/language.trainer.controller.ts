@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import LanguageBatch from '../models/language.batch.model';
 import LanguageMaterial from '../models/language.material.model';
 import LanguageAnnouncement from '../models/language.announcement.model';
@@ -139,6 +141,26 @@ export const deleteMaterial = async (req: AuthRequest, res: Response) => {
         const batch = await LanguageBatch.findOne({ _id: material.batchId, trainerId });
         if (!batch) {
             return res.status(403).json({ message: 'Not authorized to delete this material' });
+        }
+
+        // Delete file from filesystem
+        if (material.fileUrl) {
+            try {
+                // material.fileUrl is like "/uploads/materials/filename.ext"
+                // Resolve path relative to process.cwd() (typically project root where package.json is)
+                const relativePath = material.fileUrl.startsWith('/') ? material.fileUrl.slice(1) : material.fileUrl;
+                const filePath = path.join(process.cwd(), relativePath);
+
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                    console.log(`Deleted file: ${filePath}`);
+                } else {
+                    console.warn(`File not found for deletion: ${filePath}`);
+                }
+            } catch (err) {
+                console.error("Error deleting physical file:", err);
+                // Continue to delete record
+            }
         }
 
         await LanguageMaterial.findByIdAndDelete(materialId);
