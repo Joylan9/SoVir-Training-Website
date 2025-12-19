@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, ChevronDown, Settings } from 'lucide-react';
 import Button from '../ui/Button';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const { user } = useAuth();
     const navRef = useRef<HTMLElement>(null);
@@ -23,6 +24,7 @@ const Header: React.FC = () => {
         const handleClickOutside = (event: MouseEvent) => {
             if (navRef.current && !navRef.current.contains(event.target as Node)) {
                 setOpenDropdown(null);
+                setIsSettingsOpen(false);
             }
         };
 
@@ -416,7 +418,7 @@ const Header: React.FC = () => {
                         </div>
 
                         <Link
-                            to="#"
+                            to="/about"
                             className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm px-3 py-2"
                         >
                             About
@@ -431,12 +433,32 @@ const Header: React.FC = () => {
 
                     {/* Right Area */}
                     <div className="hidden lg:flex items-center gap-4">
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-yellow-400 transition-colors"
-                        >
-                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                        </button>
+                        {/* Settings Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors"
+                            >
+                                <Settings className="w-5 h-5" />
+                            </button>
+
+                            {isSettingsOpen && (
+                                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#0a192f] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                                    <div className="p-2">
+                                        <button
+                                            onClick={() => {
+                                                toggleTheme();
+                                                setIsSettingsOpen(false);
+                                            }}
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors text-sm"
+                                        >
+                                            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                                            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
                         {user ? (
                             <Link to={`/${user.role}-dashboard`} className="text-gray-700 dark:text-white font-medium hover:text-[#d6b161] transition-colors text-sm">
@@ -461,11 +483,28 @@ const Header: React.FC = () => {
                     {/* Mobile Menu Button */}
                     <div className="lg:hidden flex items-center gap-3">
                         <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-yellow-400"
+                            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300"
                         >
-                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                            <Settings className="w-5 h-5" />
                         </button>
+
+                        {isSettingsOpen && (
+                            <div className="absolute right-4 top-16 w-48 bg-white dark:bg-[#0a192f] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                                <div className="p-2">
+                                    <button
+                                        onClick={() => {
+                                            toggleTheme();
+                                            setIsSettingsOpen(false);
+                                        }}
+                                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors text-sm"
+                                    >
+                                        {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                                        <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="text-gray-700 dark:text-white p-2"
@@ -574,7 +613,7 @@ const Header: React.FC = () => {
                                 </div>
                             )}
 
-                            <Link to="#" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>About</Link>
+                            <Link to="/about" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>About</Link>
                             <Link to="#" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
                             <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-3">

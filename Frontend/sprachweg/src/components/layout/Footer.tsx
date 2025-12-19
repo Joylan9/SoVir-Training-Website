@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
                     <div>
                         <h3 className="font-bold text-white mb-6 text-base">Company</h3>
                         <ul className="space-y-3 text-sm text-gray-400">
-                            <li><Link to="#" className="hover:text-[#d6b161] transition-colors block">About Us</Link></li>
+                            <li><Link to="/about" className="hover:text-[#d6b161] transition-colors block">About Us</Link></li>
                             <li><Link to="#" className="hover:text-[#d6b161] transition-colors block">Our Team</Link></li>
                             <li><Link to="#" className="hover:text-[#d6b161] transition-colors block">Careers at SoVir</Link></li>
                             <li><Link to="#" className="hover:text-[#d6b161] transition-colors block">Press & Media</Link></li>

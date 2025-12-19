@@ -24,6 +24,8 @@ import CourseEnglishPage from './pages/CourseEnglishPage';
 import CourseGermanPage from './pages/CourseGermanPage';
 import CourseJapanesePage from './pages/CourseJapanesePage';
 import NotFound404 from './pages/NotFound404';
+import AboutPage from './pages/About';
+
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -89,6 +91,8 @@ const AppContent = () => {
         <Route path="/training/english" element={<CourseEnglishPage />} />
         <Route path="/training/german" element={<CourseGermanPage />} />
         <Route path="/training/japanese" element={<CourseJapanesePage />} />
+        <Route path="/about" element={<AboutPage />} />
+
 
         <Route
           path="/login"
