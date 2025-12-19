@@ -93,6 +93,8 @@ const AppContent = () => {
         <Route path="/training/german" element={<CourseGermanPage />} />
         <Route path="/training/japanese" element={<CourseJapanesePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
 
         <Route
