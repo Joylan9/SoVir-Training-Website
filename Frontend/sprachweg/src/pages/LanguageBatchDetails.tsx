@@ -14,12 +14,10 @@ import {
     UserCheck,
     Ban,
     ArrowLeft,
-    ChevronDown
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
-import Button from '../components/ui/Button';
 import api from '../lib/api';
 
 interface Annotation {
@@ -379,8 +377,8 @@ const LanguageBatchDetails: React.FC = () => {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`relative px-5 sm:px-6 py-4 text-sm sm:text-base font-semibold whitespace-nowrap transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b161]/30 rounded-lg ${activeTab === tab
-                                            ? 'text-[#d6b161]'
-                                            : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+                                        ? 'text-[#d6b161]'
+                                        : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
                                         }`}
                                     role="tab"
                                     aria-selected={activeTab === tab}
@@ -439,7 +437,7 @@ const LanguageBatchDetails: React.FC = () => {
 
                                     <div className="relative z-10">
                                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                                            <div className="flex items-start gap-4 min-w-0">
+                                            <div className="flex items-start gap-4 min-w-0 flex-1">
                                                 <div className="flex-shrink-0 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 p-3 text-green-600 dark:bg-green-900/20 dark:text-green-400 transition-transform group-hover:scale-110 duration-300">
                                                     <Video className="h-6 w-6" />
                                                 </div>
@@ -457,6 +455,11 @@ const LanguageBatchDetails: React.FC = () => {
                                                         <span className="inline-flex items-center gap-1 text-gray-500 dark:text-gray-400">
                                                             <Users className="h-4 w-4" /> {cls.attendees?.length || 0} joined
                                                         </span>
+                                                        {cls.status === 'completed' && (
+                                                            <span className="inline-flex items-center gap-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider">
+                                                                ✓ Completed
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -511,12 +514,6 @@ const LanguageBatchDetails: React.FC = () => {
                                                 )}
                                             </div>
                                         </div>
-
-                                        {cls.status === 'completed' && (
-                                            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-gray-100 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                                                ✓ Completed
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -773,17 +770,17 @@ const LanguageBatchDetails: React.FC = () => {
 
                                     {/* Google Calendar Connection Status */}
                                     <div className={`p-4 sm:p-5 rounded-xl border transition-all duration-300 ${isGoogleConnected
-                                            ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800/50'
-                                            : 'bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-800/50'
+                                        ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800/50'
+                                        : 'bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-800/50'
                                         }`}>
                                         <div className="flex items-center gap-3 flex-col sm:flex-row">
                                             <div className={`p-2.5 rounded-xl flex-shrink-0 ${isGoogleConnected
-                                                    ? 'bg-green-100 dark:bg-green-800/30'
-                                                    : 'bg-blue-100 dark:bg-blue-800/30'
+                                                ? 'bg-green-100 dark:bg-green-800/30'
+                                                : 'bg-blue-100 dark:bg-blue-800/30'
                                                 }`}>
                                                 <Video className={`h-5 w-5 ${isGoogleConnected
-                                                        ? 'text-green-600 dark:text-green-400'
-                                                        : 'text-blue-600 dark:text-blue-400'
+                                                    ? 'text-green-600 dark:text-green-400'
+                                                    : 'text-blue-600 dark:text-blue-400'
                                                     }`} />
                                             </div>
                                             <div className="flex-1">
@@ -798,8 +795,8 @@ const LanguageBatchDetails: React.FC = () => {
                                                 type="button"
                                                 onClick={handleConnectGoogle}
                                                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${isGoogleConnected
-                                                        ? 'bg-green-600 hover:bg-green-700 text-white focus-visible:ring-offset-green-100 dark:focus-visible:ring-offset-gray-800'
-                                                        : 'bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white focus-visible:ring-offset-gray-800'
+                                                    ? 'bg-green-600 hover:bg-green-700 text-white focus-visible:ring-offset-green-100 dark:focus-visible:ring-offset-gray-800'
+                                                    : 'bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:text-white focus-visible:ring-offset-gray-800'
                                                     }`}
                                                 aria-label={`${isGoogleConnected ? 'Reconnect' : 'Connect'} Google Calendar`}
                                             >
@@ -955,8 +952,8 @@ const LanguageBatchDetails: React.FC = () => {
                                                 disabled={attendanceLoading}
                                                 onClick={() => handleUpdateAttendance(student._id, !isPresent)}
                                                 className={`flex-shrink-0 p-2.5 rounded-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${isPresent
-                                                        ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 focus-visible:ring-green-500/30 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-800'
-                                                        : 'bg-gray-200 text-gray-500 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:hover:bg-gray-500 focus-visible:ring-gray-500/30 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-800'
+                                                    ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 focus-visible:ring-green-500/30 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-800'
+                                                    : 'bg-gray-200 text-gray-500 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:hover:bg-gray-500 focus-visible:ring-gray-500/30 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-800'
                                                     }`}
                                                 title={isPresent ? "Mark Absent" : "Mark Present"}
                                                 aria-label={`Mark ${student.name} as ${isPresent ? 'absent' : 'present'}`}
