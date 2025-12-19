@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
-import { FileText, Bell, Download, Plus, ArrowLeft, Users } from 'lucide-react';
+import {
+    FileText,
+    Bell,
+    Download,
+    Plus,
+    ArrowLeft,
+    Users,
+    File as FileIcon,
+    Image,
+    X,
+    Trash2
+} from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
@@ -18,8 +28,9 @@ interface Annotation {
 interface Material {
     _id: string;
     title: string;
+    subtitle?: string;
     description: string;
-    fileUrl: string;
+    fileUrl?: string; // Optional
     createdAt: string;
 }
 
@@ -49,11 +60,15 @@ const LanguageBatchDetails: React.FC = () => {
 
     // Forms State
     const [showAddModal, setShowAddModal] = useState(false);
-    const [newItemTitle, setNewItemTitle] = useState('');
-    const [newItemContent, setNewItemContent] = useState(''); // description for material
-    const [newItemFile, setNewItemFile] = useState(''); // url for material
 
-    const isTrainer = user?.role === 'trainer' || user?.id === batch?.trainerId;
+    // Add Item State
+    const [title, setTitle] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [content, setContent] = useState(''); // Used for Announcement Content OR Material Description
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [submitting, setSubmitting] = useState(false);
+
+    const isTrainer = user?.role === 'trainer' || user?._id === batch?.trainerId;
 
     useEffect(() => {
         fetchBatchDetails();
@@ -61,7 +76,6 @@ const LanguageBatchDetails: React.FC = () => {
 
     const fetchBatchDetails = async () => {
         try {
-            // Using the shared route
             const response = await api.get(`/language-trainer/batch/${batchId}`);
             setBatch(response.data);
         } catch (error) {
@@ -71,181 +85,406 @@ const LanguageBatchDetails: React.FC = () => {
         }
     };
 
-    const handleAddItem = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            if (activeTab === 'announcements') {
-                await api.post('/language-trainer/announcements', {
-                    batchId,
-                    title: newItemTitle,
-                    content: newItemContent
-                });
-            } else {
-                await api.post('/language-trainer/materials', {
-                    batchId,
-                    title: newItemTitle,
-                    description: newItemContent,
-                    fileUrl: newItemFile // In real app, handle file upload
-                });
-            }
-            setShowAddModal(false);
-            setNewItemTitle('');
-            setNewItemContent('');
-            setNewItemFile('');
-            fetchBatchDetails(); // Refresh
-        } catch (error) {
-            console.error("Failed to add item", error);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (!batch) return <div>Batch not found</div>;
+    const handleAddItem = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!batchId) return;
+
+        try {
+            setSubmitting(true);
+
+            if (activeTab === 'announcements') {
+                await api.post('/language-trainer/announcements', {
+                    batchId,
+                    title,
+                    content
+                });
+            } else {
+                // For materials, use FormData to handle file upload
+                const formData = new FormData();
+                formData.append('batchId', batchId);
+                formData.append('title', title);
+                formData.append('subtitle', subtitle);
+                formData.append('description', content); // 'content' state maps to description
+                if (selectedFile) {
+                    formData.append('file', selectedFile);
+                }
+
+                await api.post('/language-trainer/materials', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
+
+            // Reset and Refresh
+            setShowAddModal(false);
+            resetForm();
+            fetchBatchDetails();
+        } catch (error) {
+            console.error("Failed to add item", error);
+            alert("Failed to add item. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const resetForm = () => {
+        setTitle('');
+        setSubtitle('');
+        setContent('');
+        setSelectedFile(null);
+    };
+
+    const handleDeleteAnnouncement = async (announcementId: string) => {
+        if (!window.confirm('Are you sure you want to delete this announcement?')) return;
+
+        try {
+            await api.delete(`/language-trainer/announcements/${announcementId}`);
+            fetchBatchDetails(); // Refresh
+        } catch (error) {
+            console.error("Failed to delete announcement", error);
+            alert("Failed to delete announcement. Please try again.");
+        }
+    };
+
+    const handleDeleteMaterial = async (materialId: string) => {
+        if (!window.confirm('Are you sure you want to delete this material?')) return;
+
+        try {
+            await api.delete(`/language-trainer/materials/${materialId}`);
+            fetchBatchDetails(); // Refresh
+        } catch (error) {
+            console.error("Failed to delete material", error);
+            alert("Failed to delete material. Please try again.");
+        }
+    };
+
+    const getFileIcon = (filename: string = '') => {
+        const ext = filename.split('.').pop()?.toLowerCase();
+        if (['jpg', 'jpeg', 'png', 'gif'].includes(ext || '')) return <Image className="h-6 w-6" />;
+        if (['pdf'].includes(ext || '')) return <FileText className="h-6 w-6" />;
+        return <FileIcon className="h-6 w-6" />;
+    };
+
+    const getFileUrl = (path?: string) => {
+        if (!path) return '#';
+        if (path.startsWith('http')) return path;
+        // Prepend backend URL if relative path
+        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        return `${backendUrl}${path}`;
+    };
+
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#d6b161] border-t-transparent"></div>
+        </div>
+    );
+
+    if (!batch) return <div className="p-8 text-center bg-gray-50 dark:bg-gray-900 min-h-screen">Batch not found</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
             <Header />
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <Button onClick={() => navigate(-1)} className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                    <ArrowLeft className="h-4 w-4" /> Back
+            <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                {/* Navigation */}
+                <Button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <ArrowLeft className="h-4 w-4" /> Back to Dashboard
                 </Button>
 
-                <div className="mb-8 rounded-2xl bg-[#0a192f] p-8 text-white">
-                    <h1 className="text-3xl font-bold">{batch.courseTitle} - {batch.name}</h1>
-                    <p className="text-gray-300">Classroom Space</p>
+                {/* Batch Header */}
+                <div className="mb-8 rounded-3xl bg-gradient-to-r from-[#0a192f] to-[#112240] p-8 text-white shadow-xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                        <FileText className="h-64 w-64" />
+                    </div>
+                    <div className="relative z-10">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <h1 className="text-4xl font-bold font-serif mb-2">{batch.courseTitle}</h1>
+                                <div className="inline-flex items-center rounded-full bg-[#d6b161]/20 px-4 py-1.5 text-sm font-medium text-[#d6b161]">
+                                    {batch.name}
+                                </div>
+                            </div>
+                            <div className="text-right hidden sm:block">
+                                <p className="text-3xl font-bold">{batch.students?.length || 0}</p>
+                                <p className="text-sm text-gray-400">Students Enrolled</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="mb-6 flex space-x-4 border-b border-gray-200 dark:border-gray-700">
+                {/* Tabs */}
+                <div className="mb-8 flex space-x-1 border-b border-gray-200 dark:border-gray-700">
                     <button
                         onClick={() => setActiveTab('announcements')}
-                        className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'announcements'
-                            ? 'border-b-2 border-[#d6b161] text-[#d6b161]'
+                        className={`px-6 py-4 text-sm font-medium transition-all relative ${activeTab === 'announcements'
+                            ? 'text-[#d6b161]'
                             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
                             }`}
                     >
                         Announcements
+                        {activeTab === 'announcements' && (
+                            <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#d6b161]" />
+                        )}
                     </button>
                     <button
                         onClick={() => setActiveTab('materials')}
-                        className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'materials'
-                            ? 'border-b-2 border-[#d6b161] text-[#d6b161]'
+                        className={`px-6 py-4 text-sm font-medium transition-all relative ${activeTab === 'materials'
+                            ? 'text-[#d6b161]'
                             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
                             }`}
                     >
                         Learning Materials
+                        {activeTab === 'materials' && (
+                            <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#d6b161]" />
+                        )}
                     </button>
                     <button
                         onClick={() => setActiveTab('students')}
-                        className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'students'
-                            ? 'border-b-2 border-[#d6b161] text-[#d6b161]'
+                        className={`px-6 py-4 text-sm font-medium transition-all relative ${activeTab === 'students'
+                            ? 'text-[#d6b161]'
                             : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
                             }`}
                     >
                         Students
+                        {activeTab === 'students' && (
+                            <div className="absolute bottom-0 left-0 h-0.5 w-full bg-[#d6b161]" />
+                        )}
                     </button>
                 </div>
 
-                {/* Content Area */}
-                <div className="space-y-4">
-                    {/* Add Button for Trainers */}
-                    {isTrainer && activeTab !== 'students' && (
-                        <Button onClick={() => setShowAddModal(true)} className="mb-4 flex items-center gap-2 bg-[#d6b161] text-[#0a192f]">
-                            <Plus className="h-4 w-4" /> Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}
+                {/* Action Bar */}
+                {isTrainer && activeTab !== 'students' && (
+                    <div className="mb-6 flex justify-end">
+                        <Button
+                            onClick={() => { resetForm(); setShowAddModal(true); }}
+                            className="flex items-center gap-2 bg-[#d6b161] text-[#0a192f] hover:bg-[#c4a055] px-6 py-2.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}
                         </Button>
-                    )}
+                    </div>
+                )}
 
+                {/* Content Area */}
+                <div className="space-y-6">
                     {activeTab === 'announcements' ? (
                         <div className="space-y-4">
-                            {batch.announcements.length === 0 && <p className="text-gray-500">No announcements yet.</p>}
-                            {batch.announcements.map((item) => (
-                                <div key={item._id} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                    <div className="flex items-start gap-4">
-                                        <div className="rounded-full bg-blue-100 p-2 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                                            <Bell className="h-5 w-5" />
+                            {(!batch.announcements || batch.announcements.length === 0) && (
+                                <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                    <Bell className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500 dark:text-gray-400">No announcements yet.</p>
+                                </div>
+                            )}
+
+                            {(batch.announcements || []).slice().reverse().map((item) => (
+                                <div key={item._id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500" />
+                                    <div className="flex items-start gap-5">
+                                        <div className="flex-shrink-0 rounded-full bg-blue-50 p-3 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+                                            <Bell className="h-6 w-6" />
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                                            <p className="mt-1 text-gray-600 dark:text-gray-300">{item.content}</p>
-                                            <p className="mt-2 text-xs text-gray-400">{new Date(item.createdAt).toLocaleDateString()}</p>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-medium text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-lg">
+                                                        {new Date(item.createdAt).toLocaleDateString()}
+                                                    </span>
+                                                    {isTrainer && (
+                                                        <button
+                                                            onClick={() => handleDeleteAnnouncement(item._id)}
+                                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600"
+                                                            title="Delete announcement"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{item.content}</p>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : activeTab === 'materials' ? (
-                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {batch.materials.length === 0 && <p className="text-gray-500">No materials yet.</p>}
-                            {batch.materials.map((item) => (
-                                <div key={item._id} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-                                        <FileText className="h-6 w-6" />
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {(!batch.materials || batch.materials.length === 0) && (
+                                <div className="col-span-full text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                    <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500 dark:text-gray-400">No learning materials uploaded yet.</p>
+                                </div>
+                            )}
+
+                            {(batch.materials || []).slice().reverse().map((item) => (
+                                <div key={item._id} className="group flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 dark:border-gray-700 dark:bg-gray-800 relative">
+                                    {isTrainer && (
+                                        <button
+                                            onClick={() => handleDeleteMaterial(item._id)}
+                                            className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 shadow-sm"
+                                            title="Delete material"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                    <div className="mb-4 flex items-center justify-between">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+                                            {getFileIcon(item.fileUrl)}
+                                        </div>
+                                        {item.createdAt && (
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(item.createdAt).toLocaleDateString()}
+                                            </span>
+                                        )}
                                     </div>
-                                    <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
-                                    <a
-                                        href={item.fileUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 text-sm font-medium text-[#d6b161] hover:underline"
-                                    >
-                                        <Download className="h-4 w-4" /> Download Resource
-                                    </a>
+
+                                    <div className="flex-1 mb-4">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1" title={item.title}>
+                                            {item.title}
+                                        </h3>
+                                        {item.subtitle && (
+                                            <p className="text-sm font-medium text-[#d6b161] mb-2">{item.subtitle}</p>
+                                        )}
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                                            {item.description}
+                                        </p>
+                                    </div>
+
+                                    {item.fileUrl ? (
+                                        <a
+                                            href={getFileUrl(item.fileUrl)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-auto flex w-full items-center justify-center gap-2 rounded-xl bg-gray-50 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                        >
+                                            <Download className="h-4 w-4" /> Download File
+                                        </a>
+                                    ) : (
+                                        <div className="mt-auto w-full py-2.5 text-center text-sm text-gray-400 bg-gray-50 rounded-xl dark:bg-gray-700/50">
+                                            No file attached
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {batch.students?.length === 0 && <p className="text-gray-500">No students enrolled yet.</p>}
-                            {batch.students?.map((student) => (
-                                <div key={student._id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                            {(!batch.students || batch.students.length === 0) && (
+                                <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                    <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500 dark:text-gray-400">No students enrolled yet.</p>
+                                </div>
+                            )}
+
+                            {(batch.students || []).map((student) => (
+                                <div key={student._id} className="flex items-center justify-between rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
                                     <div className="flex items-center gap-4">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                                            <Users className="h-5 w-5" />
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 font-bold text-lg dark:bg-blue-900/20 dark:text-blue-400">
+                                            {student.name.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
-                                            <p className="font-medium text-gray-900 dark:text-white">{student.name}</p>
+                                            <p className="font-bold text-gray-900 dark:text-white text-lg">{student.name}</p>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">{student.email}</p>
                                         </div>
                                     </div>
+                                    <button className="text-sm font-medium text-gray-400 hover:text-[#d6b161]">
+                                        View Profile
+                                    </button>
                                 </div>
                             ))}
                         </div>
                     )}
                 </div>
 
-                {/* Simple Modal for Adding Items */}
+                {/* Add Item Modal */}
                 {showAddModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                        <div className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-gray-800">
-                            <h2 className="mb-4 text-xl font-bold dark:text-white">Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}</h2>
-                            <form onSubmit={handleAddItem} className="space-y-4">
-                                <input
-                                    type="text"
-                                    placeholder="Title"
-                                    value={newItemTitle}
-                                    onChange={e => setNewItemTitle(e.target.value)}
-                                    className="w-full rounded-lg border p-2 dark:bg-gray-700 dark:text-white"
-                                    required
-                                />
-                                <textarea
-                                    placeholder={activeTab === 'announcements' ? 'Content' : 'Description'}
-                                    value={newItemContent}
-                                    onChange={e => setNewItemContent(e.target.value)}
-                                    className="w-full rounded-lg border p-2 dark:bg-gray-700 dark:text-white"
-                                    required
-                                />
-                                {activeTab === 'materials' && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                        <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl dark:bg-gray-800 scale-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold font-serif dark:text-white">
+                                    Add {activeTab === 'announcements' ? 'Announcement' : 'Material'}
+                                </h2>
+                                <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleAddItem} className="space-y-5">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Title</label>
                                     <input
                                         type="text"
-                                        placeholder="File URL (e.g. Google Drive link)"
-                                        value={newItemFile}
-                                        onChange={e => setNewItemFile(e.target.value)}
-                                        className="w-full rounded-lg border p-2 dark:bg-gray-700 dark:text-white"
+                                        placeholder="e.g. Chapter 1 Notes"
+                                        value={title}
+                                        onChange={e => setTitle(e.target.value)}
+                                        className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
                                         required
                                     />
+                                </div>
+
+                                {activeTab === 'materials' && (
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Subtitle <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. Grammar Basics"
+                                            value={subtitle}
+                                            onChange={e => setSubtitle(e.target.value)}
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
+                                        />
+                                    </div>
                                 )}
-                                <div className="flex gap-2">
-                                    <Button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200">Cancel</Button>
-                                    <Button type="submit" className="flex-1 bg-[#d6b161] text-[#0a192f]">Add</Button>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                        {activeTab === 'announcements' ? 'Content' : 'Description'}
+                                    </label>
+                                    <textarea
+                                        placeholder={activeTab === 'announcements' ? 'Enter announcement details...' : 'Describe what this material is about...'}
+                                        value={content}
+                                        onChange={e => setContent(e.target.value)}
+                                        rows={4}
+                                        className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-[#d6b161] focus:ring-2 focus:ring-[#d6b161]/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all resize-none"
+                                        required
+                                    />
+                                </div>
+
+                                {activeTab === 'materials' && (
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Upload File</label>
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                onChange={handleFileChange}
+                                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#d6b161]/10 file:text-[#d6b161] hover:file:bg-[#d6b161]/20 cursor-pointer"
+                                                accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png"
+                                            />
+                                        </div>
+                                        <p className="mt-2 text-xs text-gray-400">Supported: PDF, Doc, Images (Max 10MB)</p>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3 pt-2">
+                                    <Button
+                                        type="button"
+                                        onClick={() => setShowAddModal(false)}
+                                        className="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 py-3 rounded-xl font-bold"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={submitting}
+                                        className="flex-1 bg-[#d6b161] text-[#0a192f] hover:bg-[#c4a055] py-3 rounded-xl font-bold shadow-lg shadow-[#d6b161]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {submitting ? 'Adding...' : 'Add Item'}
+                                    </Button>
                                 </div>
                             </form>
                         </div>

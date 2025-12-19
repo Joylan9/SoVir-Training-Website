@@ -37,8 +37,14 @@ export const getStudentBatches = async (req: AuthRequest, res: Response) => {
 // Add Material to a Batch
 export const addMaterial = async (req: AuthRequest, res: Response) => {
     try {
-        const { batchId, title, description, fileUrl } = req.body;
+        const { batchId, title, subtitle, description } = req.body;
         const trainerId = req.user?._id;
+        let fileUrl = '';
+
+        if (req.file) {
+            // Store relative path so frontend can prepend API URL
+            fileUrl = `/uploads/materials/${req.file.filename}`;
+        }
 
         // Verify trainer owns the batch
         const batch = await LanguageBatch.findOne({ _id: batchId, trainerId });
@@ -49,14 +55,16 @@ export const addMaterial = async (req: AuthRequest, res: Response) => {
         const material = new LanguageMaterial({
             batchId,
             title,
+            subtitle,
             description,
-            fileUrl,
+            fileUrl, // Can be empty string if optional
             uploadedBy: trainerId
         });
 
         await material.save();
         res.status(201).json(material);
     } catch (error) {
+        console.error("Error adding material:", error);
         res.status(500).json({ message: 'Error adding material', error });
     }
 };
@@ -113,5 +121,55 @@ export const getBatchDetails = async (req: AuthRequest, res: Response) => {
         res.json(batch);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching batch details', error });
+    }
+};
+
+// Delete Material
+export const deleteMaterial = async (req: AuthRequest, res: Response) => {
+    try {
+        const { materialId } = req.params;
+        const trainerId = req.user?._id;
+
+        const material = await LanguageMaterial.findById(materialId);
+        if (!material) {
+            return res.status(404).json({ message: 'Material not found' });
+        }
+
+        // Verify trainer owns the batch
+        const batch = await LanguageBatch.findOne({ _id: material.batchId, trainerId });
+        if (!batch) {
+            return res.status(403).json({ message: 'Not authorized to delete this material' });
+        }
+
+        await LanguageMaterial.findByIdAndDelete(materialId);
+        res.json({ message: 'Material deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting material:", error);
+        res.status(500).json({ message: 'Error deleting material', error });
+    }
+};
+
+// Delete Announcement
+export const deleteAnnouncement = async (req: AuthRequest, res: Response) => {
+    try {
+        const { announcementId } = req.params;
+        const trainerId = req.user?._id;
+
+        const announcement = await LanguageAnnouncement.findById(announcementId);
+        if (!announcement) {
+            return res.status(404).json({ message: 'Announcement not found' });
+        }
+
+        // Verify trainer owns the batch
+        const batch = await LanguageBatch.findOne({ _id: announcement.batchId, trainerId });
+        if (!batch) {
+            return res.status(403).json({ message: 'Not authorized to delete this announcement' });
+        }
+
+        await LanguageAnnouncement.findByIdAndDelete(announcementId);
+        res.json({ message: 'Announcement deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting announcement:", error);
+        res.status(500).json({ message: 'Error deleting announcement', error });
     }
 };
