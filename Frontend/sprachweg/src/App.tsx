@@ -23,6 +23,7 @@ import LanguageTraining from './pages/LanguageTraining';
 import CourseEnglishPage from './pages/CourseEnglishPage';
 import CourseGermanPage from './pages/CourseGermanPage';
 import CourseJapanesePage from './pages/CourseJapanesePage';
+import SkillTrainingOverviewPage from './pages/skill_training/SkillTrainingOverviewPage';
 import SCADAAndHMIPage from './pages/skill_training/SCADAAndHMIPage';
 import PLCIndustrialAutomationPage from './pages/skill_training/PLCIndustrialAutomationPage';
 import IndustrialDrivesMotionPage from './pages/skill_training/IndustrialDrivesMotionPage';
@@ -103,10 +104,13 @@ const AppContent = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
+
         {/* Skill Training Routes */}
+        <Route path="/skill-training" element={<SkillTrainingOverviewPage />} />
         <Route path="/skill-training/scada" element={<SCADAAndHMIPage />} />
         <Route path="/skill-training/plc" element={<PLCIndustrialAutomationPage />} />
         <Route path="/skill-training/drives" element={<IndustrialDrivesMotionPage />} />
+        <Route path="/skill-training/industry4" element={<AdvancedIndustry4Page />} />
         <Route path="/skill-training/industry4" element={<AdvancedIndustry4Page />} />
         <Route path="/skill-training/corporate" element={<CustomizedCorporateTrainingPage />} />
 

@@ -191,6 +191,15 @@ const Header: React.FC = () => {
                                     <div>
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Industrial Automation</h3>
                                         <div className="space-y-3">
+                                            <Link to="/skill-training" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
+                                                    <span className="text-lg">⚙️</span>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Overview</p>
+                                                    <p className="text-xs text-gray-600 dark:text-gray-400">All skill training courses</p>
+                                                </div>
+                                            </Link>
                                             <Link to="/skill-training/scada" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
                                                     <span className="text-lg">🖥️</span>
@@ -562,6 +571,7 @@ const Header: React.FC = () => {
                                     {/* Industrial Automation */}
                                     <div className="space-y-1">
                                         <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Industrial Automation</h4>
+                                        <Link to="/skill-training" className="block text-gray-600 dark:text-gray-400 py-1 text-xs font-medium" onClick={() => setIsMenuOpen(false)}>Overview</Link>
                                         <Link to="/skill-training/scada" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>SCADA & HMI</Link>
                                         <Link to="/skill-training/plc" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>PLC Programming</Link>
                                         <Link to="/skill-training/drives" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Industrial Drives</Link>
