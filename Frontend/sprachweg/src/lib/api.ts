@@ -38,6 +38,10 @@ export const authAPI = {
         const response = await api.post('/auth/reset-password', data);
         return response.data;
     },
+    async forgotPassword(email: string) {
+        const response = await api.post('/auth/forgot-password', { email });
+        return response.data;
+    },
 };
 
 // Dashboard API

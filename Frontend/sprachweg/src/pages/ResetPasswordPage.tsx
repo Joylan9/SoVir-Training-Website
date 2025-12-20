@@ -127,7 +127,7 @@ const ResetPasswordPage: React.FC = () => {
                                     <input
                                         type="text"
                                         placeholder="123456"
-                                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-center text-2xl tracking-widest font-mono text-gray-900 placeholder:text-gray-300 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-center text-2xl tracking-widest font-mono text-gray-900 placeholder:text-gray-300 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-white"
                                         value={formData.otp}
                                         onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
                                         maxLength={6}
@@ -146,7 +146,7 @@ const ResetPasswordPage: React.FC = () => {
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="••••••••"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-white"
                                             value={formData.newPassword}
                                             onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                                             required
@@ -173,7 +173,7 @@ const ResetPasswordPage: React.FC = () => {
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="••••••••"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#0e5cad] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-white"
                                             value={formData.confirmPassword}
                                             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                             required

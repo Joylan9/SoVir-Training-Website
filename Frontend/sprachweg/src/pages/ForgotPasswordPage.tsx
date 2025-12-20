@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, CheckCircle, ArrowLeft, Send } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Header } from '../components/layout';
+import { authAPI } from '../lib/api';
 
 const ForgotPasswordPage: React.FC = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    // const [success, setSuccess] = useState(false); // Removed success state as we navigate away
 
-    // Simulate backend call (since none exists in AuthContext yet)
+    // Call backend API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        setSuccess(true);
-        setLoading(false);
+        try {
+            await authAPI.forgotPassword(email);
+            // Navigate to ResetPasswordPage with email param
+            navigate(`/reset-password?email=${encodeURIComponent(email)}`);
+        } catch (error: any) {
+            alert(error.response?.data?.message || 'Failed to send OTP');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -105,107 +110,67 @@ const ForgotPasswordPage: React.FC = () => {
                             transition={{ duration: 0.4 }}
                             className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700"
                         >
-                            {!success ? (
-                                <>
-                                    <div className="mb-8 text-center">
-                                        <div className="w-16 h-16 bg-[#d6b161]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#d6b161]">
-                                            <Mail className="w-8 h-8" />
+                            <div className="mb-8 text-center">
+                                <div className="w-16 h-16 bg-[#d6b161]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#d6b161]">
+                                    <Mail className="w-8 h-8" />
+                                </div>
+                                <h2 className="font-sans text-3xl font-bold text-[#0a192f] dark:text-white mb-3">Forgot Password?</h2>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                    Enter your email address and we'll send you a link to reset your password.
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
+                                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                                        Email Address
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                            <Mail className="w-5 h-5" />
                                         </div>
-                                        <h2 className="font-sans text-3xl font-bold text-[#0a192f] dark:text-white mb-3">Forgot Password?</h2>
-                                        <p className="text-gray-500 dark:text-gray-400">
-                                            Enter your email address and we'll send you a link to reset your password.
-                                        </p>
-                                    </div>
-
-                                    <form onSubmit={handleSubmit} className="space-y-6">
-                                        <div>
-                                            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-                                                Email Address
-                                            </label>
-                                            <div className="relative">
-                                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                                    <Mail className="w-5 h-5" />
-                                                </div>
-                                                <input
-                                                    id="email"
-                                                    type="email"
-                                                    placeholder="you@example.com"
-                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400"
-                                                    value={email}
-                                                    onChange={(e) => setEmail(e.target.value)}
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <Button
-                                            type="submit"
-                                            className="w-full bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] py-3.5 rounded-xl font-semibold shadow-lg shadow-amber-900/10 flex items-center justify-center gap-2"
-                                            disabled={loading}
-                                            data-testid="reset-button"
-                                        >
-                                            {loading ? (
-                                                <span className="flex items-center gap-2">
-                                                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                    Sending...
-                                                </span>
-                                            ) : (
-                                                <>
-                                                    Send Reset Link
-                                                    <Send className="w-4 h-4" />
-                                                </>
-                                            )}
-                                        </Button>
-
-                                        <div className="text-center">
-                                            <Link
-                                                to="/login"
-                                                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#d6b161] font-medium transition-colors"
-                                            >
-                                                <ArrowLeft className="w-4 h-4" />
-                                                Back to Login
-                                            </Link>
-                                        </div>
-                                    </form>
-                                </>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600 animate-bounce">
-                                        <CheckCircle className="w-10 h-10" />
-                                    </div>
-                                    <h2 className="font-sans text-2xl font-bold text-gray-900 dark:text-white mb-4">Check your email</h2>
-                                    <p className="text-gray-600 dark:text-gray-400 mb-8">
-                                        We have sent a password reset link to <br />
-                                        <strong className="text-gray-900 dark:text-white">{email}</strong>
-                                    </p>
-                                    <p className="text-sm text-gray-500 mb-8">
-                                        Didn't receive the email? Check your spam folder or try again.
-                                    </p>
-
-                                    <div className="space-y-3">
-                                        <Button
-                                            onClick={() => {
-                                                // If we had a resend feature, call it here. For simulation:
-                                                setLoading(true);
-                                                setTimeout(() => setLoading(false), 1000);
-                                            }}
-                                            variant="outline"
-                                            className="w-full border-gray-200"
-                                        >
-                                            Click to Resend
-                                        </Button>
-
-                                        <div className="pt-4">
-                                            <Link
-                                                to="/login"
-                                                className="text-sm text-[#d6b161] font-semibold hover:underline"
-                                            >
-                                                Back to Sign In
-                                            </Link>
-                                        </div>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            placeholder="you@example.com"
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            required
+                                        />
                                     </div>
                                 </div>
-                            )}
+
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] py-3.5 rounded-xl font-semibold shadow-lg shadow-amber-900/10 flex items-center justify-center gap-2"
+                                    disabled={loading}
+                                    data-testid="reset-button"
+                                >
+                                    {loading ? (
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            Sending...
+                                        </span>
+                                    ) : (
+                                        <>
+                                            Send OTP
+                                            <Send className="w-4 h-4" />
+                                        </>
+                                    )}
+                                </Button>
+
+                                <div className="text-center">
+                                    <Link
+                                        to="/login"
+                                        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#d6b161] font-medium transition-colors"
+                                    >
+                                        <ArrowLeft className="w-4 h-4" />
+                                        Back to Login
+                                    </Link>
+                                </div>
+                            </form>
+
                         </motion.div>
 
                         <p className="text-center text-xs text-gray-400 mt-8">

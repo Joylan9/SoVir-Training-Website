@@ -174,7 +174,7 @@ const LoginPage: React.FC = () => {
                                         <input
                                             type="email"
                                             placeholder="you@example.com"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400"
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-900 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             required
@@ -187,12 +187,6 @@ const LoginPage: React.FC = () => {
                                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                                             Password
                                         </label>
-                                        <Link
-                                            to="/forgot-password"
-                                            className="text-sm text-[#d6b161] hover:underline font-medium"
-                                        >
-                                            Forgot password?
-                                        </Link>
                                     </div>
                                     <div className="relative group">
                                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#d6b161] transition-colors">
@@ -201,7 +195,7 @@ const LoginPage: React.FC = () => {
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="••••••••"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                                            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pl-10 pr-10 text-gray-900 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#d6b161] focus:bg-white dark:focus:bg-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-white"
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             required
@@ -214,6 +208,14 @@ const LoginPage: React.FC = () => {
                                         >
                                             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                         </button>
+                                    </div>
+                                    <div className="mt-2 text-right">
+                                        <Link
+                                            to="/forgot-password"
+                                            className="text-sm text-[#d6b161] hover:underline font-medium"
+                                        >
+                                            Forgot password?
+                                        </Link>
                                     </div>
                                 </div>
 
