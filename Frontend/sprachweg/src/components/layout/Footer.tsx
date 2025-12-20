@@ -105,16 +105,40 @@ const Footer: React.FC = () => {
                         <div className="flex items-center gap-4">
                             <span className="text-sm text-gray-400">Follow Us</span>
                             <div className="flex gap-3">
-                                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all">
+                                <a
+                                    href="https://www.facebook.com/share/19zn8KoUN6/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"
+                                    aria-label="Follow us on Facebook"
+                                >
                                     <Facebook className="w-5 h-5" />
                                 </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all">
+                                <a
+                                    href="https://www.instagram.com/sovir_technologies?igsh=YnprbWtpNWkwYXNn"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"
+                                    aria-label="Follow us on Instagram"
+                                >
                                     <Instagram className="w-5 h-5" />
                                 </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all">
+                                <a
+                                    href="https://www.linkedin.com/company/sovir-technology/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"
+                                    aria-label="Follow us on LinkedIn"
+                                >
                                     <Linkedin className="w-5 h-5" />
                                 </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all">
+                                <a
+                                    href="https://youtube.com/@sovirtechnologies?si=8ux1V9Y5SyhWmQy1"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#d6b161] hover:text-[#0a192f] transition-all"
+                                    aria-label="Follow us on YouTube"
+                                >
                                     <Youtube className="w-5 h-5" />
                                 </a>
                             </div>

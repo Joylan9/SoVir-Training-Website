@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy, useMemo } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
+
+// Lazy-load heavy route chrome (Header/Footer)
+const Header = lazy(() => import('../components/layout/Header'));
+const Footer = lazy(() => import('../components/layout/Footer'));
 
 // --- Premium Animation Variants ---
 const fadeInUp = {
@@ -17,14 +19,16 @@ const fadeInUp = {
 
 const staggerContainer = {
     hidden: { opacity: 0 },
-    visible: {
+    visible: (startHeavyAnimations: boolean = false) => ({
         opacity: 1,
-        transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-    }
+        transition: startHeavyAnimations
+            ? { staggerChildren: 0.1, delayChildren: 0.2 }
+            : { duration: 0.3 } // Instant for first paint, delay stagger until after
+    })
 };
 
-// Elevated Hero Background
-const HeroBackground: React.FC = () => {
+// Elevated Hero Background - Memoized and deferred for performance
+const HeroBackground: React.FC<{ startAnimations: boolean }> = React.memo(({ startAnimations }) => {
     const shouldReduceMotion = useReducedMotion();
     const { scrollY } = useScroll();
     const y1 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
@@ -33,32 +37,39 @@ const HeroBackground: React.FC = () => {
 
     return (
         <motion.div
-            style={{ opacity }}
+            style={{ opacity, contain: 'paint' }}
             className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
             aria-hidden="true"
         >
-            <motion.div
-                style={{ y: y1 }}
-                animate={{
-                    scale: [1, 1.1, 1],
-                    opacity: [0.3, 0.5, 0.3]
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#d6b161]/20 to-cyan-500/10 blur-[120px]"
-            />
-            <motion.div
-                style={{ y: y2 }}
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.2, 0.4, 0.2]
-                }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[100px]"
-            />
+            {/* Static background immediately visible */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+
+            {/* Heavy animated layers deferred until after first paint */}
+            {startAnimations && (
+                <>
+                    <motion.div
+                        style={{ y: y1 }}
+                        animate={{
+                            scale: [1, 1.1, 1],
+                            opacity: [0.3, 0.5, 0.3]
+                        }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#d6b161]/20 to-cyan-500/10 blur-[120px]"
+                    />
+                    <motion.div
+                        style={{ y: y2 }}
+                        animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.2, 0.4, 0.2]
+                        }}
+                        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        className="absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[100px]"
+                    />
+                </>
+            )}
         </motion.div>
     );
-};
+});
 // Types
 interface FormData {
     name: string;
@@ -85,7 +96,7 @@ interface SuccessAnimationProps {
     onReset: () => void;
 }
 
-// 3D Tilt Hook
+// 3D Tilt Hook - Optimized with rAF throttling and conditional listeners
 const useTilt = (enable: boolean = true, isMobile: boolean = false) => {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -93,23 +104,35 @@ const useTilt = (enable: boolean = true, isMobile: boolean = false) => {
         if (!enable || !ref.current || window.innerWidth < 1024 || isMobile) return;
 
         const element = ref.current;
+        let raf = 0;
 
         const handleMouseMove = (e: MouseEvent) => {
-            const rect = element.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-            element.style.transform = `perspective(2000px) rotateY(${x * 6}deg) rotateX(${y * -6}deg) translateZ(8px)`;
+            if (raf) cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(() => {
+                const rect = element.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                element.style.transform = `perspective(2000px) rotateY(${x * 6}deg) rotateX(${y * -6}deg) translateZ(8px)`;
+            });
         };
 
         const handleMouseLeave = () => {
+            if (raf) cancelAnimationFrame(raf);
             element.style.transform = 'perspective(2000px) rotateY(0deg) rotateX(0deg) translateZ(0px)';
+            element.removeEventListener('mousemove', handleMouseMove);
         };
 
-        element.addEventListener('mousemove', handleMouseMove);
+        const handleMouseEnter = () => {
+            element.addEventListener('mousemove', handleMouseMove);
+        };
+
+        // Only attach listeners on hover
+        element.addEventListener('mouseenter', handleMouseEnter);
         element.addEventListener('mouseleave', handleMouseLeave);
 
         return () => {
+            if (raf) cancelAnimationFrame(raf);
+            element.removeEventListener('mouseenter', handleMouseEnter);
             element.removeEventListener('mousemove', handleMouseMove);
             element.removeEventListener('mouseleave', handleMouseLeave);
         };
@@ -118,8 +141,27 @@ const useTilt = (enable: boolean = true, isMobile: boolean = false) => {
     return ref;
 };
 
-// Icons
-const ICONS = {
+// LazyIframe Component - Only loads when in viewport
+const LazyIframe: React.FC<{ src: string; title: string; className?: string }> = ({ src, title, className }) => {
+    const ref = useRef<HTMLIFrameElement | null>(null);
+    useEffect(() => {
+        if (!ref.current) return;
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    if (ref.current && !ref.current.src) ref.current.src = src;
+                    io.disconnect();
+                }
+            });
+        }, { rootMargin: '200px' });
+        io.observe(ref.current);
+        return () => io.disconnect();
+    }, [src]);
+    return <iframe ref={ref} src="" data-src={src} title={title} className={className} loading="lazy" width="100%" height="100%" style={{ border: 0 }} allowFullScreen referrerPolicy="no-referrer-when-downgrade" />;
+};
+
+// Icons - Memoized for performance
+const useIcons = () => useMemo(() => ({
     user: (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
@@ -178,23 +220,23 @@ const ICONS = {
             <path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
         </svg>
     ),
-};
+}), []);
 
-// Helper Components
-const IconWrapper: React.FC<IconWrapperProps> = ({ children, className = "" }) => (
+// Helper Components - Memoized
+const IconWrapper = React.memo<IconWrapperProps>(({ children, className = "" }) => (
     <div className={`flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-white/20 rounded-lg sm:rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 ${className}`}>
         {children}
     </div>
-);
+));
 
-const FieldIcon: React.FC<FieldIconProps> = ({ children }) => (
+const FieldIcon = React.memo<FieldIconProps>(({ children }) => (
     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 sm:pl-3.5">
         {children}
     </div>
-);
+));
 
-// Success Animation Component
-const SuccessAnimation: React.FC<SuccessAnimationProps> = ({ onReset }) => (
+// Success Animation Component - Memoized
+const SuccessAnimation = React.memo<SuccessAnimationProps>(({ onReset }) => (
     <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -246,7 +288,7 @@ const SuccessAnimation: React.FC<SuccessAnimationProps> = ({ onReset }) => (
             Send Another Message
         </motion.button>
     </motion.div>
-);
+));
 
 // Animation Variants
 const containerVariants = {
@@ -278,9 +320,30 @@ const ContactPage: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState("");
     const [isMobile, setIsMobile] = useState(false);
+    const [startHeavyAnimations, setStartHeavyAnimations] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const contactCardRef = useTilt(true, isMobile);
     const formCardRef = useTilt(true, isMobile);
+    const ICONS = useIcons();
+
+    // Defer heavy animations until after first paint / idle
+    useEffect(() => {
+        setIsAnimating(true);
+
+        if ('requestIdleCallback' in window) {
+            (window as any).requestIdleCallback(() => {
+                setStartHeavyAnimations(true);
+                setIsAnimating(false);
+            }, { timeout: 200 });
+        } else {
+            const id = requestAnimationFrame(() => {
+                setStartHeavyAnimations(true);
+                setIsAnimating(false);
+            });
+            return () => cancelAnimationFrame(id);
+        }
+    }, []);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -348,18 +411,21 @@ const ContactPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col font-sans">
-            <Header />
+            <Suspense fallback={<div className="h-16 w-full bg-transparent" aria-hidden="true" />}>
+                <Header />
+            </Suspense>
 
             {/* Hero Section */}
             <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
-                <HeroBackground />
+                <HeroBackground startAnimations={startHeavyAnimations} />
 
                 <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                     <motion.div
                         initial="hidden"
                         animate="visible"
                         variants={staggerContainer}
+                        custom={startHeavyAnimations}
                         className="mx-auto max-w-4xl"
                     >
                         <motion.div variants={fadeInUp} className="mb-6 flex justify-center">
@@ -396,10 +462,11 @@ const ContactPage: React.FC = () => {
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 text-white shadow-2xl relative overflow-hidden border border-[#d6b161]/20"
+                            className={`bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 text-white relative overflow-hidden border border-[#d6b161]/20 transition-shadow duration-500 ${startHeavyAnimations ? 'shadow-2xl' : 'shadow-sm'} ${isAnimating ? 'will-change-transform' : ''}`}
                             style={{
                                 transformStyle: 'preserve-3d',
                                 transition: 'transform 0.25s cubic-bezier(.2,.9,.2,1)',
+                                contain: 'paint'
                             }}
                         >
                             {/* Background Pattern */}
@@ -408,9 +475,13 @@ const ContactPage: React.FC = () => {
                                 backgroundSize: '40px 40px'
                             }}></div>
 
-                            {/* Animated Gradient Orbs */}
-                            <div className="absolute top-0 left-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-r from-[#d6b161] to-[#c4a055] rounded-full opacity-20 blur-2xl animate-pulse"></div>
-                            <div className="absolute bottom-0 right-0 w-24 h-24 sm:w-28 sm:h-28 md:w-40 md:h-40 bg-gradient-to-r from-[#d6b161] to-[#c4a055] rounded-full opacity-20 blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                            {/* Animated Gradient Orbs - deferred */}
+                            {startHeavyAnimations && (
+                                <>
+                                    <div className="absolute top-0 left-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-r from-[#d6b161] to-[#c4a055] rounded-full opacity-20 blur-2xl animate-pulse"></div>
+                                    <div className="absolute bottom-0 right-0 w-24 h-24 sm:w-28 sm:h-28 md:w-40 md:h-40 bg-gradient-to-r from-[#d6b161] to-[#c4a055] rounded-full opacity-20 blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                                </>
+                            )}
 
                             <div className="relative z-10">
                                 <motion.h2
@@ -523,10 +594,11 @@ const ContactPage: React.FC = () => {
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl border border-gray-200 dark:border-gray-700"
+                            className={`bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 border border-gray-200 dark:border-gray-700 transition-shadow duration-500 ${startHeavyAnimations ? 'shadow-2xl' : 'shadow-sm'} ${isAnimating ? 'will-change-transform' : ''}`}
                             style={{
                                 transformStyle: 'preserve-3d',
                                 transition: 'transform 0.25s cubic-bezier(.2,.9,.2,1)',
+                                contain: 'paint'
                             }}
                         >
                             <AnimatePresence mode="wait">
@@ -681,17 +753,11 @@ const ContactPage: React.FC = () => {
                             className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden hover:shadow-3xl transition-all duration-500 border border-gray-200 dark:border-gray-700"
                         >
                             <div className="aspect-video bg-gradient-to-br from-[#0a192f]/10 to-[#d6b161]/10 relative">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.123456789012!2d74.12345678901234!3d13.123456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDA3JzI0LjQiTiA3NMKwMDcnNDEuMCJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: 0 }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
+                                <LazyIframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3882.2267!2d74.71639!3d13.27896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbca59bbf2e73c5%3A0x123456789!2sJLB%20Complex%20Gopadi%2C%20NH%2066%2C%20Koteshwara%20Proper%2C%20Kundapura%2C%20Karnataka%20576201!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
                                     title="Sovir Technologies Head Office"
                                     className="min-h-[200px] sm:min-h-[250px] md:min-h-[300px]"
-                                ></iframe>
+                                />
                             </div>
                             <div className="p-4 sm:p-6 md:p-8">
                                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#0a192f] dark:text-white mb-2 sm:mb-3 md:mb-4">Head Office</h3>
@@ -728,17 +794,11 @@ const ContactPage: React.FC = () => {
                             className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden hover:shadow-3xl transition-all duration-500 border border-gray-200 dark:border-gray-700"
                         >
                             <div className="aspect-video bg-gradient-to-br from-[#0a192f]/10 to-[#d6b161]/10 relative">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.7451626823346!2d77.05830571138308!3d28.575597775773244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce7cf92d24e0d%3A0x3f3f3f3f3f3f3f3f!2sBlock%20A%2C%205th%20Floor%2C%20Unit%20No%20540%2C%20Sector%2090%2C%20Noida!5e0!3m2!1sen!2sin!4v1234567890123"
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: 0 }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
+                                <LazyIframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.578!2d77.38166!3d28.56667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5a!2sBlock%20A%2C%20Sector%2090%2C%20Noida%2C%20Uttar%20Pradesh%20201305!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
                                     title="Sovir Technologies Branch Office"
                                     className="min-h-[200px] sm:min-h-[250px] md:min-h-[300px]"
-                                ></iframe>
+                                />
                             </div>
                             <div className="p-4 sm:p-6 md:p-8">
                                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#0a192f] dark:text-white mb-2 sm:mb-3 md:mb-4">Branch Office</h3>
@@ -770,7 +830,9 @@ const ContactPage: React.FC = () => {
                 </div>
             </section>
 
-            <Footer />
+            <Suspense fallback={<div className="h-24 w-full bg-transparent" aria-hidden="true" />}>
+                <Footer />
+            </Suspense>
 
             {/* Reduced Motion Support Styles */}
             <style>{`
