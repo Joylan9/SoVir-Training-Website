@@ -32,6 +32,15 @@ interface Batch {
     students: any[];
 }
 
+interface TrialRequest {
+    _id: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    interest: string;
+    createdAt: string;
+}
+
 // ============================================================================
 // COMPONENTS
 // ============================================================================
@@ -114,6 +123,7 @@ const AdminDashboard: React.FC = () => {
     // Data State
     const [batches, setBatches] = useState<Batch[]>([]);
     const [trainers, setTrainers] = useState<Trainer[]>([]);
+    const [trialRequests, setTrialRequests] = useState<TrialRequest[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Stats State
@@ -133,13 +143,15 @@ const AdminDashboard: React.FC = () => {
 
     const fetchData = async () => {
         try {
-            const [batchesRes, trainersRes] = await Promise.all([
+            const [batchesRes, trainersRes, trialsRes] = await Promise.all([
                 api.get('/language-training/admin/batches'),
-                api.get('/language-training/admin/trainers')
+                api.get('/language-training/admin/trainers'),
+                api.get('/trials')
             ]);
 
             const fetchedBatches: Batch[] = batchesRes.data;
             const fetchedTrainers: Trainer[] = trainersRes.data;
+            setTrialRequests(trialsRes.data);
 
             setBatches(fetchedBatches);
             setTrainers(fetchedTrainers);
@@ -193,6 +205,17 @@ const AdminDashboard: React.FC = () => {
         } catch (error: any) {
             console.error("Failed to remove trainer", error);
             alert(error.response?.data?.message || 'Failed to remove trainer');
+        }
+    };
+
+    const handleDeleteTrialRequest = async (id: string) => {
+        if (!window.confirm("Are you sure you want to delete this request?")) return;
+        try {
+            await api.delete(`/trials/${id}`);
+            setTrialRequests(prev => prev.filter(req => req._id !== id));
+        } catch (error: any) {
+            console.error("Failed to delete trial request", error);
+            alert(error.response?.data?.message || 'Failed to delete request');
         }
     };
 
@@ -258,6 +281,47 @@ const AdminDashboard: React.FC = () => {
                         </motion.div>
                     </Link>
                 </div>
+
+                {/* Trial Requests */}
+                <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-[#112240]">
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#0a192f] dark:text-white">
+                        <Mail className="h-5 w-5 text-[#d6b161]" />
+                        New booking requests
+                    </h3>
+                    <div className="space-y-4 max-h-[300px] overflow-y-auto">
+                        {loading ? (
+                            <p className="text-gray-500">Loading requests...</p>
+                        ) : trialRequests.length === 0 ? (
+                            <p className="text-gray-500">No new booking requests.</p>
+                        ) : (
+                            trialRequests.map((req) => (
+                                <div key={req._id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-lg border border-gray-100 p-4 dark:border-gray-700 bg-gray-50 dark:bg-[#0a192f]/50">
+                                    <div>
+                                        <div className="flex items-center gap-2 font-bold text-gray-900 dark:text-white">
+                                            {req.fullName}
+                                            <span className={`px-2 py-0.5 rounded text-xs border ${req.interest === 'Language' ? 'bg-blue-100 text-blue-700 border-blue-200' : req.interest === 'Skill' ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-orange-100 text-orange-700 border-orange-200'}`}>
+                                                {req.interest}
+                                            </span>
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                            {req.email} • {req.phone}
+                                        </div>
+                                        <div className="text-xs text-gray-400 mt-1">
+                                            {new Date(req.createdAt).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteTrialRequest(req._id)}
+                                        className="self-end sm:self-center p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors border border-transparent hover:border-red-200"
+                                        title="Delete Request"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </section>
 
                 <div className="grid gap-6 lg:grid-cols-3">
                     {/* Recent Batches List */}

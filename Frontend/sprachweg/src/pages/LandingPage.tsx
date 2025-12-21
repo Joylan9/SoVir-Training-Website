@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Header, Footer } from '../components/layout';
-import BookingForm from '../components/ui/BookingForm';
+import UnifiedBookingForm from '../components/ui/UnifiedBookingForm';
 
 // Carousel for Trusted Partners with smooth infinite scroll
 const TrustedPartnersCarousel = () => {
@@ -542,7 +542,7 @@ const LandingPage: React.FC = () => {
                             <div className="inline-block px-4 py-2 bg-[#d6b161]/10 rounded-full mb-6 border border-[#d6b161]/20">
                                 <span className="text-[#d6b161] font-medium text-sm flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-[#d6b161]"></span>
-                                    New: Summer 2025 Batches Now Open
+                                    New: Summer 202 Batches Now Open
                                 </span>
                             </div>
 
@@ -887,8 +887,8 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Modals */}
-            <BookingForm
+            {/* Booking Modal */}
+            <UnifiedBookingForm
                 isOpen={isBookingFormOpen}
                 onClose={() => setIsBookingFormOpen(false)}
             />
