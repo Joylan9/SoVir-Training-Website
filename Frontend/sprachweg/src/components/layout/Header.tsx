@@ -190,7 +190,7 @@ const Header: React.FC = () => {
                                     <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${openDropdown === 'career-desktop' ? 'rotate-180' : ''}`} />
                                 </button>
                             </div>
-                            <div className={`absolute left-0 top-full mt-2 w-[850px] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
+                            <div className={`absolute left-0 top-full mt-2 w-[850px] max-w-[90vw] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
                                 <div className="grid grid-cols-4 gap-6 p-6">
                                     {/* DESTINATIONS Column */}
                                     <div>
@@ -462,7 +462,7 @@ const Header: React.FC = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="lg:hidden bg-white dark:bg-[#0a192f] border-t border-gray-100 dark:border-gray-800"
+                        className="lg:hidden bg-white dark:bg-[#0a192f] border-t border-gray-100 dark:border-gray-800 max-h-[calc(100vh-4rem)] overflow-y-auto"
                     >
                         <div className="px-4 py-4 space-y-2">
                             <Link to="/" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>Home</Link>
@@ -515,7 +515,7 @@ const Header: React.FC = () => {
                                 className="w-full text-left text-gray-700 dark:text-gray-300 font-medium py-2 text-sm flex items-center justify-between"
                             >
                                 Career
-                                <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'career' ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`w-5 h-5 transition-transform ${openDropdown === 'career' ? 'rotate-180' : ''}`} />
                             </button>
                             {openDropdown === 'career' && (
                                 <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
@@ -530,6 +530,38 @@ const Header: React.FC = () => {
                                         <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Services</h4>
                                         <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Visa Assistance</Link>
                                         <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Job Placement</Link>
+                                    </div>
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Internship</h4>
+                                        {[
+                                            "Software Development Intern",
+                                            "Web Development Intern (Frontend / Backend)",
+                                            "Full Stack Development Intern",
+                                            "Python Programming Intern",
+                                            "Java Development Intern",
+                                            "Data Analytics Intern",
+                                            "Cloud Computing Intern",
+                                            "Cyber Security Intern",
+                                            "AI & Machine Learning Intern",
+                                            "IT Support & Systems Intern"
+                                        ].map((item, idx) => (
+                                            <Link key={idx} to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>
+                                                {item}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Full Time</h4>
+                                        {[
+                                            "PLC Automation Engineer",
+                                            "Controls & Automation Engineer",
+                                            "PLC Programmer (Automation)",
+                                            "Industrial Automation Engineer"
+                                        ].map((item, idx) => (
+                                            <Link key={idx} to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>
+                                                {item}
+                                            </Link>
+                                        ))}
                                     </div>
                                 </div>
                             )}
