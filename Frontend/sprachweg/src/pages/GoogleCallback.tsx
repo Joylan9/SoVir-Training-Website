@@ -13,7 +13,7 @@ const GoogleCallback: React.FC = () => {
         if (code) {
             handleCallback();
         } else {
-            navigate('/dashboard');
+            navigate('/student-dashboard');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [code, navigate]);
@@ -34,13 +34,13 @@ const GoogleCallback: React.FC = () => {
             } else {
 
                 // Fallback to role-based dashboard
-                const dashboard = user?.role === 'trainer' ? '/trainer-dashboard' : '/dashboard';
+                const dashboard = user?.role === 'trainer' ? '/trainer-dashboard' : '/student-dashboard';
                 navigate(dashboard);
             }
         } catch (error) {
             console.error('Google Auth Failed', error);
             alert('Failed to connect Google Calendar.');
-            const dashboard = user?.role === 'trainer' ? '/trainer-dashboard' : '/dashboard';
+            const dashboard = user?.role === 'trainer' ? '/trainer-dashboard' : '/student-dashboard';
             navigate(dashboard);
         }
     };

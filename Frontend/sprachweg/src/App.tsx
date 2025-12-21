@@ -77,7 +77,7 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/student-dashboard" replace />;
   }
 
   return <>{children}</>;
