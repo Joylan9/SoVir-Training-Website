@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import Enrollment from "../models/language.enrollment.model";
 import Batch from "../models/language.batch.model";
 import User from "../models/user.model";
+import { EmailService } from "../utils/email.service";
+
+const emailService = new EmailService();
 
 /* ============================
    STUDENT APIs
@@ -9,8 +12,10 @@ import User from "../models/user.model";
 
 // POST /api/language-training/enroll
 export const applyEnrollment = async (req: Request, res: Response) => {
+  console.log('[EnrollmentController] applyEnrollment called');
   try {
     const { courseTitle, name } = req.body;
+    console.log(`[EnrollmentController] Payload: courseTitle=${courseTitle}, name=${name}`);
 
     if (!courseTitle || !name) {
       return res.status(400).json({ message: "courseTitle and name required" });
@@ -27,6 +32,13 @@ export const applyEnrollment = async (req: Request, res: Response) => {
         exists.status = "PENDING";
         exists.batchId = undefined;
         await exists.save();
+
+        // Send "Request Received" Email for Re-enrollment
+        const userEmail = (req as any).user.email;
+        const userName = (req as any).user.name;
+        console.log(`[EnrollmentController] Sending re-enrollment email to ${userEmail}`);
+        await emailService.sendEnrollmentEmail(userEmail, userName, courseTitle, 'PENDING');
+
         return res.status(200).json({
           message: "Re-enrollment submitted successfully.",
           enrollment: exists,
@@ -40,6 +52,11 @@ export const applyEnrollment = async (req: Request, res: Response) => {
       courseTitle,
       name,
     });
+
+    // Send "Request Received" Email
+    const userEmail = (req as any).user.email;
+    const userName = (req as any).user.name;
+    await emailService.sendEnrollmentEmail(userEmail, userName, courseTitle, 'PENDING');
 
     res.status(201).json({
       message: "Enrollment request submitted. Await admin approval.",
@@ -75,8 +92,9 @@ export const getEnrollments = async (req: Request, res: Response) => {
 
 // POST /api/language-training/admin/enroll/:id/approve
 export const approveEnrollment = async (req: Request, res: Response) => {
+  console.log(`[EnrollmentController] approveEnrollment called for ID: ${req.params.id}`);
   try {
-    const enrollment = await Enrollment.findById(req.params.id);
+    const enrollment = await Enrollment.findById(req.params.id).populate('userId');
 
     if (!enrollment || enrollment.status !== "PENDING") {
       return res.status(400).json({ message: "Invalid enrollment" });
@@ -103,6 +121,14 @@ export const approveEnrollment = async (req: Request, res: Response) => {
     enrollment.status = "APPROVED";
     enrollment.batchId = batch._id;
     await enrollment.save();
+
+    // Send "Approved" Email
+    // Since we populated userId, it is now an object (depending on TS types). 
+    // We cast to any or check type to access email.
+    const studentUser = enrollment.userId as any;
+    if (studentUser && studentUser.email) {
+      await emailService.sendEnrollmentEmail(studentUser.email, studentUser.name, enrollment.courseTitle, 'APPROVED');
+    }
 
     res.json({
       message: "Enrollment approved and assigned to batch",

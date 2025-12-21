@@ -37,6 +37,7 @@ import GoogleCallback from './pages/GoogleCallback';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import ContactPage from './pages/ContactPage';
+import AdminContactMessages from './pages/Admin/AdminContactMessages';
 
 
 // Protected Route Component
@@ -77,7 +78,33 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (user) {
+    if (user.role === 'admin') return <Navigate to="/admin" replace />;
+    if (user.role === 'trainer') return <Navigate to="/trainer-dashboard" replace />;
     return <Navigate to="/student-dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const TrainerRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user || user.role !== 'trainer') {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
@@ -164,9 +191,9 @@ const AppContent = () => {
         <Route
           path="/trainer-dashboard"
           element={
-            <ProtectedRoute>
+            <TrainerRoute>
               <TrainerDashboard />
-            </ProtectedRoute>
+            </TrainerRoute>
           }
         />
 
@@ -175,49 +202,49 @@ const AppContent = () => {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AdminDashboard />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
           path="/admin/skills"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <SkillDashboard />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
           path="/admin/skills-details"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <SkillDashboard1 />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
           path="/admin/languages"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <LanguageDashboard />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
           path="/admin/language-enrollment-details"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <LanguageEnrollmentDetails />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
           path="/admin/language-batches"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <LanguageBatches />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
         <Route
@@ -226,6 +253,14 @@ const AppContent = () => {
             <ProtectedRoute>
               <LanguageBatchDetails />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/messages"
+          element={
+            <AdminRoute>
+              <AdminContactMessages />
+            </AdminRoute>
           }
         />
 

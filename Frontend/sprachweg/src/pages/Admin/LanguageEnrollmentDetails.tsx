@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "../../components/admin/AdminLayout";
-import { Check, X, Filter, Search, Mail, BookOpen, Eye, Phone } from "lucide-react";
+import { Check, X, Filter, Search, Mail, BookOpen, Eye, Phone, Loader2 } from "lucide-react";
 
 import { API_BASE_URL as API_URL } from "../../lib/api";
 
@@ -31,6 +31,7 @@ const LanguageEnrollmentDetails: React.FC = () => {
     const [error, setError] = useState("");
     const [filterLevel, setFilterLevel] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
+    const [processingId, setProcessingId] = useState<string | null>(null);
 
     // Modal State
     const [selectedEnrollment, setSelectedEnrollment] = useState<Enrollment | null>(null);
@@ -71,6 +72,8 @@ const LanguageEnrollmentDetails: React.FC = () => {
 
     const handleApprove = async (id: string, e?: React.MouseEvent) => {
         e?.stopPropagation();
+        if (processingId) return;
+        setProcessingId(id);
         try {
             const token = localStorage.getItem("token");
             const config = {
@@ -86,12 +89,16 @@ const LanguageEnrollmentDetails: React.FC = () => {
             // Optional: Add toast notification here
         } catch (err) {
             alert("Failed to approve");
+        } finally {
+            setProcessingId(null);
         }
     };
 
     const handleReject = async (id: string, e?: React.MouseEvent) => {
         e?.stopPropagation();
+        if (processingId) return;
         if (!confirm("Are you sure you want to reject this enrollment?")) return;
+        setProcessingId(id);
         try {
             const token = localStorage.getItem("token");
             const config = {
@@ -106,6 +113,8 @@ const LanguageEnrollmentDetails: React.FC = () => {
             if (selectedEnrollment?._id === id) setSelectedEnrollment(null);
         } catch (err) {
             alert("Failed to reject");
+        } finally {
+            setProcessingId(null);
         }
     };
 
@@ -230,14 +239,25 @@ const LanguageEnrollmentDetails: React.FC = () => {
                                 <div className="flex gap-3 mt-auto">
                                     <button
                                         onClick={(e) => handleApprove(enrollment._id, e)}
-                                        className="flex-1 bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] py-2.5 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-lg"
+                                        disabled={!!processingId}
+                                        className={`flex-1 bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] py-2.5 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-lg ${processingId ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     >
-                                        <Check className="w-4 h-4" />
-                                        Approve
+                                        {processingId === enrollment._id ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Check className="w-4 h-4" />
+                                                Approve
+                                            </>
+                                        )}
                                     </button>
                                     <button
                                         onClick={(e) => handleReject(enrollment._id, e)}
-                                        className="flex-1 bg-transparent border border-red-900/50 text-red-500 hover:bg-red-900/20 py-2.5 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                                        disabled={!!processingId}
+                                        className={`flex-1 bg-transparent border border-red-900/50 text-red-500 hover:bg-red-900/20 py-2.5 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-colors ${processingId ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     >
                                         <X className="w-4 h-4" />
                                         Reject
@@ -313,10 +333,20 @@ const LanguageEnrollmentDetails: React.FC = () => {
                                 </button>
                                 <button
                                     onClick={() => handleApprove(selectedEnrollment._id)}
-                                    className="px-6 py-2 rounded-lg bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-bold shadow-md transition-colors flex items-center gap-2"
+                                    disabled={!!processingId}
+                                    className={`px-6 py-2 rounded-lg bg-[#d6b161] hover:bg-[#c4a055] text-[#0a192f] font-bold shadow-md transition-colors flex items-center gap-2 ${processingId ? 'opacity-70 cursor-not-allowed' : ''}`}
                                 >
-                                    <Check className="w-4 h-4" />
-                                    Approve Enrollment
+                                    {processingId === selectedEnrollment._id ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Processing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Check className="w-4 h-4" />
+                                            Approve Enrollment
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>

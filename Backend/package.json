@@ -26,6 +26,7 @@
     "mongoose": "^9.0.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
+    "react-hot-toast": "^2.6.0",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

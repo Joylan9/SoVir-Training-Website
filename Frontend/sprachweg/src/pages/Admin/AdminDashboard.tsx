@@ -6,10 +6,13 @@ import {
     TrendingUp,
     Shield,
     Award,
-    Trash2
+    Trash2,
+    Mail,
+    ArrowRight
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import api from '../../lib/api';
+import { Link } from 'react-router-dom';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -183,6 +186,28 @@ const AdminDashboard: React.FC = () => {
                         value={loading ? "..." : stats.totalStudents}
                         color="bg-blue-500"
                     />
+                </div>
+
+                {/* Quick Access Links */}
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <Link to="/admin/messages" className="group">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-[#112240] hover:border-[#d6b161] dark:hover:border-[#d6b161] transition-all hover:shadow-lg"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="mb-3 inline-flex rounded-lg bg-[#d6b161]/10 p-3 text-[#d6b161]">
+                                        <Mail className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-[#0a192f] dark:text-white mb-1">Contact Messages</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">View and manage inquiries</p>
+                                </div>
+                                <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-[#d6b161] group-hover:translate-x-1 transition-all" />
+                            </div>
+                        </motion.div>
+                    </Link>
                 </div>
 
                 <div className="grid gap-6 lg:grid-cols-3">

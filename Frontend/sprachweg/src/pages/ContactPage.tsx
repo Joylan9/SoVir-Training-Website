@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy, useMemo } from 'react';
+import axios from 'axios';
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 
 import { MessageCircle } from 'lucide-react';
@@ -96,50 +97,7 @@ interface SuccessAnimationProps {
     onReset: () => void;
 }
 
-// 3D Tilt Hook - Optimized with rAF throttling and conditional listeners
-const useTilt = (enable: boolean = true, isMobile: boolean = false) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!enable || !ref.current || window.innerWidth < 1024 || isMobile) return;
-
-        const element = ref.current;
-        let raf = 0;
-
-        const handleMouseMove = (e: MouseEvent) => {
-            if (raf) cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(() => {
-                const rect = element.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                element.style.transform = `perspective(2000px) rotateY(${x * 6}deg) rotateX(${y * -6}deg) translateZ(8px)`;
-            });
-        };
-
-        const handleMouseLeave = () => {
-            if (raf) cancelAnimationFrame(raf);
-            element.style.transform = 'perspective(2000px) rotateY(0deg) rotateX(0deg) translateZ(0px)';
-            element.removeEventListener('mousemove', handleMouseMove);
-        };
-
-        const handleMouseEnter = () => {
-            element.addEventListener('mousemove', handleMouseMove);
-        };
-
-        // Only attach listeners on hover
-        element.addEventListener('mouseenter', handleMouseEnter);
-        element.addEventListener('mouseleave', handleMouseLeave);
-
-        return () => {
-            if (raf) cancelAnimationFrame(raf);
-            element.removeEventListener('mouseenter', handleMouseEnter);
-            element.removeEventListener('mousemove', handleMouseMove);
-            element.removeEventListener('mouseleave', handleMouseLeave);
-        };
-    }, [enable, isMobile]);
-
-    return ref;
-};
+// 3D Tilt Hook removed for performance optimization
 
 // LazyIframe Component - Only loads when in viewport
 const LazyIframe: React.FC<{ src: string; title: string; className?: string }> = ({ src, title, className }) => {
@@ -314,49 +272,32 @@ const itemVariants = {
 };
 
 const ContactPage: React.FC = () => {
-    
+
     const [form, setForm] = useState<FormData>({ name: "", email: "", subject: "", message: "" });
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState("");
-    const [isMobile, setIsMobile] = useState(false);
     const [startHeavyAnimations, setStartHeavyAnimations] = useState(false);
-    const [isAnimating, setIsAnimating] = useState(false);
 
-    const contactCardRef = useTilt(true, isMobile);
-    const formCardRef = useTilt(true, isMobile);
+    // const contactCardRef = useTilt(true, isMobile);
+    // const formCardRef = useTilt(true, isMobile);
     const ICONS = useIcons();
 
     // Defer heavy animations until after first paint / idle
     useEffect(() => {
-        setIsAnimating(true);
-
         if ('requestIdleCallback' in window) {
             (window as any).requestIdleCallback(() => {
                 setStartHeavyAnimations(true);
-                setIsAnimating(false);
             }, { timeout: 200 });
         } else {
             const id = requestAnimationFrame(() => {
                 setStartHeavyAnimations(true);
-                setIsAnimating(false);
             });
             return () => cancelAnimationFrame(id);
         }
     }, []);
 
-    useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
 
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-
-        return () => {
-            window.removeEventListener('resize', checkMobile);
-        };
-    }, []);
 
     const updateField = (key: keyof FormData, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -382,16 +323,20 @@ const ContactPage: React.FC = () => {
 
         setSubmitting(true);
 
-        // Simulate form submission (remove backend call for now)
-        setTimeout(() => {
-            console.log("Form submitted:", form);
+        try {
+            const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+            await axios.post(`${API_URL}/api/contact`, form);
             setSubmitted(true);
             setForm({ name: "", email: "", subject: "", message: "" });
+        } catch (error: any) {
+            console.error("Submission error:", error);
+            setSubmitError(error.response?.data?.message || "Failed to send message. Please try again.");
+        } finally {
             setSubmitting(false);
-        }, 1500);
+        }
     };
 
- 
+
 
     // Data
     const contactEmails: ContactEmail[] = [
@@ -454,16 +399,10 @@ const ContactPage: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 items-start">
                         {/* Left Column - Contact Info */}
                         <motion.div
-                            ref={contactCardRef}
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className={`bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 text-white relative overflow-hidden border border-[#d6b161]/20 transition-shadow duration-500 ${startHeavyAnimations ? 'shadow-2xl' : 'shadow-sm'} ${isAnimating ? 'will-change-transform' : ''}`}
-                            style={{
-                                transformStyle: 'preserve-3d',
-                                transition: 'transform 0.25s cubic-bezier(.2,.9,.2,1)',
-                                contain: 'paint'
-                            }}
+                            className={`bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 text-white relative overflow-hidden border border-[#d6b161]/20 transition-shadow duration-500 shadow-xl`}
                         >
                             {/* Background Pattern */}
                             <div className="absolute inset-0 opacity-10" style={{
@@ -579,16 +518,10 @@ const ContactPage: React.FC = () => {
 
                         {/* Right Column - Contact Form */}
                         <motion.div
-                            ref={formCardRef}
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className={`bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 border border-gray-200 dark:border-gray-700 transition-shadow duration-500 ${startHeavyAnimations ? 'shadow-2xl' : 'shadow-sm'} ${isAnimating ? 'will-change-transform' : ''}`}
-                            style={{
-                                transformStyle: 'preserve-3d',
-                                transition: 'transform 0.25s cubic-bezier(.2,.9,.2,1)',
-                                contain: 'paint'
-                            }}
+                            className={`bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 border border-gray-200 dark:border-gray-700 transition-shadow duration-500 shadow-xl`}
                         >
                             <AnimatePresence mode="wait">
                                 {submitted ? (

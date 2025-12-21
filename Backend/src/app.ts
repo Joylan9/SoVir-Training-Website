@@ -47,4 +47,7 @@ import skillTrainingDetailRoutes from './routes/skillTrainingDetail.routes';
 app.use('/api/skill-training-details', skillTrainingDetailRoutes);
 app.use('/api/language-trainer', languageTrainerRoutes);
 
+import contactRoutes from './routes/contact.routes';
+app.use('/api/contact', contactRoutes);
+
 export default app;
