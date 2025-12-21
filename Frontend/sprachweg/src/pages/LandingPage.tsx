@@ -112,22 +112,22 @@ const RotatingImageStack: React.FC = () => {
 
     const stackImages = [
         {
-            url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
             title: "Industrial Automation Training",
             caption: "Master PLC, SCADA, and Modern Control Systems"
         },
         {
-            url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
             title: "Hands-On Learning",
             caption: "Real-world Projects and Lab Experience"
         },
         {
-            url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
             title: "Industry 4.0 Ready",
             caption: "Smart Manufacturing and IIoT Technologies"
         },
         {
-            url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
             title: "Expert Instructors",
             caption: "Learn from Industry Professionals"
         }

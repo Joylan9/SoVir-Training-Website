@@ -20,7 +20,6 @@ const Footer: React.FC = () => {
                                 className="h-20 w-auto object-contain brightness-0 invert transform scale-125"
                             />
                             <div>
-                                <span className="font-serif font-bold text-lg leading-tight text-white block">SoVir Skilling & Training Center</span>
                                 <span className="text-xs tracking-wider text-gray-400">A Division of SoVir Technologies LLP</span>
                             </div>
                         </div>
@@ -32,15 +31,14 @@ const Footer: React.FC = () => {
                                 <Mail className="w-4 h-4 flex-shrink-0" />
                                 <span className="text-sm">training@sovirtechnologies.in</span>
                             </a>
-                            <a href="tel:+4930123456789" className="flex items-center gap-3 text-gray-400 hover:text-[#d6b161] transition-colors">
+                            <a href="tel:+91 9990718176" className="flex items-center gap-3 text-gray-400 hover:text-[#d6b161] transition-colors">
                                 <Phone className="w-4 h-4 flex-shrink-0" />
-                                <span className="text-sm">+49 30 123 456 789</span>
+                                <span className="text-sm">+91 9990718176</span>
                             </a>
                             <div className="flex items-start gap-3 text-gray-400">
                                 <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
                                 <div className="text-sm">
-                                    <div>Friedrichstraße 123</div>
-                                    <div>10117 Berlin, Germany</div>
+                                    <div>JLB Complex Gopadi, NH 66, Koteshwara Proper, Kundapura, Karnataka 576201</div>
                                 </div>
                             </div>
                         </div>

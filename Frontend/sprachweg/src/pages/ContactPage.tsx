@@ -397,9 +397,7 @@ const ContactPage: React.FC = () => {
 
     // Data
     const contactEmails: ContactEmail[] = [
-        { type: 'Sales', email: 'sales@sovirtechnologies.in' },
-        { type: 'Support', email: 'support@sovirtechnologies.in' },
-        { type: 'Business', email: 'business@sovirtechnologies.in' },
+        { type: 'Training', email: 'training@sovirtechnologies.in' },
         { type: 'Queries', email: 'info@sovirtechnologies.in' }
     ];
 
@@ -561,13 +559,6 @@ const ContactPage: React.FC = () => {
                                     transition={{ delay: 0.9 }}
                                     className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 mt-6 sm:mt-10 md:mt-12"
                                 >
-                                    <button
-                                        onClick={handlePartnershipClick}
-                                        className="flex items-center justify-center gap-2 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl text-white font-semibold text-xs sm:text-sm md:text-base hover:bg-white/20 hover:border-[#d6b161]/50 transition-all duration-300 group shadow-lg hover:shadow-xl min-h-[44px]"
-                                    >
-                                        {ICONS.partner}
-                                        <span>Be Our Partner</span>
-                                    </button>
                                     <a
                                         href="https://wa.me/918851771838"
                                         target="_blank"
@@ -754,7 +745,7 @@ const ContactPage: React.FC = () => {
                         >
                             <div className="aspect-video bg-gradient-to-br from-[#0a192f]/10 to-[#d6b161]/10 relative">
                                 <LazyIframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3882.2267!2d74.71639!3d13.27896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbca59bbf2e73c5%3A0x123456789!2sJLB%20Complex%20Gopadi%2C%20NH%2066%2C%20Koteshwara%20Proper%2C%20Kundapura%2C%20Karnataka%20576201!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3882.4876887447756!2d74.71387367507528!3d13.278956687193878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbca54a0bdd5e0b%3A0x7b6f8b1a0bdd5e0c!2sKoteshwara%2C%20Karnataka%20576222!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
                                     title="Sovir Technologies Head Office"
                                     className="min-h-[200px] sm:min-h-[250px] md:min-h-[300px]"
                                 />
@@ -795,7 +786,7 @@ const ContactPage: React.FC = () => {
                         >
                             <div className="aspect-video bg-gradient-to-br from-[#0a192f]/10 to-[#d6b161]/10 relative">
                                 <LazyIframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.578!2d77.38166!3d28.56667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5a!2sBlock%20A%2C%20Sector%2090%2C%20Noida%2C%20Uttar%20Pradesh%20201305!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.578307963847!2d77.38166!3d28.566670!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5a43173357b%3A0x37ffce30c87cc03d!2sSector%2090%2C%20Noida%2C%20Uttar%20Pradesh%20201305!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
                                     title="Sovir Technologies Branch Office"
                                     className="min-h-[200px] sm:min-h-[250px] md:min-h-[300px]"
                                 />

@@ -66,131 +66,7 @@ const Header: React.FC = () => {
                             Home
                         </Link>
 
-                        {/* Language Training Mega Menu */}
-                        <div className="relative group">
-                            <div className="flex items-center gap-1">
-                                <Link
-                                    to="/language-training"
-                                    className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm px-2 py-2"
-                                >
-                                    Language Training
-                                </Link>
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleDropdown('language-desktop');
-                                    }}
-                                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors focus:outline-none"
-                                >
-                                    <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${openDropdown === 'language-desktop' ? 'rotate-180' : ''}`} />
-                                </button>
-                            </div>
-                            <div className={`absolute left-0 top-full mt-2 w-[650px] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'language-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
-                                <div className="grid grid-cols-3 gap-6 p-6">
-                                    {/* LANGUAGES Column */}
-                                    <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Languages</h3>
-                                        <div className="space-y-3">
-                                            <Link to="/language-training" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🌍</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">All Languages</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">View all language courses</p>
-                                                </div>
-                                            </Link>
-                                            <Link to="/training/english" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🇬🇧</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">English</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Business & Academic English</p>
-                                                </div>
-                                            </Link>
-                                            <Link to="/training/german" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🇩🇪</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">German</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">German A1-B2 Complete</p>
-                                                </div>
-                                            </Link>
-                                            <Link to="/training/japanese" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🇯🇵</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Japanese</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">JLPT preparation</p>
-                                                </div>
-                                            </Link>
-                                        </div>
-                                    </div>
 
-                                    {/* LEARNING MODES Column */}
-                                    <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Learning Modes</h3>
-                                        <div className="space-y-3">
-                                            <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">▶️</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Live Classes</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Interactive sessions</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">📚</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Self-Paced</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Learn at your pace</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">📅</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Hybrid</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Best of both worlds</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* CERTIFICATIONS Column */}
-                                    <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Certifications</h3>
-                                        <div className="space-y-3">
-                                            <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🏆</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Exam Preparation</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">International certifications</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">💼</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Business Language</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Professional communication</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Skill Training Mega Menu */}
                         <div className="relative group">
@@ -251,6 +127,15 @@ const Header: React.FC = () => {
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Industrial Drives</p>
                                                     <p className="text-xs text-gray-600 dark:text-gray-400">Motion control systems</p>
+                                                </div>
+                                            </Link>
+                                            <Link to="/language-training" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
+                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
+                                                    <span className="text-lg">🌍</span>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Language Training</p>
+                                                    <p className="text-xs text-gray-600 dark:text-gray-400">English, German, Japanese</p>
                                                 </div>
                                             </Link>
                                         </div>
@@ -566,41 +451,7 @@ const Header: React.FC = () => {
                         <div className="px-4 py-4 space-y-2">
                             <Link to="/" className="block text-gray-700 dark:text-gray-300 font-medium py-2 text-sm" onClick={() => setIsMenuOpen(false)}>Home</Link>
 
-                            <div className="flex items-center justify-between w-full">
-                                <Link
-                                    to="/language-training"
-                                    onClick={() => setIsMenuOpen(false)}
-                                    className="text-gray-700 dark:text-gray-300 font-medium py-2 text-sm flex-1"
-                                >
-                                    Language Training
-                                </Link>
-                                <button
-                                    onClick={() => toggleDropdown('language')}
-                                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10"
-                                >
-                                    <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform ${openDropdown === 'language' ? 'rotate-180' : ''}`} />
-                                </button>
-                            </div>
-                            {openDropdown === 'language' && (
-                                <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
-                                    {/* Languages */}
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Languages</h4>
-                                        <Link to="/training/english" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>English</Link>
-                                        <Link to="/training/german" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>German</Link>
-                                        <Link to="/training/japanese" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Japanese</Link>
-                                        <Link to="/language-training" className="block text-gray-600 dark:text-gray-400 py-1 text-xs font-medium" onClick={() => setIsMenuOpen(false)}>View All Languages</Link>
-                                    </div>
 
-                                    {/* Learning Modes */}
-                                    <div className="space-y-1 border-t border-gray-100 dark:border-gray-700 pt-2">
-                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Learning Modes</h4>
-                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Live Classes</p>
-                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Self-Paced</p>
-                                        <p className="text-gray-600 dark:text-gray-400 py-1 text-xs">Hybrid</p>
-                                    </div>
-                                </div>
-                            )}
 
                             <div className="flex items-center justify-between w-full">
                                 <Link
@@ -626,6 +477,7 @@ const Header: React.FC = () => {
                                         <Link to="/skill-training/scada" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>SCADA & HMI</Link>
                                         <Link to="/skill-training/plc" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>PLC Programming</Link>
                                         <Link to="/skill-training/drives" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Industrial Drives</Link>
+                                        <Link to="/language-training" className="block text-gray-600 dark:text-gray-400 py-1 text-xs font-medium" onClick={() => setIsMenuOpen(false)}>Language Training</Link>
                                     </div>
 
                                     {/* Advanced Training */}
