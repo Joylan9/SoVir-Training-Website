@@ -414,7 +414,7 @@ const ContactPage: React.FC = () => {
             </Suspense>
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
+            <section className="relative py-28 sm:py-36 text-center overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
                 <HeroBackground startAnimations={startHeavyAnimations} />
 

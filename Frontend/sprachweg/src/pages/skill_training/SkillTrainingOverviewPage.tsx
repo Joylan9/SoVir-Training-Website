@@ -317,7 +317,7 @@ const SkillTrainingOverviewPage: React.FC = () => {
             <Header />
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden py-24 md:py-32">
+            <section className="relative bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden py-28 sm:py-36 text-center">
                 <HeroBackground />
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

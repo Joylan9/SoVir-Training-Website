@@ -148,14 +148,19 @@ const AdminDashboard: React.FC = () => {
         <AdminLayout>
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Hero */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-white">
-                            Dashboard
-                        </h1>
-                        <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            Overview of your academy's performance.
-                        </p>
+                <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-28 sm:py-36 text-center overflow-hidden -mx-6 -mt-6 lg:-mx-8 lg:-mt-8 mb-8">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            <h1 className="mb-4 text-4xl font-bold font-serif md:text-5xl">Dashboard</h1>
+                            <p className="text-xl text-gray-300">Overview of your academy's performance.</p>
+                        </motion.div>
                     </div>
                 </div>
 

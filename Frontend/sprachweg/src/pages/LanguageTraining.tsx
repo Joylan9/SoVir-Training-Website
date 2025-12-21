@@ -309,7 +309,7 @@ const LanguageTraining: React.FC = () => {
             <Header />
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden">
+            <section className="relative py-28 sm:py-36 text-center bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden">
                 {/* ... (animated background) */}
                 <div className="absolute inset-0 overflow-hidden">
                     <motion.div

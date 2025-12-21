@@ -146,22 +146,25 @@ const AboutPage: React.FC = () => {
             <Header />
 
             {/* --- HERO SECTION --- */}
-            <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#0a192f] dark:bg-[#030810] text-white">
+            <section className="relative py-28 sm:py-36 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
+
                 {/* Parallax Background Band */}
                 <motion.div
-                    className="absolute inset-0 bg-[#0a192f] dark:bg-[#030810]"
+                    className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
                     style={{ y: shouldReduceMotion ? 0 : heroY }}
+                    aria-hidden="true"
                 >
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-10 mix-blend-overlay" />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0a192f]/80 to-[#0a192f]" />
                 </motion.div>
 
-                <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10 w-full">
+                <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 z-10">
                     <motion.div
                         initial={shouldReduceMotion ? {} : { opacity: 0, y: 30 }}
                         animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="max-w-[65ch] mx-auto text-center"
+                        className="mx-auto max-w-4xl"
                     >
                         <motion.span
                             className="inline-block text-[#d6b161] font-semibold tracking-wider text-sm uppercase mb-4"
@@ -172,7 +175,7 @@ const AboutPage: React.FC = () => {
                             Learn. Automate. Communicate. Succeed.
                         </motion.span>
                         <motion.h1
-                            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight"
+                            className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight text-white"
                             initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.9 }}
                             animate={shouldReduceMotion ? {} : { opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
@@ -180,7 +183,7 @@ const AboutPage: React.FC = () => {
                             About SoVir Skilling & Training Center
                         </motion.h1>
                         <motion.p
-                            className="text-lg sm:text-xl text-gray-300 mb-8 font-light leading-relaxed"
+                            className="mx-auto mb-10 max-w-2xl text-lg sm:text-xl text-gray-300 font-light leading-relaxed"
                             initial={shouldReduceMotion ? {} : { opacity: 0 }}
                             animate={shouldReduceMotion ? {} : { opacity: 1 }}
                             transition={{ duration: 0.6, delay: 0.4 }}

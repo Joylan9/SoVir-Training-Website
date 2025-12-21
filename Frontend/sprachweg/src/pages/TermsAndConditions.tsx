@@ -10,7 +10,7 @@ const TermsAndConditions: React.FC = () => {
 
             <main className="flex-1">
                 {/* Hero Section */}
-                <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-16 sm:py-20 md:py-24 overflow-hidden">
+                <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-28 sm:py-36 text-center overflow-hidden">
                     {/* Subtle pattern overlay */}
                     <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:25px_25px] pointer-events-none" />
 

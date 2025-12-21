@@ -90,24 +90,24 @@ const StudentDashboard: React.FC = () => {
                 Skip to content
             </a>
 
-            <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Hero Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8 rounded-2xl bg-gradient-to-br from-[#0a192f] to-[#112240] p-8 text-white relative overflow-hidden"
-                >
-                    {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
+            {/* Hero Section */}
+            <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-28 sm:py-36 text-center overflow-hidden">
+                {/* Decorative Background Elements */}
+                <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
 
-                    <div className="relative z-10 flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
-                        <div>
-                            <h1 className="mb-2 text-3xl font-bold">Student Dashboard</h1>
-                            <p className="text-gray-300">Welcome back, {user?.name}!</p>
-                        </div>
-                    </div>
-                </motion.div>
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Student Dashboard</h1>
+                        <p className="text-xl text-gray-300">Welcome back, {user?.name}!</p>
+                    </motion.div>
+                </div>
+            </div>
+
+            <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
                 <div className="grid gap-8 lg:grid-cols-12">
                     {/* Profile Section - Takes 4 columns */}

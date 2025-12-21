@@ -265,7 +265,7 @@ const CourseEnglishPage: React.FC = () => {
       </a>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
+      <section className="relative py-28 sm:py-36 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
         <HeroBackground />
 

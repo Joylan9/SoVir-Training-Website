@@ -57,31 +57,31 @@ const TrainerDashboard: React.FC = () => {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
             <Header />
 
-            <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Hero Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8 rounded-2xl bg-gradient-to-br from-[#0a192f] to-[#112240] p-8 text-white shadow-lg"
-                >
-                    <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                        <div>
-                            <h1 className="mb-2 text-3xl font-bold font-serif">Trainer Dashboard</h1>
-                            <p className="text-gray-300">Manage your ongoing language classes and materials.</p>
-                        </div>
+            {/* Hero Section */}
+            <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-28 sm:py-36 text-center overflow-hidden">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h1 className="mb-4 text-4xl font-bold font-serif md:text-5xl">Trainer Dashboard</h1>
+                        <p className="text-xl text-gray-300 max-w-2xl mx-auto">Manage your ongoing language classes and materials.</p>
 
-                        <div className="flex gap-8">
+                        <div className="mt-8 flex justify-center gap-12">
                             <div className="text-center">
-                                <p className="text-3xl font-bold">{loading ? "..." : batches.length}</p>
-                                <p className="text-sm text-gray-400">Active Batches</p>
+                                <p className="text-4xl font-bold text-[#d6b161]">{loading ? "..." : batches.length}</p>
+                                <p className="text-sm text-gray-400 mt-1">Active Batches</p>
                             </div>
                             <div className="text-center">
-                                <p className="text-3xl font-bold">{loading ? "..." : totalStudents}</p>
-                                <p className="text-sm text-gray-400">Total Students</p>
+                                <p className="text-4xl font-bold text-[#d6b161]">{loading ? "..." : totalStudents}</p>
+                                <p className="text-sm text-gray-400 mt-1">Total Students</p>
                             </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
+            </div>
+
+            <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
                 {/* Batches Grid */}
                 <div className="space-y-6">
