@@ -24,7 +24,7 @@ import {
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
-import api from '../lib/api';
+import api, { getAssetUrl } from '../lib/api';
 
 interface Annotation {
     _id: string;
@@ -304,12 +304,7 @@ const LanguageBatchDetails: React.FC = () => {
         return <FileText className="h-6 w-6" />;
     };
 
-    const getFileUrl = (path?: string) => {
-        if (!path) return '#';
-        if (path.startsWith('http')) return path;
-        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        return `${backendUrl}${path}`;
-    };
+
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
@@ -644,7 +639,7 @@ const LanguageBatchDetails: React.FC = () => {
 
                                         {item.fileUrl ? (
                                             <a
-                                                href={getFileUrl(item.fileUrl)}
+                                                href={getAssetUrl(item.fileUrl)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500/10 to-green-500/10 hover:from-emerald-500 hover:to-green-500 py-2.5 text-sm font-semibold text-emerald-600 hover:text-white dark:bg-emerald-900/20 dark:text-emerald-400 dark:hover:text-white transition-all duration-300 border border-emerald-200 dark:border-emerald-700/50 hover:border-emerald-500 dark:hover:border-emerald-400"

@@ -3,7 +3,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import ImageUpload from '../../components/admin/ImageUpload';
 import Button from '../../components/ui/Button';
 import { Plus, Edit, Trash2, Save, X, AlertCircle, CheckCircle, AlertTriangle } from 'lucide-react';
-import { skillAPI } from '../../lib/api';
+import { skillAPI, getAssetUrl } from '../../lib/api';
 import type { SkillCourse } from '../../types/skill';
 
 // ============= Types & Interfaces =============
@@ -1267,7 +1267,7 @@ const SkillDashboard: React.FC = () => {
                                 {course.image && (
                                     <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
                                         <img
-                                            src={`http://localhost:5000/uploads/${course.image}`}
+                                            src={getAssetUrl(`uploads/${course.image}`)}
                                             alt={course.title}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                             loading="lazy"

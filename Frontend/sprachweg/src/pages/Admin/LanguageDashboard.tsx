@@ -3,7 +3,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import ImageUpload from '../../components/admin/ImageUpload';
 import Button from '../../components/ui/Button';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
-import { languageAPI } from '../../lib/api';
+import { languageAPI, getAssetUrl } from '../../lib/api';
 // Define type locally or import if you put in types file
 interface LanguageCourse {
     _id?: string;
@@ -340,7 +340,7 @@ const LanguageDashboard: React.FC = () => {
                             <div key={course._id} className="bg-white dark:bg-[#112240] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden group hover:shadow-lg transition-shadow">
                                 {course.image && (
                                     <div className="relative h-48">
-                                        <img src={`http://localhost:5000/uploads/${course.image}`} alt={course.title} className="w-full h-full object-cover" />
+                                        <img src={getAssetUrl(`uploads/${course.image}`)} alt={course.title} className="w-full h-full object-cover" />
                                         {course.popular && <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Popular</div>}
                                     </div>
                                 )}

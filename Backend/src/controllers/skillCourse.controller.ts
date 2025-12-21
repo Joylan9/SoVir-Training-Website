@@ -99,7 +99,7 @@ export const updateCourse = async (req: Request, res: Response) => {
         if (req.file) {
             // Delete old image if it exists
             if (course.image) {
-                const oldImagePath = path.join('uploads', course.image);
+                const oldImagePath = path.join('/home/sovirtraining/file_serve', course.image);
                 if (fs.existsSync(oldImagePath)) {
                     fs.unlinkSync(oldImagePath);
                 }
@@ -126,7 +126,7 @@ export const deleteCourse = async (req: Request, res: Response) => {
 
         // Delete image file
         if (course.image) {
-            const imagePath = path.join('uploads', course.image);
+            const imagePath = path.join('/home/sovirtraining/file_serve', course.image);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }

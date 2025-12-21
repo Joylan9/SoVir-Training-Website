@@ -3,7 +3,7 @@ import axios from "axios";
 import AdminLayout from "../../components/admin/AdminLayout";
 import { Check, X, Filter, Search, Mail, BookOpen, Eye, Phone } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { API_BASE_URL as API_URL } from "../../lib/api";
 
 interface Enrollment {
     _id: string;
@@ -50,7 +50,7 @@ const LanguageEnrollmentDetails: React.FC = () => {
             };
 
             const { data } = await axios.get(
-                `${API_URL}/language-training/admin/enrollments?status=PENDING`,
+                `${API_URL}/api/language-training/admin/enrollments?status=PENDING`,
                 config
             );
 
@@ -77,7 +77,7 @@ const LanguageEnrollmentDetails: React.FC = () => {
                 headers: { Authorization: `Bearer ${token}` },
             };
             await axios.post(
-                `${API_URL}/language-training/admin/enroll/${id}/approve`,
+                `${API_URL}/api/language-training/admin/enroll/${id}/approve`,
                 {},
                 config
             );
@@ -98,7 +98,7 @@ const LanguageEnrollmentDetails: React.FC = () => {
                 headers: { Authorization: `Bearer ${token}` },
             };
             await axios.post(
-                `${API_URL}/language-training/admin/enroll/${id}/reject`,
+                `${API_URL}/api/language-training/admin/enroll/${id}/reject`,
                 {},
                 config
             );

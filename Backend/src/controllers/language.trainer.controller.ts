@@ -187,9 +187,14 @@ export const deleteMaterial = async (req: AuthRequest, res: Response) => {
         if (material.fileUrl) {
             try {
                 // material.fileUrl is like "/uploads/materials/filename.ext"
-                // Resolve path relative to process.cwd() (typically project root where package.json is)
-                const relativePath = material.fileUrl.startsWith('/') ? material.fileUrl.slice(1) : material.fileUrl;
-                const filePath = path.join(process.cwd(), relativePath);
+                // We need to map this to "/home/sovirtraining/file_serve/materials/filename.ext"
+
+                // Remove "/uploads" prefix from the URL to get relative path inside file_serve
+                // "/uploads/materials/file.pdf" -> "/materials/file.pdf"
+                const relativePath = material.fileUrl.replace('/uploads', '');
+
+                // Construct absolute path
+                const filePath = path.join('/home/sovirtraining/file_serve', relativePath);
 
                 if (fs.existsSync(filePath)) {
                     fs.unlinkSync(filePath);
