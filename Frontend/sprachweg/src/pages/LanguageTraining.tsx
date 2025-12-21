@@ -1,18 +1,18 @@
 // ... imports
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView, useAnimation, type Easing } from 'framer-motion';
+import { motion, useInView, useAnimation, type Easing, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import {
-    Users,
-    Award,
-    Globe,
-    Building2,
     Star,
     BookOpen,
     Clock,
     TrendingUp,
     ArrowRight,
-    GraduationCap
+    GraduationCap,
+    Shield,
+    Zap,
+    Users,
+    Globe
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -69,13 +69,44 @@ const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string 
     );
 };
 
-// Stats data
-const stats = [
-    { icon: Users, value: '30+', label: 'Active Students' },
-    { icon: Award, value: '76%', label: 'Success Rate' },
-    { icon: Globe, value: '3+', label: 'Countries' },
-    { icon: Building2, value: '5', label: 'Partner Companies' }
-];
+// Elevated Hero Background
+const HeroBackground: React.FC = () => {
+    const shouldReduceMotion = useReducedMotion();
+    const { scrollY } = useScroll();
+    const y1 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
+    const y2 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : -150]);
+    const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
+    return (
+        <motion.div
+            style={{ opacity }}
+            className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
+            aria-hidden="true"
+        >
+            <motion.div
+                style={{ y: y1 }}
+                animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.4, 0.6, 0.4]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#d6b161]/20 to-[#0a192f]/10 blur-[120px]"
+            />
+            <motion.div
+                style={{ y: y2 }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[100px]"
+            />
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        </motion.div>
+    );
+};
+
+
 
 // Language cards data
 const languageCards = [
@@ -309,117 +340,50 @@ const LanguageTraining: React.FC = () => {
             <Header />
 
             {/* Hero Section */}
-            <section className="relative py-28 sm:py-36 text-center bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden">
-                {/* ... (animated background) */}
-                <div className="absolute inset-0 overflow-hidden">
-                    <motion.div
-                        animate={{
-                            x: [0, 100, 0],
-                            y: [0, -50, 0],
-                            scale: [1, 1.2, 1]
-                        }}
-                        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                        className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full blur-3xl"
-                    />
-                    <motion.div
-                        animate={{
-                            x: [0, -80, 0],
-                            y: [0, 80, 0],
-                            scale: [1, 1.3, 1]
-                        }}
-                        transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-                        className="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-tr from-[#d6b161]/20 to-transparent rounded-full blur-3xl"
-                    />
-                </div>
+            <section className="relative py-28 sm:py-36 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-[#0d1f3a] dark:to-[#0a192f]" />
+                <HeroBackground />
 
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
-                    <AnimatedSection className="flex flex-col items-center text-center">
-                        {/* Main Heading */}
+                <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={staggerContainer}
+                        className="mx-auto max-w-4xl"
+                    >
+                        <motion.div variants={fadeInUp} className="mb-8 flex justify-center">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-[#d6b161]/20 bg-[#d6b161]/10 px-4 py-1.5 text-sm font-semibold text-[#d6b161] backdrop-blur-sm">
+                                <Star className="h-4 w-4 fill-current" />
+                                Global Language Certification
+                            </span>
+                        </motion.div>
+
                         <motion.h1
                             variants={fadeInUp}
-                            className="text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-white mb-6 leading-tight text-center mx-auto"
+                            className="font-display mb-6 text-5xl font-bold tracking-tight text-[#0a192f] dark:text-white sm:text-6xl lg:text-7xl"
                         >
-                            Master Global Languages with{' '}
-                            <span className="text-[#d6b161] relative">
-                                Expert Instructors
-                                <motion.span
-                                    initial={{ scaleX: 0 }}
-                                    animate={{ scaleX: 1 }}
-                                    transition={{ delay: 0.8, duration: 0.6 }}
-                                    className="absolute -bottom-2 left-0 w-full h-1 bg-[#d6b161]/50 rounded-full origin-left"
-                                />
-                            </span>
+                            Master Languages for <br className="hidden sm:inline" />
+                            <span className="bg-gradient-to-r from-[#d6b161] to-[#b38f3f] bg-clip-text text-transparent">Global Success</span>
                         </motion.h1>
 
-                        {/* Subheading */}
                         <motion.p
                             variants={fadeInUp}
-                            className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-12"
+                            className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 sm:text-xl"
                         >
-                            Learn English, German, or Japanese with live interactive classes, flexible
-                            schedules, and internationally recognized certifications
+                            Learn English, German, or Japanese with live interactive classes, flexible schedules, and internationally recognized certifications.
                         </motion.p>
 
-                        {/* CTA Buttons */}
-                        <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <motion.button
-                                onClick={() => setIsBookingOpen(true)}
-                                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(214, 177, 97, 0.3)' }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-8 py-4 bg-[#d6b161] text-[#0a192f] font-bold rounded-xl hover:bg-[#c4a055] transition-all shadow-lg"
-                            >
-                                Start Learning Today
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-8 py-4 border-2 border-white/30 text-white font-medium rounded-xl hover:bg-white/10 transition-all"
-                            >
-                                View All Courses
-                            </motion.button>
+                        <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center gap-2 rounded-lg bg-white/50 px-4 py-2 dark:bg-white/5">
+                                <Shield className="h-5 w-5 text-emerald-500" />
+                                <span>Official Certification</span>
+                            </div>
+                            <div className="flex items-center gap-2 rounded-lg bg-white/50 px-4 py-2 dark:bg-white/5">
+                                <Zap className="h-5 w-5 text-[#d6b161]" />
+                                <span>Fast-track Options</span>
+                            </div>
                         </motion.div>
-                    </AnimatedSection>
-                </div>
-
-                {/* Stats Bar */}
-                <div className="relative bg-white/10 backdrop-blur-md border-t border-white/10">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                        <motion.div
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={staggerContainer}
-                            className="grid grid-cols-2 md:grid-cols-4 gap-8"
-                        >
-                            {stats.map((stat, index) => {
-                                const Icon = stat.icon;
-                                return (
-                                    <motion.div
-                                        key={index}
-                                        variants={fadeInUp}
-                                        className="text-center group"
-                                    >
-                                        <motion.div
-                                            whileHover={{ scale: 1.1, rotate: 5 }}
-                                            className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 mb-3 group-hover:bg-[#d6b161]/20 transition-colors"
-                                        >
-                                            <Icon className="w-6 h-6 text-[#d6b161]" />
-                                        </motion.div>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.5 }}
-                                            whileInView={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: index * 0.1, duration: 0.4 }}
-                                            viewport={{ once: true }}
-                                            className="text-3xl md:text-4xl font-bold text-white mb-1"
-                                        >
-                                            {stat.value}
-                                        </motion.div>
-                                        <p className="text-sm text-gray-300">{stat.label}</p>
-                                    </motion.div>
-                                );
-                            })}
-                        </motion.div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 

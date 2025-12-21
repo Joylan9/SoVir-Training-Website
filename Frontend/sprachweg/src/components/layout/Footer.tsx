@@ -9,8 +9,8 @@ const Footer: React.FC = () => {
     return (
         <footer className="bg-[#050c18] text-white pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Main Grid - 4 Columns with equal spacing */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
+                {/* Main Grid - 5 Columns with equal spacing */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-16">
                     {/* Column 1: Company Info */}
                     <div className="space-y-6 lg:col-span-1">
                         <div className="flex items-center gap-3">
@@ -44,7 +44,17 @@ const Footer: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Column 2: Career Abroad (previously Column 3) */}
+                    {/* Column 2: Language Training */}
+                    <div>
+                        <h3 className="font-bold text-white mb-6 text-base">Language Training</h3>
+                        <ul className="space-y-3 text-sm text-gray-400">
+                            <li><Link to="/training/german" className="hover:text-[#d6b161] transition-colors block">German Training</Link></li>
+                            <li><Link to="/training/english" className="hover:text-[#d6b161] transition-colors block">English Training</Link></li>
+                            <li><Link to="/training/japanese" className="hover:text-[#d6b161] transition-colors block">Japanese Training</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Column 3: Career Abroad (previously Column 2) */}
                     <div>
                         <h3 className="font-bold text-white mb-6 text-base">Career Abroad</h3>
                         <ul className="space-y-3 text-sm text-gray-400">
@@ -56,7 +66,7 @@ const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    {/* Column 3: Company (previously Column 4) */}
+                    {/* Column 4: Company (previously Column 3) */}
                     <div>
                         <h3 className="font-bold text-white mb-6 text-base">Company</h3>
                         <ul className="space-y-3 text-sm text-gray-400">
@@ -68,7 +78,7 @@ const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    {/* Column 4: Policies (previously Column 5) */}
+                    {/* Column 5: Policies (previously Column 4) */}
                     <div>
                         <h3 className="font-bold text-white mb-6 text-base">Policies</h3>
                         <ul className="space-y-3 text-sm text-gray-400">

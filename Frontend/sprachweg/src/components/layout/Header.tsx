@@ -1,6 +1,6 @@
 // Header.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, ChevronDown, Settings } from 'lucide-react';
 import Button from '../ui/Button';
@@ -12,13 +12,9 @@ const Header: React.FC = () => {
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
+
     const navRef = useRef<HTMLElement>(null);
 
     const toggleDropdown = (dropdown: string) => {
@@ -178,18 +174,27 @@ const Header: React.FC = () => {
 
                         {/* Career Abroad Mega Menu */}
                         <div className="relative group">
-                            <button
-                                onClick={() => toggleDropdown('career-desktop')}
-                                className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm px-3 py-2 flex items-center gap-1"
-                            >
-                                Career Abroad
-                                <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'career-desktop' ? 'rotate-180' : ''}`} />
-                            </button>
-                            <div className={`absolute left-0 top-full mt-2 w-[650px] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
-                                <div className="grid grid-cols-3 gap-6 p-6">
+                            <div className="flex items-center gap-1">
+                                <button
+                                    className="text-gray-700 dark:text-gray-300 hover:text-[#d6b161] font-medium transition-colors text-sm px-2 py-2"
+                                >
+                                    Career
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleDropdown('career-desktop');
+                                    }}
+                                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors focus:outline-none"
+                                >
+                                    <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${openDropdown === 'career-desktop' ? 'rotate-180' : ''}`} />
+                                </button>
+                            </div>
+                            <div className={`absolute left-0 top-full mt-2 w-[850px] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
+                                <div className="grid grid-cols-4 gap-6 p-6">
                                     {/* DESTINATIONS Column */}
                                     <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Destinations</h3>
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Career Abroad</h3>
                                         <div className="space-y-3">
                                             <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
                                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
@@ -264,33 +269,51 @@ const Header: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* RESOURCES Column */}
+                                    {/* INTERNSHIP Column */}
                                     <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Resources</h3>
-                                        <div className="space-y-3">
-                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">📋</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Document Checklist</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Required paperwork</p>
-                                                </div>
-                                            </Link>
-                                            <Link to="/404" className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item">
-                                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#d6b161]/10 flex items-center justify-center text-[#d6b161]">
-                                                    <span className="text-lg">🤝</span>
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover/item:text-[#d6b161]">Employer Partners</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">Our network</p>
-                                                </div>
-                                            </Link>
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Internship</h3>
+                                        <div className="space-y-1">
+                                            {[
+                                                "Software Development Intern",
+                                                "Web Development Intern (Frontend / Backend)",
+                                                "Full Stack Development Intern",
+                                                "Python Programming Intern",
+                                                "Java Development Intern",
+                                                "Data Analytics Intern",
+                                                "Cloud Computing Intern",
+                                                "Cyber Security Intern",
+                                                "AI & Machine Learning Intern",
+                                                "IT Support & Systems Intern"
+                                            ].map((item, idx) => (
+                                                <Link key={idx} to="/404" className="block text-sm text-gray-600 dark:text-gray-400 hover:text-[#d6b161] dark:hover:text-[#d6b161] py-1 transition-colors">
+                                                    {item}
+                                                </Link>
+                                            ))}
                                         </div>
                                     </div>
+
+                                    {/* FULL TIME Column */}
+                                    <div>
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#d6b161] mb-4">Full Time</h3>
+                                        <div className="space-y-1">
+                                            {[
+                                                "PLC Automation Engineer",
+                                                "Controls & Automation Engineer",
+                                                "PLC Programmer (Automation)",
+                                                "Industrial Automation Engineer"
+                                            ].map((item, idx) => (
+                                                <Link key={idx} to="/404" className="block text-sm text-gray-600 dark:text-gray-400 hover:text-[#d6b161] dark:hover:text-[#d6b161] py-1 transition-colors">
+                                                    {item}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
+
 
                         <Link
                             to="/about"
@@ -362,13 +385,6 @@ const Header: React.FC = () => {
                                         Dashboard
                                     </Button>
                                 </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-                                    title="Logout"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
-                                </button>
                             </div>
                         ) : (
                             <>
@@ -498,13 +514,13 @@ const Header: React.FC = () => {
                                 onClick={() => toggleDropdown('career')}
                                 className="w-full text-left text-gray-700 dark:text-gray-300 font-medium py-2 text-sm flex items-center justify-between"
                             >
-                                Career Abroad
+                                Career
                                 <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'career' ? 'rotate-180' : ''}`} />
                             </button>
                             {openDropdown === 'career' && (
                                 <div className="bg-gray-50 dark:bg-white/5 rounded pl-4 pr-2 py-2 space-y-3">
                                     <div className="space-y-1">
-                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Destinations</h4>
+                                        <h4 className="text-xs font-bold uppercase text-[#d6b161] mb-2">Career Abroad</h4>
                                         <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Work in Canada</Link>
                                         <Link to="#" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Career in Germany</Link>
                                         <Link to="/404" className="block text-gray-600 dark:text-gray-400 py-1 text-xs" onClick={() => setIsMenuOpen(false)}>Jobs in Australia</Link>
@@ -548,7 +564,7 @@ const Header: React.FC = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </nav >
     );
 };
 

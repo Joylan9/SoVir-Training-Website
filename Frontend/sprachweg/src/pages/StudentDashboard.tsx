@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import api from '../lib/api';
 import {
     BookOpen,
@@ -53,11 +53,62 @@ const CourseCard: React.FC<{ course: any }> = ({ course }) => {
 };
 
 // ============================================================================
+// ANIMATIONS & COMPONENTS
+// ============================================================================
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (custom: number = 0) => ({
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.6, delay: custom * 0.1, ease: [0.22, 1, 0.36, 1] as const }
+    })
+};
+
+// Hero Background Component with parallax blobs + grain
+const HeroBackground: React.FC = () => {
+    const shouldReduceMotion = useReducedMotion();
+    const { scrollY } = useScroll();
+    const y1 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
+    const y2 = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : -150]);
+    const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
+    return (
+        <motion.div
+            style={{ opacity }}
+            className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
+            aria-hidden="true"
+        >
+            <motion.div
+                style={{ y: y1 }}
+                animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#d6b161]/20 to-red-500/10 blur-[120px]"
+            />
+            <motion.div
+                style={{ y: y2 }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.2, 0.4, 0.2]
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-yellow-500/10 blur-[100px]"
+            />
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        </motion.div>
+    );
+};
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 const StudentDashboard: React.FC = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [courses, setCourses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -91,21 +142,20 @@ const StudentDashboard: React.FC = () => {
             </a>
 
             {/* Hero Section */}
-            <div className="relative bg-[#0a192f] dark:bg-[#030810] text-white py-28 sm:py-36 text-center overflow-hidden">
-                {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#d6b161] opacity-10 blur-3xl"></div>
+            <section className="relative bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d] overflow-hidden py-28 sm:py-36 text-center">
+                <HeroBackground />
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial="hidden"
+                        animate="visible"
+                        variants={fadeInUp}
                     >
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Student Dashboard</h1>
+                        <h1 className="mb-4 text-4xl font-bold font-sans md:text-5xl text-white">Student Dashboard</h1>
                         <p className="text-xl text-gray-300">Welcome back, {user?.name}!</p>
                     </motion.div>
                 </div>
-            </div>
+            </section>
 
             <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
@@ -129,6 +179,18 @@ const StudentDashboard: React.FC = () => {
                                 >
                                     <Edit className="h-5 w-5" />
                                 </Button>
+                                <button
+                                    onClick={() => {
+                                        logout();
+                                        navigate('/login');
+                                    }}
+                                    className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                                    title="Logout"
+                                >
+                                    <div className="flex items-center gap-1 font-semibold text-sm">
+                                        Logout
+                                    </div>
+                                </button>
                             </div>
 
                             <div className="space-y-4">
