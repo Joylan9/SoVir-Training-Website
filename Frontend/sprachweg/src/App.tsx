@@ -38,6 +38,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import ContactPage from './pages/ContactPage';
 import AdminContactMessages from './pages/Admin/AdminContactMessages';
+import AdminBookingRequests from './pages/Admin/AdminBookingRequests';
+
 
 
 // Protected Route Component
@@ -260,6 +262,14 @@ const AppContent = () => {
           element={
             <AdminRoute>
               <AdminContactMessages />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/booking-requests"
+          element={
+            <AdminRoute>
+              <AdminBookingRequests />
             </AdminRoute>
           }
         />
