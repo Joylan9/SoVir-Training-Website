@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import TrialRequest from '../models/trialRequest.model';
 
+
+// Import EmailService
+import { EmailService } from '../utils/email.service';
+
+const emailService = new EmailService();
+
 // Create a new trial request
 export const createTrialRequest = async (req: Request, res: Response) => {
     try {
@@ -22,6 +28,12 @@ export const createTrialRequest = async (req: Request, res: Response) => {
 
         await newRequest.save();
         console.log('Trial request saved successfully:', newRequest); // DEBUG LOG
+
+        // Send Email Notification
+        if (email) {
+            await emailService.sendTrialEmail(email, fullName);
+            console.log(`Trial email sent to ${email}`);
+        }
 
         res.status(201).json({ message: 'Trial request submitted successfully', data: newRequest });
     } catch (error: any) {
