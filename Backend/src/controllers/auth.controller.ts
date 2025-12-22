@@ -55,7 +55,7 @@ export const register = async (req: Request, res: Response) => {
             await user.save();
         }
 
-        await emailService.sendOtp(user.email, otp);
+        await emailService.sendOtp(user.email, otp, user.name, "Registration Verification");
         res.status(201).json({ message: 'OTP sent to email' });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
@@ -134,7 +134,7 @@ export const resendOtp = async (req: Request, res: Response) => {
         user.lastOtpSent = new Date();
         await user.save();
 
-        await emailService.sendOtp(user.email, otp);
+        await emailService.sendOtp(user.email, otp, user.name, "Verification");
         res.status(200).json({ message: 'OTP resent to email' });
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
@@ -161,7 +161,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         user.otpExpires = otpExpires;
         await user.save();
 
-        await emailService.sendOtp(user.email, otp);
+        await emailService.sendOtp(user.email, otp, user.name, "Password Reset");
 
         res.json({ message: 'OTP sent to email' });
     } catch (error) {

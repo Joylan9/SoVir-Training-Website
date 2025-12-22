@@ -19,13 +19,123 @@ export class EmailService {
         });
     }
 
-    public async sendOtp(to: string, otp: string): Promise<void> {
+    private getOtpTemplate(name: string, otp: string, purpose: string): string {
+        return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                }
+                .header {
+                    background-color: #0a192f;
+                    color: #ffffff;
+                    padding: 30px;
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 24px;
+                    color: #d6b161;
+                }
+                .content {
+                    padding: 40px 30px;
+                    background-color: #ffffff;
+                }
+                .welcome-text {
+                    font-size: 18px;
+                    color: #0a192f;
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                }
+                .message-body {
+                    color: #555555;
+                    font-size: 16px;
+                }
+                .otp-box {
+                    background-color: #f0f4f8;
+                    border: 2px dashed #0a192f;
+                    color: #0a192f;
+                    font-size: 24px;
+                    font-weight: bold;
+                    text-align: center;
+                    padding: 15px;
+                    margin: 20px 0;
+                    letter-spacing: 5px;
+                    border-radius: 6px;
+                }
+                .footer {
+                    background-color: #f8f9fa;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #888888;
+                    border-top: 1px solid #eeeeee;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Sovir Technologies<br>Training & Skilling Program</h1>
+                </div>
+                <div class="content">
+                    <div class="welcome-text">Dear ${name},</div>
+                    
+                    <div class="message-body">
+                        <p>Welcome to the <strong>Sovir Technologies Training and Skilling Program</strong>.</p>
+                        
+                        <p>We are delighted to have you with us. As requested, here is your One-Time Password (OTP) for <strong>${purpose}</strong>.</p>
+                        
+                        <div class="otp-box">${otp}</div>
+                        
+                        <p>This OTP is valid for <strong>3 minutes</strong>. Please do not share this code with anyone.</p>
+                        
+                        <p>All further information, updates, and important announcements will be shared through your registered login email ID. Kindly check your email regularly to stay informed.</p>
+
+                        <p style="margin-top: 30px;">Once again, thank you for choosing Sovir Technologies as your skilling partner.</p>
+                        
+                        <p style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
+                            Warm regards,<br>
+                            <strong>Sovir Technologies Team</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="footer">
+                    &copy; ${new Date().getFullYear()} Sovir Technologies LLP. All rights reserved.<br>
+                    <a href="https://sovirtechnologies.in" style="color: #666; text-decoration: none;">www.sovirtechnologies.in</a>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;
+    }
+
+    public async sendOtp(to: string, otp: string, name: string = 'Participant', purpose: string = 'Verification'): Promise<void> {
+        const htmlContent = this.getOtpTemplate(name, otp, purpose);
+
         const mailOptions = {
-            from: `"SprachWeg" <${env.EMAIL_USER}>`,
+            from: `"Sovir Technologies" <${env.EMAIL_USER}>`,
             to,
-            subject: 'Your Verification OTP',
-            text: `Your OTP is: ${otp}. It is valid for 3 minutes.`,
-            html: `<p>Your OTP is: <b>${otp}</b>. It is valid for 3 minutes.</p>`,
+            subject: `${purpose} OTP - Sovir Technologies`,
+            text: `Dear ${name},\n\nYour OTP for ${purpose} is: ${otp}. It is valid for 3 minutes.\n\nWarm regards,\nSovir Technologies Team`,
+            html: htmlContent,
         };
 
         try {
@@ -35,6 +145,8 @@ export class EmailService {
             throw new Error('Email service failed');
         }
     }
+
+
 
     public async sendEnrollmentEmail(
         to: string,
