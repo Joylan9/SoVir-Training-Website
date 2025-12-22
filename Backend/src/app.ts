@@ -50,4 +50,7 @@ app.use('/api/language-trainer', languageTrainerRoutes);
 import contactRoutes from './routes/contact.routes';
 app.use('/api/contact', contactRoutes);
 
+import trialRoutes from './routes/trialRequest.routes';
+app.use('/api', trialRoutes);
+
 export default app;
