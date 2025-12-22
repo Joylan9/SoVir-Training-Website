@@ -190,7 +190,7 @@ const Header: React.FC = () => {
                                     <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${openDropdown === 'career-desktop' ? 'rotate-180' : ''}`} />
                                 </button>
                             </div>
-                            <div className={`absolute left-0 top-full mt-2 w-[850px] max-w-[90vw] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
+                            <div className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[850px] max-w-[90vw] bg-white/95 dark:bg-[#0a192f]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl transition-all duration-200 z-50 ${openDropdown === 'career-desktop' ? 'opacity-100 visible' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'}`}>
                                 <div className="grid grid-cols-4 gap-6 p-6">
                                     {/* DESTINATIONS Column */}
                                     <div>
