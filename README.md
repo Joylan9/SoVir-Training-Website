@@ -1,86 +1,135 @@
+<br/>
+
 <p align="center">
-  <img src="https://img.shields.io/badge/SprachWeg-Training%20Platform-FF6B35?style=for-the-badge&logoColor=white" alt="SprachWeg" />
+  <img src="https://via.placeholder.com/800x120/0F172A/FFFFFF?text=SprachWeg" alt="SprachWeg Banner" width="100%" />
 </p>
 
-<h1 align="center">🎓 SprachWeg</h1>
+<h1 align="center">SprachWeg</h1>
 
 <p align="center">
-  <strong>A Production-Grade Full-Stack Training Platform for Language &amp; Industrial Skill Development</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=flat-square&logo=vite&logoColor=white" />
-  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/Express-5.2-000000?style=flat-square&logo=express&logoColor=white" />
-  <img src="https://img.shields.io/badge/MongoDB-Mongoose%209-47A248?style=flat-square&logo=mongodb&logoColor=white" />
-  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
-  <img src="https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=flat-square&logo=firebase&logoColor=black" />
+  <strong>Where Language Meets Industry — A Next-Gen Training Platform</strong>
 </p>
 
 <p align="center">
-  <a href="https://training.sovirtechnologies.in">🌐 Live Demo</a> •
-  <a href="#-quick-start">🚀 Quick Start</a> •
-  <a href="#-architecture">🏗️ Architecture</a> •
-  <a href="#-api-reference">📡 API Reference</a>
+  <em>Empowering learners with German, English &amp; Japanese language courses alongside industrial skill training in PLC, SCADA, Industry 4.0 and more.</em>
 </p>
+
+<br/>
+
+<p align="center">
+  <a href="https://training.sovirtechnologies.in"><img src="https://img.shields.io/badge/🌐_Live_Site-training.sovirtechnologies.in-0F172A?style=for-the-badge" alt="Live Site" /></a>
+  &nbsp;
+  <a href="#-getting-started"><img src="https://img.shields.io/badge/🚀_Get_Started-Guide-6366F1?style=for-the-badge" alt="Get Started" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/node-%3E%3D14.0-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Express-5.2-000000?style=flat-square&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/MongoDB-Mongoose_9-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS" />
+  <img src="https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/License-Proprietary-red?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome" />
+</p>
+
+---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="https://via.placeholder.com/900x500/1E293B/FFFFFF?text=Landing+Page+Screenshot" alt="Landing Page" width="80%" />
+</p>
+
+<p align="center">
+  <sub><strong>↑ Landing Page</strong> — Premium hero section with course catalog, animated components, and responsive design</sub>
+</p>
+
+<br/>
+
+<table>
+<tr>
+<td width="50%">
+  <img src="https://via.placeholder.com/450x280/1E293B/FFFFFF?text=Admin+Dashboard" alt="Admin Dashboard" width="100%" />
+  <p align="center"><sub><strong>Admin Dashboard</strong> — Full course, enrollment &amp; trainer management</sub></p>
+</td>
+<td width="50%">
+  <img src="https://via.placeholder.com/450x280/1E293B/FFFFFF?text=Student+Dashboard" alt="Student Dashboard" width="100%" />
+  <p align="center"><sub><strong>Student Dashboard</strong> — Enrolled courses, batch access &amp; progress</sub></p>
+</td>
+</tr>
+</table>
+
+> **💡 Replace the placeholder images above with actual screenshots:**
+> - Landing page hero section
+> - Admin dashboard (with course data visible)
+> - Student dashboard (with enrollments)
+> - Login/Register page (showing Google OAuth button)
 
 ---
 
 ## 📋 Overview
 
-**SprachWeg** (German: *"Language Path"*) is an enterprise-grade training platform built by **SoVir Technologies** that delivers both **language courses** (German, English, Japanese) and **industrial skill training** (PLC, SCADA, Industry 4.0, Drives & Motion, Corporate Training).
+**SprachWeg** (German: *"Language Path"*) is a production-grade, full-stack training platform built for **SoVir Technologies**. It serves two distinct training verticals:
 
-The platform features **role-based dashboards** for Students, Trainers, and Administrators — with a secure authentication pipeline, real-time enrollment workflows, and integrated Google Calendar scheduling.
+| Vertical | Offerings |
+|:---:|---|
+| 🌍 **Language Training** | German · English · Japanese — multi-level courses with exam prep |
+| ⚙️ **Industrial Skills** | PLC Automation · SCADA & HMI · Industrial Drives · Industry 4.0 · Corporate Training |
+
+The platform delivers **role-based experiences** for three user types — Students, Trainers, and Administrators — with enterprise-grade authentication, real-time enrollment workflows, and integrated Google Calendar scheduling.
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🔐 Authentication & Security
-- JWT-based session management (30-day expiry)
+- JWT sessions with 30-day expiry
 - Google OAuth 2.0 single sign-on
-- OTP email verification via Nodemailer
-- Forgot/Reset password flow
-- Helmet security headers
-- Role-based access control (RBAC)
+- Email OTP verification (Nodemailer)
+- Forgot / Reset password flow
+- Helmet security headers (XSS, clickjacking, sniffing)
+- bcryptjs password hashing
+- Whitelisted CORS origins
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 📚 Course Management
-- Language courses (German, English, Japanese)
-- 5 industrial skill training domains
-- Multi-level course structures with exam prep
+- Dual-vertical catalog (language + industrial)
+- Multi-level course structures with exam prep tiers
 - Image uploads via Multer
-- Database seeding for initial catalog
 - Dynamic course detail pages
+- Admin CRUD with search & filtering
+- Database seeding script for initial data
 
 </td>
 </tr>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 👥 Role-Based Dashboards
-- **Student** — enrolled courses, batch access
-- **Trainer** — batch management, attendance, assignments, materials, announcements
-- **Admin** — full CRUD, enrollment approval, trainer management, contact messages, booking requests
+- **Student** — enrolled courses, batch access, progress
+- **Trainer** — batch mgmt, attendance, assignments, materials, announcements
+- **Admin** — full platform control, enrollment approval, trainer management, messaging
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🛠️ Platform Capabilities
-- Batch scheduling with Google Calendar
-- Enrollment workflows with admin approval
-- Assignment submission & tracking
-- Attendance management
-- Booking/trial request handling
-- Contact message management
-- Dark/Light theme toggle
+- Google Calendar integration for class scheduling
+- Enrollment workflows with admin approval pipeline
+- Assignment submission & grading interface
+- Attendance tracking per session
+- Contact form & booking/trial request management
+- Dark / Light theme toggle
+- Profile completion enforcement modal
 
 </td>
 </tr>
@@ -91,245 +140,414 @@ The platform features **role-based dashboards** for Students, Trainers, and Admi
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    FRONTEND (SPA)                        │
-│  React 19 · Vite 7 · TailwindCSS 4 · Framer Motion     │
-│  React Router 7 · Axios · Google OAuth Provider         │
-│                                                         │
-│  ┌──────────┐ ┌───────────┐ ┌────────────────────────┐  │
-│  │ 33+ Pages│ │11 Compnts │ │ AuthContext·ThemeContext│  │
-│  └──────────┘ └───────────┘ └────────────────────────┘  │
-│                     │ Axios /api/*                       │
-├─────────────────────┼───────────────────────────────────┤
-│                     ▼                                    │
-│                BACKEND (REST API)                        │
-│  Express 5 · TypeScript · Helmet · CORS                 │
-│                                                         │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐ │
-│  │13 Controllers│ │ 11 Route     │ │ JWT + Google     │ │
-│  │              │ │ Groups       │ │ OAuth Middleware  │ │
-│  └──────────────┘ └──────────────┘ └──────────────────┘ │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐ │
-│  │ 19 Mongoose  │ │ Multer File  │ │ Nodemailer Email │ │
-│  │ Models       │ │ Uploads      │ │ + GCal Service   │ │
-│  └──────────────┘ └──────────────┘ └──────────────────┘ │
-│                     │                                    │
-├─────────────────────┼───────────────────────────────────┤
-│                     ▼                                    │
-│  ┌──────────────────────────────────────────────┐       │
-│  │           MongoDB (Atlas / Local)             │       │
-│  └──────────────────────────────────────────────┘       │
-│                                                         │
-│  Frontend Hosting: Firebase  ·  Backend: Linux Server   │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                      CLIENT  (SPA)                           │
+│                                                              │
+│   React 19  ·  Vite 7  ·  TailwindCSS 4  ·  Framer Motion  │
+│   React Router 7  ·  Axios  ·  Google OAuth Provider         │
+│                                                              │
+│   ┌───────────┐  ┌────────────┐  ┌─────────────────────────┐ │
+│   │  33+ Pages│  │ 11 Compnts │  │ AuthContext·ThemeContext │ │
+│   └───────────┘  └────────────┘  └─────────────────────────┘ │
+│                        │                                     │
+│                   Axios /api/*                                │
+├────────────────────────┼─────────────────────────────────────┤
+│                        ▼                                     │
+│                   SERVER  (REST API)                          │
+│                                                              │
+│   Express 5  ·  TypeScript  ·  Helmet  ·  CORS               │
+│                                                              │
+│   ┌───────────────┐  ┌─────────────┐  ┌────────────────────┐ │
+│   │ 13 Controllers│  │ 11 Route    │  │ JWT  +  Google     │ │
+│   │               │  │ Groups      │  │ OAuth Middleware    │ │
+│   └───────────────┘  └─────────────┘  └────────────────────┘ │
+│   ┌───────────────┐  ┌─────────────┐  ┌────────────────────┐ │
+│   │ 19 Mongoose   │  │ Multer File │  │ Nodemailer  +      │ │
+│   │ Models        │  │ Uploads     │  │ Google Calendar    │ │
+│   └───────────────┘  └─────────────┘  └────────────────────┘ │
+│                        │                                     │
+├────────────────────────┼─────────────────────────────────────┤
+│                        ▼                                     │
+│            ┌─────────────────────────┐                       │
+│            │  MongoDB (Atlas/Local)  │                       │
+│            └─────────────────────────┘                       │
+│                                                              │
+│   Frontend: Firebase Hosting  ·  Backend: Linux Server       │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🧰 Tech Stack
+## 🛠️ Tech Stack
+
+<table>
+<tr>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black" /><br/><sub>React 19</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=vite&logoColor=white" /><br/><sub>Vite 7</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" /><br/><sub>TypeScript 5.9</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" /><br/><sub>TailwindCSS 4</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white" /><br/><sub>Node.js</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-Express-000000?style=flat-square&logo=express&logoColor=white" /><br/><sub>Express 5</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white" /><br/><sub>MongoDB</sub></td>
+<td align="center" width="96"><img src="https://img.shields.io/badge/-Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black" /><br/><sub>Firebase</sub></td>
+</tr>
+</table>
 
 | Layer | Technologies |
 |:---:|---|
-| **Frontend** | React 19 · Vite 7 · TypeScript 5.9 · TailwindCSS 4 · Framer Motion · React Router 7 · Axios · Lucide Icons · react-hot-toast |
-| **Backend** | Node.js · Express 5 · TypeScript 5.9 · Mongoose 9 · class-validator · Multer · Nodemailer · Helmet · CORS |
-| **Auth** | JWT (jsonwebtoken) · bcryptjs · Google OAuth 2.0 (google-auth-library) · OTP Email Verification |
+| **Frontend** | React 19 · Vite 7 · TypeScript · TailwindCSS 4 · Framer Motion · React Router 7 · Axios · Lucide Icons · react-hot-toast |
+| **Backend** | Node.js · Express 5 · TypeScript · Mongoose 9 · class-validator · Multer · Nodemailer · Helmet |
+| **Auth** | JWT (jsonwebtoken) · bcryptjs · Google OAuth 2.0 · OTP Email Verification |
 | **Database** | MongoDB (Atlas or Local) |
-| **Services** | Google Calendar API · SMTP Email Service (Gmail) |
+| **Services** | Google Calendar API · SMTP Email (Gmail) |
 | **Hosting** | Firebase Hosting (Frontend) · Linux Server (Backend) |
-| **DevTools** | nodemon · ts-node · ESLint · Vite HMR |
 
 ---
 
-## 📁 Project Structure
+## 🌐 Live Demo
+
+| | Link |
+|:---:|---|
+| 🔗 **Production** | [training.sovirtechnologies.in](https://training.sovirtechnologies.in) |
+| 📦 **Repository** | [github.com/Akash-Shenvi/SprachWeg](https://github.com/Akash-Shenvi/SprachWeg) |
+
+---
+
+<details>
+<summary><h2>📁 Project Structure</h2></summary>
 
 ```
 SprachWeg/
 │
 ├── Backend/
-│   ├── src/
-│   │   ├── server.ts                 # Entry point
-│   │   ├── app.ts                    # Express setup + 14 route mounts
-│   │   ├── config/                   # database.ts · env.ts · multer.ts
-│   │   ├── controllers/              # 13 controllers (auth, courses, enrollment, dashboard...)
-│   │   ├── dtos/                     # Request validation (class-validator)
-│   │   ├── middlewares/              # JWT auth guard · role authorization · file upload
-│   │   ├── models/                   # 19 Mongoose schemas
-│   │   ├── routes/                   # 11 route files
-│   │   ├── services/                 # Google Calendar integration
-│   │   ├── utils/                    # Email service (OTP, welcome, enrollment confirmations)
-│   │   └── seedCourses.ts            # Database seed script
 │   ├── package.json
-│   └── tsconfig.json
+│   ├── tsconfig.json
+│   └── src/
+│       ├── server.ts                     # Entry point — connects DB, starts server
+│       ├── app.ts                        # Express app — middleware + 14 route mounts
+│       ├── seedCourses.ts                # DB seed script (languages + skills)
+│       │
+│       ├── config/
+│       │   ├── database.ts               # MongoDB connection
+│       │   ├── env.ts                    # Centralized env vars
+│       │   └── multer.ts                 # File upload storage config
+│       │
+│       ├── controllers/                  # 13 controllers
+│       │   ├── auth.controller.ts        # Register, Login, OTP, Password reset
+│       │   ├── auth.google.controller.ts # Google OAuth flow
+│       │   ├── dashboard.controller.ts   # Student & Trainer data aggregation
+│       │   ├── enrollment.controller.ts  # Skill enrollment accept/reject
+│       │   ├── language.enrolment.controller.ts
+│       │   ├── language.trainer.controller.ts  # Batches, classes, attendance, assignments
+│       │   ├── languageCourse.controller.ts
+│       │   ├── skillCourse.controller.ts
+│       │   ├── skillTrainingDetail.controller.ts
+│       │   ├── contact.controller.ts
+│       │   ├── trialRequestController.ts
+│       │   ├── user.controller.ts
+│       │   └── item.controller.ts
+│       │
+│       ├── models/                       # 19 Mongoose schemas
+│       │   ├── user.model.ts             # Roles, OTP, Google ID, profile virtual
+│       │   ├── skillCourse.model.ts      # Multi-level with exam prep
+│       │   ├── languageCourse.model.ts
+│       │   ├── enrollment.model.ts
+│       │   ├── language.enrollment.model.ts
+│       │   ├── batch.model.ts
+│       │   ├── language.batch.model.ts
+│       │   ├── classSession.model.ts
+│       │   ├── language.class.model.ts
+│       │   ├── attendance.model.ts
+│       │   ├── assignment.model.ts
+│       │   ├── submission.model.ts
+│       │   ├── language.material.model.ts
+│       │   ├── announcement.model.ts
+│       │   ├── language.announcement.model.ts
+│       │   ├── contact.model.ts
+│       │   ├── trialRequest.model.ts
+│       │   ├── skillTrainingDetail.model.ts
+│       │   └── item.model.ts
+│       │
+│       ├── routes/                       # 11 route files
+│       ├── middlewares/                  # JWT auth guard, role authorization, file upload
+│       ├── dtos/                         # Request validation (class-validator)
+│       ├── services/                     # Google Calendar integration
+│       ├── utils/                        # Email service (21KB — OTP, welcome, confirmations)
+│       └── types/                        # TypeScript declarations
 │
 ├── Frontend/sprachweg/
-│   ├── src/
-│   │   ├── App.tsx                   # Provider stack + 33+ routes
-│   │   ├── context/                  # AuthContext · ThemeContext
-│   │   ├── components/               # layout/ · ui/ · auth/ · admin/
-│   │   ├── pages/                    # Public · Auth · Student · Trainer · Admin (9) · Skill Training (6)
-│   │   ├── lib/                      # Axios API client · course data · utilities
-│   │   └── types/                    # TypeScript interfaces
-│   ├── firebase.json                 # Firebase Hosting config (SPA rewrites)
-│   ├── vite.config.ts
-│   └── package.json
+│   ├── package.json
+│   ├── vite.config.ts                    # Vite + React + TailwindCSS plugins
+│   ├── firebase.json                     # Firebase Hosting (SPA rewrites)
+│   ├── index.html
+│   └── src/
+│       ├── main.tsx                      # React root
+│       ├── App.tsx                       # Provider stack + 33+ routes
+│       │
+│       ├── context/
+│       │   ├── AuthContext.tsx            # Full auth state + localStorage persistence
+│       │   └── ThemeContext.tsx           # Dark/Light toggle
+│       │
+│       ├── components/
+│       │   ├── layout/                   # Header (46KB mega-nav), Footer, ScrollToTop
+│       │   ├── ui/                       # Button, BookingForm, EnrollmentModal, UnifiedBookingForm
+│       │   ├── auth/                     # ProfileCompletionModal
+│       │   └── admin/                    # Admin-specific components
+│       │
+│       ├── pages/
+│       │   ├── LandingPage.tsx           # 49KB — hero, catalog, testimonials
+│       │   ├── About.tsx                 # 37KB — company info
+│       │   ├── ContactPage.tsx           # 47KB — contact form
+│       │   ├── LoginPage.tsx             # Google OAuth + email login
+│       │   ├── RegisterPage.tsx          # With OTP verification step
+│       │   ├── StudentDashboard.tsx
+│       │   ├── TrainerDashboard.tsx
+│       │   ├── LanguageBatchDetails.tsx  # 73KB — largest page
+│       │   ├── Admin/                    # 9 admin pages
+│       │   │   ├── AdminDashboard.tsx
+│       │   │   ├── SkillDashboard.tsx    # 76KB
+│       │   │   ├── LanguageDashboard.tsx
+│       │   │   ├── LanguageBatches.tsx
+│       │   │   ├── ManageTrainers.tsx
+│       │   │   └── ...
+│       │   └── skill_training/           # 6 skill training detail pages
+│       │
+│       ├── lib/
+│       │   ├── api.ts                    # Axios instance + 6 typed API modules
+│       │   ├── courseData.ts             # Static course catalog (14KB)
+│       │   └── utils.ts
+│       └── types/
 │
-└── .github/workflows/               # CI/CD pipelines
+└── .github/workflows/                   # CI/CD pipelines
 ```
 
----
-
-## 📡 API Reference
-
-| Route Group | Base Path | Key Endpoints |
-|---|---|---|
-| **Auth** | `/api/auth` | `POST` register · login · verify-otp · resend-otp · forgot-password · reset-password · google — `GET` me — `PUT` profile/complete |
-| **Skills** | `/api/skills` | `GET` list — `POST` create — `PUT` update — `DELETE` remove *(admin)* |
-| **Languages** | `/api/languages` | Full CRUD for language courses |
-| **Language Training** | `/api/language-training` | Enrollment flows for language courses |
-| **Language Trainer** | `/api/language-trainer` | Batches · classes · attendance · assignments · materials · announcements |
-| **Dashboard** | `/api/dashboard` | `GET` student · trainer |
-| **Enrollment** | `/api/enrollment` | `POST` enroll · accept · reject — `GET` pending |
-| **Skill Details** | `/api/skill-training-details` | `GET` /:courseId — `POST` / |
-| **Contact** | `/api/contact` | `POST` submit — `GET` list *(admin)* |
-| **Trial Requests** | `/api/trial-requests` | Booking & trial request management |
-| **Uploads** | `/api/uploads` | Static file serving for uploaded assets |
+</details>
 
 ---
 
-## 🗄️ Database Models (19 Schemas)
-
-| Domain | Models |
-|---|---|
-| **User & Auth** | User (with roles, OTP, Google ID, profile completion virtual) |
-| **Courses** | SkillCourse · LanguageCourse · SkillTrainingDetail |
-| **Enrollment** | Enrollment · LanguageEnrollment |
-| **Batches** | Batch · LanguageBatch |
-| **Classes** | ClassSession · LanguageClass · Attendance |
-| **Content** | Assignment · Submission · LanguageMaterial |
-| **Communication** | Announcement · LanguageAnnouncement |
-| **Contact & Trials** | Contact · TrialRequest · Item |
-
----
-
-## 🔑 Role-Based Access
-
-| Role | Permissions |
-|:---:|---|
-| **Public** | Landing page · About · Contact · Course pages · Skill training pages · Privacy & Terms |
-| **Student** | All public + Student Dashboard · Language Batch Details · Course enrollment |
-| **Trainer** | All student + Trainer Dashboard · Batch management · Attendance · Assignments · Materials · Announcements |
-| **Admin** | Full access — Admin Dashboard · Course CRUD · Enrollment approval · Trainer management · Contact messages · Booking requests |
-
----
-
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js** v14+ &nbsp;·&nbsp; **npm** &nbsp;·&nbsp; **MongoDB** (local or Atlas)
+| Tool | Version |
+|---|---|
+| Node.js | ≥ 14.x |
+| npm | ≥ 6.x |
+| MongoDB | Local instance or Atlas cluster |
 
-### Backend
+---
+
+### ⚡ Backend Setup
 
 ```bash
+# 1. Navigate to backend
 cd SprachWeg/Backend
+
+# 2. Install dependencies
 npm install
 
-# Create .env file
-cat > .env << EOF
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/sprachweg
-NODE_ENV=development
-JWT_SECRET=your_super_secret_jwt_key
-JWT_EXPIRE=30d
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
-GOOGLE_CLIENT_ID=your_google_client_id
-EOF
+# 3. Create environment file (see Environment Variables section below)
+cp .env.example .env
 
-npm run dev          # Start with nodemon (hot-reload)
+# 4. Start development server (with hot-reload)
+npm run dev
+
+# 5. Or build for production
+npm run build && npm start
 ```
 
-### Frontend
+### ⚡ Frontend Setup
 
 ```bash
+# 1. Navigate to frontend
 cd SprachWeg/Frontend/sprachweg
+
+# 2. Install dependencies
 npm install
 
-# Create .env file
-cat > .env << EOF
-VITE_API_URL=http://localhost:5000
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-EOF
+# 3. Create environment file
+cp .env.example .env
 
-npm run dev          # Start Vite dev server
-```
+# 4. Start Vite dev server
+npm run dev
 
-### Production Build & Deploy
+# 5. Build for production
+npm run build
 
-```bash
-# Backend
-cd Backend
-npm run build        # Compiles to dist/
-npm start            # Runs dist/server.js
-
-# Frontend → Firebase
-cd Frontend/sprachweg
-npm run build        # Builds to dist/
+# 6. Deploy to Firebase
 firebase deploy --only hosting
 ```
 
 ---
 
-## 📊 Project Stats
+<details>
+<summary><h2>🔧 Environment Variables</h2></summary>
 
-<table>
-<tr>
-<td align="center"><strong>19</strong><br/>Database Models</td>
-<td align="center"><strong>13</strong><br/>Controllers</td>
-<td align="center"><strong>14</strong><br/>API Route Mounts</td>
-<td align="center"><strong>33+</strong><br/>Frontend Pages</td>
-</tr>
-<tr>
-<td align="center"><strong>3</strong><br/>User Roles</td>
-<td align="center"><strong>3</strong><br/>Languages</td>
-<td align="center"><strong>5</strong><br/>Skill Domains</td>
-<td align="center"><strong>11</strong><br/>Components</td>
-</tr>
-</table>
+### Backend (`Backend/.env`)
+
+| Variable | Description | Default |
+|---|---|---|
+| `PORT` | Server port | `5000` |
+| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/sprachweg` |
+| `NODE_ENV` | Environment mode | `development` |
+| `JWT_SECRET` | Secret key for JWT signing | — |
+| `JWT_EXPIRE` | Token expiry duration | `30d` |
+| `EMAIL_HOST` | SMTP host | `smtp.gmail.com` |
+| `EMAIL_PORT` | SMTP port | `587` |
+| `EMAIL_USER` | SMTP sender email | — |
+| `EMAIL_PASS` | SMTP password / App Password | — |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | — |
+
+### Frontend (`Frontend/sprachweg/.env`)
+
+| Variable | Description | Default |
+|---|---|---|
+| `VITE_API_URL` | Backend API base URL | `http://localhost:5000` |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID | — |
+
+</details>
 
 ---
 
-## 🔒 Security Features
+<details>
+<summary><h2>📡 API Routes</h2></summary>
 
-- 🛡️ **Helmet** — automatic security headers (XSS, content-type sniffing, clickjacking)
-- 🔐 **JWT Authentication** — stateless, 30-day token expiry
-- 🔑 **bcryptjs** — password hashing with salt rounds
-- ✉️ **OTP Verification** — email-based with expiry and rate limiting
-- 🚫 **CORS** — whitelisted origins only (`training.sovirtechnologies.in`)
-- 👮 **Role Guards** — `protect`, `isAdmin`, `authorize(...roles)` middleware chain
+| Route Group | Base Path | Methods | Description |
+|---|---|---|---|
+| **Auth** | `/api/auth` | POST, GET, PUT | Register · Login · OTP verify/resend · Forgot/Reset password · Google OAuth · Profile |
+| **Skills** | `/api/skills` | GET, POST, PUT, DELETE | Skill course CRUD (admin-protected writes) |
+| **Languages** | `/api/languages` | GET, POST, PUT, DELETE | Language course CRUD |
+| **Language Training** | `/api/language-training` | POST, GET | Language enrollment workflows |
+| **Language Trainer** | `/api/language-trainer` | POST, GET, PUT, DELETE | Batch, class, attendance, assignment, material, announcement management |
+| **Dashboard** | `/api/dashboard` | GET | Student and Trainer data aggregation |
+| **Enrollment** | `/api/enrollment` | POST, GET | Enroll · Accept · Reject · Get pending |
+| **Skill Details** | `/api/skill-training-details` | GET, POST | Extended skill course information |
+| **Contact** | `/api/contact` | POST, GET | Contact form submission & retrieval |
+| **Trial Requests** | `/api/trial-requests` | POST, GET | Booking & trial request handling |
+| **Uploads** | `/api/uploads` | GET (static) | Serve uploaded files |
+
+</details>
+
+---
+
+## 🔑 Role-Based Access Control
+
+| | Public | Student | Trainer | Admin |
+|:---:|:---:|:---:|:---:|:---:|
+| Landing · About · Contact | ✅ | ✅ | ✅ | ✅ |
+| Course Pages (Language + Skill) | ✅ | ✅ | ✅ | ✅ |
+| Privacy Policy · Terms | ✅ | ✅ | ✅ | ✅ |
+| Student Dashboard | ❌ | ✅ | ❌ | ✅ |
+| Batch Details | ❌ | ✅ | ✅ | ✅ |
+| Trainer Dashboard | ❌ | ❌ | ✅ | ✅ |
+| Batch · Class · Attendance Mgmt | ❌ | ❌ | ✅ | ✅ |
+| Admin Dashboard | ❌ | ❌ | ❌ | ✅ |
+| Course CRUD | ❌ | ❌ | ❌ | ✅ |
+| Enrollment Approval | ❌ | ❌ | ❌ | ✅ |
+| Trainer Management | ❌ | ❌ | ❌ | ✅ |
+| Contact Messages · Booking Requests | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+<details>
+<summary><h2>🗄️ Database Schema (19 Models)</h2></summary>
+
+| Domain | Models | Description |
+|---|---|---|
+| **User & Auth** | `User` | Roles (student/trainer/admin), OTP, Google ID, profile completion virtual |
+| **Course Catalog** | `SkillCourse` · `LanguageCourse` · `SkillTrainingDetail` | Multi-level courses with pricing, features, exam prep |
+| **Enrollment** | `Enrollment` · `LanguageEnrollment` | Status-tracked enrollment pipelines |
+| **Batches** | `Batch` · `LanguageBatch` | Grouped student cohorts |
+| **Classes** | `ClassSession` · `LanguageClass` · `Attendance` | Scheduled sessions with attendance tracking |
+| **Content** | `Assignment` · `Submission` · `LanguageMaterial` | Learning materials and student submissions |
+| **Communication** | `Announcement` · `LanguageAnnouncement` | Broadcast messaging per batch |
+| **Contact & Trials** | `Contact` · `TrialRequest` · `Item` | Public form submissions |
+
+</details>
+
+---
+
+<details>
+<summary><h2>💡 Key Design Decisions</h2></summary>
+
+| Decision | Rationale |
+|---|---|
+| **Separate Skill vs Language models** | Different data structures — skills have categories, pricing tiers, and modes; languages have multi-level progressions with exam prep |
+| **OTP-based email verification** | More secure than click-through links; prevents bot and fake registrations |
+| **Dual auth (Email + Google OAuth)** | Reduces friction for Google users while maintaining traditional auth |
+| **Virtual `isProfileComplete`** | Backend computes completeness; frontend enforces modal — clean separation of concerns |
+| **Firebase Hosting** | Free tier, global CDN, automatic HTTPS, native SPA rewrite support |
+| **Multer for uploads** | Server-side storage for course images and learning materials |
+| **class-validator DTOs** | Type-safe, decorator-based request validation at the controller boundary |
+| **Helmet middleware** | Automatic security headers with zero configuration overhead |
+| **TailwindCSS 4 + Framer Motion** | Utility-first CSS for rapid development + production-grade animations |
+
+</details>
+
+---
+
+## 📊 By the Numbers
+
+<p align="center">
+
+| 19 | 13 | 14 | 33+ |
+|:---:|:---:|:---:|:---:|
+| Database Models | Controllers | API Route Mounts | Frontend Pages |
+
+| 3 | 3 | 5 | 11 |
+|:---:|:---:|:---:|:---:|
+| User Roles | Languages | Skill Domains | Components |
+
+</p>
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Here's how to get started:
+
+```bash
+# 1. Fork & clone
+git clone https://github.com/Akash-Shenvi/SprachWeg.git
+
+# 2. Create a feature branch
+git checkout -b feature/your-amazing-feature
+
+# 3. Make your changes & commit
+git commit -m "feat: add your amazing feature"
+
+# 4. Push & open a PR
+git push origin feature/your-amazing-feature
+```
+
+> **Commit Convention:** We follow [Conventional Commits](https://www.conventionalcommits.org/) — prefix with `feat:`, `fix:`, `docs:`, `refactor:`, etc.
 
 ---
 
 ## 📄 License
 
-This project is proprietary software owned by **SoVir Technologies**.
+This project is proprietary software owned by **SoVir Technologies**.  
+All rights reserved. Unauthorized reproduction or distribution is prohibited.
 
 ---
 
+<br/>
+
 <p align="center">
-  Built with ❤️ by <strong>SoVir Technologies</strong>
-  <br/>
-  <a href="https://training.sovirtechnologies.in">training.sovirtechnologies.in</a>
+  <img src="https://img.shields.io/badge/Built_with-❤️-FF6B6B?style=for-the-badge&labelColor=0F172A" />
+</p>
+
+<p align="center">
+  <strong>SprachWeg</strong> — Crafted by <a href="https://github.com/Akash-Shenvi"><strong>Akash Shenvi</strong></a> at <strong>SoVir Technologies</strong>
+</p>
+
+<p align="center">
+  <a href="https://training.sovirtechnologies.in">🌐 Live Site</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Akash-Shenvi/SprachWeg">📦 Repository</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Akash-Shenvi/SprachWeg/issues">🐛 Report Bug</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Akash-Shenvi/SprachWeg/issues">💡 Request Feature</a>
+</p>
+
+<p align="center">
+  <sub>If this project helped you, consider giving it a ⭐ — it means a lot!</sub>
 </p>
